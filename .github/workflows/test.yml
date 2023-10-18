@@ -36,7 +36,7 @@ jobs:
           version: 8
 
       - name: Run pnpm install
-        run: pnpm install
+        run: pnpm install --no-optional
 
       - name: Run tests
         run: pnpm test
