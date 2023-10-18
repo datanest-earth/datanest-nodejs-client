@@ -1,0 +1,42 @@
+{
+  "name": "datanest-nodejs-client",
+  "version": "0.1.0",
+  "description": "Datanest API Client to easily create signed requests",
+  "main": "dist/index.js",
+  "module": "index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:dev": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/datanest-earth/datanest-nodejs-client.git"
+  },
+  "keywords": [
+    "API",
+    "signed",
+    "requests",
+    "datanest",
+    "earth",
+    "gather",
+    "hub"
+  ],
+  "author": "Brandon De Rose <brandon@datanest.earth>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/datanest-earth/datanest-nodejs-client/issues"
+  },
+  "homepage": "https://github.com/datanest-earth/datanest-nodejs-client#readme",
+  "optionalDependencies": {
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.7",
+    "vitest": "^0.34.6"
+  }
+}
