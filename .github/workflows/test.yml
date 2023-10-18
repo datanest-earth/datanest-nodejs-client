@@ -35,6 +35,9 @@ jobs:
         with:
           version: 8
 
+      - name: Run pnpm install
+        run: pnpm install
+
       - name: Run tests
         run: pnpm test
 
