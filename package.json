@@ -1,12 +1,15 @@
 {
-  "name": "@datanest/nodejs-client",
-  "version": "0.1.0",
+  "name": "@datanest-earth/nodejs-client",
+  "version": "0.1.1",
   "description": "Datanest API Client to easily create signed requests",
   "main": "dist/index.js",
   "module": "index.mjs",
   "types": "dist/index.d.ts",
   "files": [
-    "dist/"
+    "dist/",
+    "src/",
+    "index.mjs",
+    "readme.md"
   ],
   "scripts": {
     "build": "tsc",
