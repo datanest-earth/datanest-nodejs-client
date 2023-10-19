@@ -14,6 +14,8 @@ Please contact [hello@datanest.earth](mailto:hello@datanest.earth) to request an
 
 If you wish to use this Node package, you will need to have Node installed on your machine.
 
+This package is in ESM module format.
+
 We recommend the latest stable version of Node.
 - Tested on Node v20.8.0
 
