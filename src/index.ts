@@ -22,13 +22,14 @@ export default class DatanestClient {
     private async signRequest(url: string, requestOptions: RequestInit) {
         const hmac = createHmac('sha256', this.apiSecret);
 
-        const timestamp = Date.now();
+        const timestamp = Date.now() / 1000;
         if (!requestOptions.headers) {
             requestOptions.headers = {};
         }
         const headers: any = requestOptions.headers;
         headers['X-Timestamp'] = timestamp.toFixed(0);
-        headers['X-Signature'] = hmac.update(`${requestOptions.method}:${url}:${requestOptions.body ? requestOptions.body + ':' : ''}${timestamp.toFixed(0)}`).digest('hex');
+        const content = `${requestOptions.method}:${url}:${requestOptions.body ? requestOptions.body + ':' : ''}${timestamp.toFixed(0)}`;
+        headers['X-Signature'] = hmac.update(content).digest('hex');
     }
 
     private async sendRequest(method: string, path: string, params?: Record<string, any>, fetchOptions?: RequestInit) {
