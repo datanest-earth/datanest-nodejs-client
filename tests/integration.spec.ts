@@ -8,7 +8,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
     it('Ordered query params', async () => {
         const client = new DatanestClient();
-        const responses = await Promise.all([client.get('v1/projects?order=test&page=2'), client.get('v1/projects', { page: '1', order: 'test' })]);
+        const responses = await Promise.all([client.get('v1/projects', { order: 'test', page: '1' }), client.get('v1/projects', { page: '1', order: 'test' })]);
 
         expect(responses[0].status).equals(200);
         expect(responses[1].status).equals(200);

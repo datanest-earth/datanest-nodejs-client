@@ -52,14 +52,16 @@ export default class DatanestClient {
         };
 
         let url = `${this.baseUrl}/${path}`;
-        if (params && (method === 'GET' || method === 'DELETE')) {
-            const queryParams = new URLSearchParams(params);
-            if (queryParams.size) {
-                queryParams.sort();
-                url += `?${queryParams}`;
+        if (params) {
+            if (method === 'GET' || method === 'DELETE') {
+                const queryParams = new URLSearchParams(params);
+                if (queryParams.size) {
+                    queryParams.sort();
+                    url += `?${queryParams}`;
+                }
+            } else {
+                options.body = JSON.stringify(params);
             }
-        } else if (params) {
-            options.body = JSON.stringify(params);
         }
 
         // Sign the request (implement the signing logic)
