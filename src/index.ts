@@ -14,12 +14,12 @@ export default class DatanestClient {
         // Remove trailing slash
         this.baseUrl = this.baseUrl.replace(/\/$/, '');
 
-        if (!this.apiKey || !this.apiSecret) {
+        if (this.apiKey === "" || this.apiSecret === "") {
             throw new Error('API key and secret are required.');
         }
     }
 
-    private async signRequest(url: string, requestOptions: RequestInit) {
+    private signRequest(url: string, requestOptions: RequestInit) {
         const hmac = createHmac('sha256', this.apiSecret);
 
         const timestamp = Date.now() / 1000;
@@ -64,29 +64,29 @@ export default class DatanestClient {
         }
 
         // Sign the request (implement the signing logic)
-        await this.signRequest(url, options);
+        this.signRequest(url, options);
 
         return await this.fetchClient(url, options);
     }
 
     public async get(path: string, params?: Record<string, any>, fetchOptions?: any) {
-        return this.sendRequest('GET', path, params, fetchOptions);
+        return await this.sendRequest('GET', path, params, fetchOptions);
     }
 
     public async post(path: string, params?: Record<string, any>, fetchOptions?: any) {
-        return this.sendRequest('POST', path, params, fetchOptions);
+        return await this.sendRequest('POST', path, params, fetchOptions);
     }
 
     public async patch(path: string, params?: Record<string, any>, fetchOptions?: any) {
-        return this.sendRequest('PATCH', path, params, fetchOptions);
+        return await this.sendRequest('PATCH', path, params, fetchOptions);
     }
 
     public async put(path: string, params?: Record<string, any>, fetchOptions?: any) {
-        return this.sendRequest('PUT', path, params, fetchOptions);
+        return await this.sendRequest('PUT', path, params, fetchOptions);
     }
 
     public async delete(path: string, params?: Record<string, any>, fetchOptions?: any) {
-        return this.sendRequest('DELETE', path, params, fetchOptions);
+        return await this.sendRequest('DELETE', path, params, fetchOptions);
     }
 
     public setBaseUrl(baseUrl: string) {
