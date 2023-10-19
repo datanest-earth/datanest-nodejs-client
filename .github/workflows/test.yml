@@ -36,9 +36,13 @@ jobs:
           version: 8
 
       - name: Run pnpm install
-        run: pnpm install --no-optional
+        run: pnpm install
 
       - name: Run tests
+        env:
+          DATANEST_API_BASE_URL: ${{ secrets.DATANEST_API_BASE_URL }}
+          DATANEST_API_KEY: ${{ secrets.DATANEST_API_KEY }}
+          DATANEST_API_SECRET: ${{ secrets.DATANEST_API_SECRET }}
         run: pnpm test
 
       - name: Build
