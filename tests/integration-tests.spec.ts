@@ -22,6 +22,21 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(dataPage2.current_page).equals(2);
     });
 
+    it('POST v1/projects - Create project', async () => {
+        const client = new DatanestClient();
+        const response = await client.post('v1/projects', {
+            project_number: '12313123',
+            project_name: 'My project',
+            project_client: 'My client',
+            address_country: 'GB',
+            address_state: null,
+        });
+
+        console.log('creation', response.status, await response.json());
+
+        expect(response.status).equals(201);
+    });
+
 } else {
     it('Skipping integration tests', () => { });
     console.warn('[WARN] Skipping integration tests because DATANEST_API_KEY, DATANEST_API_SECRET or DATANEST_API_BASE_URL is not set.');
