@@ -25,7 +25,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     it('POST v1/projects - Create project', async () => {
         const client = new DatanestClient();
         const response = await client.post('v1/projects', {
-            project_number: '12313123',
+            project_number: 'test-' + Math.random().toString(36).substring(7),
             project_name: 'My project',
             project_client: 'My client',
             address_country: 'GB',
