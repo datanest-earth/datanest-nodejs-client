@@ -1,11 +1,14 @@
 # Datanest API Client for Node.js
 
+Please see the [Datanest API documentation](docs/readme.md) for more information.
+
 This is a Node JS implementation of [datanest.earth](https://datanest.earth)'s REST API client.
 You should use this lightweight package to easily start using the API.
 
 **If you are NOT using Node.js** you can use this package as [an implementation example](https://github.com/search?q=repo%3Adatanest-earth%2Fdatanest-nodejs-client+DatanestClient&type=code).
 
 Please contact [hello@datanest.earth](mailto:hello@datanest.earth) to request an API key and Secret.
+
 
 ## Requirements
 
@@ -32,7 +35,7 @@ DATANEST_API_SECRET=your-api-secret
 
 Simply construct
 ```js
-import DatanestClient from 'datanest-api-client';
+import DatanestClient from '@datanest-earth/nodejs-client';
 import dotenv from 'dotenv';
 
 // Load .env
@@ -44,7 +47,7 @@ const client = new DatanestClient();
 Alternatively use the constructor to pass the API key and secret.
 
 ```js
-import DatanestClient from 'datanest-api-client';
+import DatanestClient from '@datanest-earth/nodejs-client';
 
 const client = new DatanestClient('your-api-key', 'your-api-secret');
 ```
@@ -68,7 +71,7 @@ See [fetch api "options" docs](https://developer.mozilla.org/en-US/docs/Web/API/
 ## Example
 
 ```ts
-import DatanestClient from 'datanest-api-client';
+import DatanestClient from '@datanest-earth/nodejs-client';
 import dotenv from 'dotenv';
 
 // Load .env
@@ -95,7 +98,7 @@ DATANEST_API_BASE_URL=https://app.datanest.earth/api
 Or in your code:
 
 ```ts
-import DatanestClient from 'datanest-api-client';
+import DatanestClient from '@datanest-earth/nodejs-client';
 
 const client = new DatanestClient();
 client.setBaseUrl('https://app.datanest.earth');

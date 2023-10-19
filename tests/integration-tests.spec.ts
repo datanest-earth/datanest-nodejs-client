@@ -6,6 +6,14 @@ dotenv.config();
 
 if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.env.DATANEST_API_BASE_URL) {
 
+    it('Ordered query params', async () => {
+        const client = new DatanestClient();
+        const responses = await Promise.all([client.get('v1/projects?order=test&page=2'), client.get('v1/projects', { page: '1', order: 'test' })]);
+
+        expect(responses[0].status).equals(200);
+        expect(responses[1].status).equals(200);
+    });
+
     it('GET v1/projects - List projects', async () => {
         const client = new DatanestClient();
         const responses = await Promise.all([client.get('v1/projects'), client.get('v1/projects?page=2')]);
@@ -31,8 +39,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             address_country: 'GB',
             address_state: null,
         });
-
-        console.log('creation', response.status, await response.json());
 
         expect(response.status).equals(201);
     });
