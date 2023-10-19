@@ -14,7 +14,7 @@ export default class DatanestClient {
         // Remove trailing slash
         this.baseUrl = this.baseUrl.replace(/\/$/, '');
 
-        if (!this.apiKey || !this.apiSecret) {
+        if (this.apiKey === "" || this.apiSecret === "") {
             throw new Error('API key and secret are required.');
         }
     }
