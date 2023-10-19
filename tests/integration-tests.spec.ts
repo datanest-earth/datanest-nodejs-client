@@ -9,6 +9,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     it('GET v1/projects - List projects', async () => {
         const client = new DatanestClient();
         const response = await client.get('v1/projects');
+
+        expect(response.status).equals(200);
+
         const data = await response.json();
 
         expect(data.data).is.an('array');

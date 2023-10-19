@@ -55,7 +55,7 @@ async function testMockRequest(method, endpoint, mockData, mockStatus = 200) {
 
     // Assert that global.fetch was called with the expected headers and options
     expect(global.fetch).toHaveBeenCalledWith(
-        'https://app.datanest.earth/api/' + endpoint,
+        (process.env.DATANEST_API_BASE_URL || 'https://app.datanest.earth/api/') + endpoint,
         {
             headers: expectedHeaders,
             ...expectedOptions,
