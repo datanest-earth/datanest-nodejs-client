@@ -53,9 +53,12 @@ async function testMockRequest(method, endpoint, mockData, mockStatus = 200) {
 
     expect(response).toEqual(expectedResponse);
 
+    const baseUrl = (process.env.DATANEST_API_BASE_URL || 'https://app.datanest.earth/api')
+        .replace(/\/$/, '');
+
     // Assert that global.fetch was called with the expected headers and options
     expect(global.fetch).toHaveBeenCalledWith(
-        (process.env.DATANEST_API_BASE_URL || 'https://app.datanest.earth/api/') + endpoint,
+        baseUrl + '/' + endpoint,
         {
             headers: expectedHeaders,
             ...expectedOptions,

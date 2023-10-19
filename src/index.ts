@@ -9,7 +9,7 @@ export default class DatanestClient {
     constructor(apiKey?: string, apiSecret?: string) {
         this.apiKey = apiKey || process.env.DATANEST_API_KEY || '';
         this.apiSecret = apiSecret || process.env.DATANEST_API_SECRET || '';
-        this.baseUrl = process.env.DATANEST_API_BASE_URL || 'https://app.datanest.earth/api'; // Default base URL
+        this.baseUrl = process.env.DATANEST_API_BASE_URL || 'https://app.datanest.earth/api';
 
         // Remove trailing slash
         this.baseUrl = this.baseUrl.replace(/\/$/, '');
