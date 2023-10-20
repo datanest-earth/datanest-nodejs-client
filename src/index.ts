@@ -42,7 +42,7 @@ export default class DatanestClient {
      * @param path 
      * @param params 
      * @param fetchOptions 
-     * @throws DatanestRequestError Request HTTP server or validation error
+     * @throws DatanestResponseError Request HTTP server or validation error
      * @returns Fetch response with readable stream.
      */
     private async sendRequest(method: string, path: string, params?: Record<string, any>, fetchOptions?: DatanestRequestInit) {
@@ -82,7 +82,7 @@ export default class DatanestClient {
         const response = await fetch(url, options);
 
         if (response.status > 299) {
-            throw new DatanestRequestError(`Datanest API Failed: ${path}: ${response.status}`, response.status, await response.json());
+            throw new DatanestResponseError(`Datanest API Failed: ${path}: ${response.status}`, response.status, await response.json());
         }
 
         return response;
@@ -93,7 +93,7 @@ export default class DatanestClient {
      * @param path e.g. `v1/projects`
      * @param params Query parameters
      * @param fetchOptions
-     * @throws DatanestRequestError Request HTTP server or validation error
+     * @throws DatanestResponseError Request HTTP server or validation error
      * @returns Fetch response with readable stream.
      */
     public async get(path: string, params?: Record<string, any>, fetchOptions?: DatanestRequestInit) {
@@ -105,7 +105,7 @@ export default class DatanestClient {
      * @param path e.g. `v1/projects`
      * @param params Will be converted to JSON in request body
      * @param fetchOptions
-     * @throws DatanestRequestError Request HTTP server or validation error
+     * @throws DatanestResponseError Request HTTP server or validation error
      * @returns Fetch response with readable stream.
      */
     public async post(path: string, params?: Record<string, any>, fetchOptions?: DatanestRequestInit) {
@@ -117,7 +117,7 @@ export default class DatanestClient {
      * @param path e.g. `v1/projects/{uuid}`
      * @param params Will be converted to JSON in request body
      * @param fetchOptions
-     * @throws DatanestRequestError Request HTTP server or validation error
+     * @throws DatanestResponseError Request HTTP server or validation error
      * @returns Fetch response with readable stream.
      */
     public async patch(path: string, params?: Record<string, any>, fetchOptions?: DatanestRequestInit) {
@@ -129,7 +129,7 @@ export default class DatanestClient {
      * @param path e.g. `v1/projects/{uuid}`
      * @param params Will be converted to JSON in request body
      * @param fetchOptions
-     * @throws DatanestRequestError Request HTTP server or validation error
+     * @throws DatanestResponseError Request HTTP server or validation error
      * @returns Fetch response with readable stream.
      */
     public async put(path: string, params?: Record<string, any>, fetchOptions?: DatanestRequestInit) {
@@ -141,7 +141,7 @@ export default class DatanestClient {
      * @param path e.g. `v1/projects/{uuid}`
      * @param params Query parameters
      * @param fetchOptions
-     * @throws DatanestRequestError Request HTTP server or validation error
+     * @throws DatanestResponseError Request HTTP server or validation error
      * @returns Fetch response with readable stream.
      */
     public async delete(path: string, params?: Record<string, any>, fetchOptions?: DatanestRequestInit) {
@@ -191,7 +191,7 @@ interface RequestInit {
 
 export type DatanestRequestInit = RequestInit;
 
-export class DatanestRequestError extends Error {
+export class DatanestResponseError extends Error {
     /**
      * HTTP status code
      */

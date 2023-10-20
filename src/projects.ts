@@ -1,4 +1,4 @@
-import DatanestClient, { DatanestRequestError } from "./index";
+import DatanestClient, { DatanestResponseError } from "./index";
 
 enum ProjectType {
     PROJECT_TYPE_ENVIRO = 0,
@@ -150,7 +150,7 @@ export async function getProject(client: DatanestClient, projectUuid: string) {
 export async function createProject(client: DatanestClient, projectData: ProjectCreationData) {
     const response = await client.post('v1/projects', projectData);
     if (response.status !== 201) {
-        throw new DatanestRequestError(`Failed to create project: ${response.status}`, response.status, await response.json());
+        throw new DatanestResponseError(`Failed to create project: ${response.status}`, response.status, await response.json());
     }
 
     const data = await response.json();
