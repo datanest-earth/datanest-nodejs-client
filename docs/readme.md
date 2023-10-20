@@ -22,7 +22,9 @@ The signature is a HMAC SHA256 of the following:
 {METHOD}:{fullUrl}:{bodyContents}:{timestamp}
 
 > `fullUrl` must have the query parameters in alphanumeric order. This must be in the exact format as provided in the request body.
+
 > `bodyContents` is optional for POST, PUT and PATCH requests. This must match the request body exactly.
+
 > GET and DELETE cannot have bodies.
 
 **Good example:**
@@ -31,9 +33,13 @@ The signature is a HMAC SHA256 of the following:
 **Bad example:**
 `get:https://APP.DATANEST.EARTH/API/V1/PROJECTS/?beta=3&alpha=1:1697748031`
 > Method must be capitalized 
+
 > URL domain should not be capitalized
+
 > URL path should not be capitalized
+
 > URL path should not have trailing slash
+
 > Query params are not ordered
 
 ## Other Headers
