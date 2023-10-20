@@ -40,11 +40,16 @@ The signature is a HMAC SHA256 of the following:
 
 We recommend using `Accept` and `Content-Type` headers with `application/json` value.
 
-`X-Client-Id` is optional, but we recommend setting it to a unique identifier for your application. It can be useful to identify requests in our logs.
+`X-Client-ID` is optional, but we recommend setting it to a unique identifier for your application. It can be useful to identify requests in our logs.
 
 ## Full Implementation Example
 
 [See Client Implementation in Node.js](../src/index.ts)
+
+## Model Type Definitions
+
+See Typescript type definitions:
+- [Projects](../src/projects.ts)
 
 ## Endpoints
 
@@ -58,10 +63,12 @@ The `page` query parameter is optional.
 ```json
 {
     "data": Project[],
-    "current_page": number,
-    "last_page": number,
-    "per_page": number,
-    "total": number
+    "meta": {
+        "current_page": number,
+        "last_page": number,
+        "per_page": number,
+        "total": number,
+    }
 }
 ```
 
@@ -85,15 +92,11 @@ Creates a new project.
 
 ```json
 {
-    "project_number": string,
-    "project_name": string,
-    "project_client": string,
-    "address_country": TwoCharIsoCode,
-
-    // Optional
-    "address_state"?: TwoOrThreeCharCode|null,
+    "project": Project,
+    "project_link": "https://app.datanest.earth/open-project/{id}"
 }
 ```
+- [Project](../src/projects.ts)
 
 #### Response Body
 
@@ -103,3 +106,4 @@ Creates a new project.
     "project_link": "https://app.datanest.earth/open-project/{id}"
 }
 ```
+- [Project](../src/projects.ts)

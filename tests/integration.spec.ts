@@ -23,11 +23,12 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const [data, dataPage2] = await Promise.all([responses[0].json(), await responses[1].json()]);
 
         expect(data.data).is.an('array');
-        expect(data.last_page).is.a('number');
-        expect(data.current_page).equals(1);
-        expect(data.total).is.a('number');
+        expect(data.meta.last_page).is.a('number');
+        expect(data.meta.current_page).equals(1);
+        expect(data.meta.per_page).is.a('number');
+        expect(data.meta.total).is.a('number');
 
-        expect(dataPage2.current_page).equals(2);
+        expect(dataPage2.meta.current_page).equals(2);
     });
 
     it('POST v1/projects - Create project', async () => {
@@ -41,6 +42,11 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         });
 
         expect(response.status).equals(201);
+
+        const data = await response.json();
+
+        expect(data.project_link).is.a('string');
+        expect(data.project.uuid).is.a('string');
     });
 
 } else {
