@@ -97,6 +97,7 @@ dotenv.config();
 
 async function listProjects() {
     const client = new DatanestClient();
+    client.setClientId("Company A Version 1");
     const response = await client.get('v1/projects');
     const projects = await response.json();
     console.log(projects);

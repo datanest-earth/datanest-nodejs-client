@@ -40,7 +40,7 @@ The signature is a HMAC SHA256 of the following:
 
 We recommend using `Accept` and `Content-Type` headers with `application/json` value.
 
-`X-Client-Id` is optional, but we recommend setting it to a unique identifier for your application. It can be useful to identify requests in our logs.
+`X-Client-ID` is optional, but we recommend setting it to a unique identifier for your application. It can be useful to identify requests in our logs.
 
 ## Full Implementation Example
 

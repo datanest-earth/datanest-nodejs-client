@@ -1,4 +1,4 @@
-import { createHmac } from 'crypto';
+import { createHmac } from 'node:crypto';
 import * as projects from './projects';
 
 export {
@@ -9,6 +9,7 @@ export default class DatanestClient {
     private apiKey: string;
     private apiSecret: string;
     private baseUrl: string;
+    private clientId: string | null = null;
 
     constructor(apiKey?: string, apiSecret?: string) {
         this.apiKey = apiKey || process.env.DATANEST_API_KEY || '';
@@ -50,12 +51,15 @@ export default class DatanestClient {
         // remove leading slash
         path = path.replace(/^\//, '');
 
-        const headers = {
+        const headers: any = {
             ...(fetchOptions?.headers ?? {}),
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.apiKey}`,
         };
+        if (this.clientId) {
+            headers['X-Client-ID'] = this.clientId;
+        }
         const options: DatanestRequestInit = {
             redirect: 'error',
             mode: 'no-cors',
@@ -154,6 +158,19 @@ export default class DatanestClient {
      */
     public setBaseUrl(baseUrl: string) {
         this.baseUrl = baseUrl;
+    }
+
+    /**
+     * Set your client ID for the Datanest API
+     * This will append the `X-Client-ID` header to all requests
+     * @param clientId Your application identifier, this can assist Datanest for debugging assistance
+     */
+    public setClientId(clientId: string) {
+        this.clientId = clientId;
+    }
+
+    public removeClientId() {
+        this.clientId = null;
     }
 }
 
