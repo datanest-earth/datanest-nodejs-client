@@ -9,7 +9,6 @@ You should use this lightweight package to easily start using the API.
 
 Please contact [hello@datanest.earth](mailto:hello@datanest.earth) to request an API key and Secret.
 
-
 ## Requirements
 
 If you wish to use this Node package, you will need to have Node installed on your machine.
@@ -23,9 +22,26 @@ Minimum requirements:
 - Fetch API Node v18.0+ (unverified)
 > [node-fetch](https://www.npmjs.com/package/node-fetch) may allow for earlier versions
 
+Should work with both Bun and Deno runtimes (unverified)
+
+## Installation for Node projects
+
+Install from NPM using your preferred package manager.
+
+E.g.
+```bash
+npm install --save @datanest-earth/nodejs-client
+```
+```bash
+pnpm add @datanest-earth/nodejs-client
+```
+```bash
+bun add @datanest-earth/nodejs-client
+```
+
 ## Authentication
 
-Datanest's API uses API keys to authenticate requests along with a [HMAC signature (see implementation code.)](https://github.com/search?q=repo%3Adatanest-earth/datanest-nodejs-client%20signRequest&type=code) The signature may be tricky to implement, so we recommend using this package to get started.
+Datanest's API uses API keys to authenticate requests along with a HMAC signature [(see docs)](./docs/readme.md) [(see implementation example.)](https://github.com/search?q=repo%3Adatanest-earth/datanest-nodejs-client%20signRequest&type=code) The signature may be tricky to implement, so we recommend using this package to get started.
 
 The client will automatically look for a local `.env` file to get the API key and secret.
 

@@ -1,10 +1,14 @@
 import { createHmac } from 'crypto';
+import * as projects from './projects';
+
+export {
+    projects,
+}
 
 export default class DatanestClient {
     private apiKey: string;
     private apiSecret: string;
     private baseUrl: string;
-    private fetchClient = fetch;
 
     constructor(apiKey?: string, apiSecret?: string) {
         this.apiKey = apiKey || process.env.DATANEST_API_KEY || '';
@@ -32,6 +36,15 @@ export default class DatanestClient {
         headers['X-Signature'] = hmac.update(content).digest('hex');
     }
 
+    /**
+     * Send a request to the Datanest API
+     * @param method 
+     * @param path 
+     * @param params 
+     * @param fetchOptions 
+     * @throws DatanestRequestError Request HTTP server or validation error
+     * @returns Fetch response with readable stream.
+     */
     private async sendRequest(method: string, path: string, params?: Record<string, any>, fetchOptions?: DatanestRequestInit) {
         method = method.toUpperCase();
         // remove leading slash
@@ -66,45 +79,87 @@ export default class DatanestClient {
 
         // Sign the request (implement the signing logic)
         this.signRequest(url, options);
+        const response = await fetch(url, options);
 
-        return await this.fetchClient(url, options);
+        if (response.status > 299) {
+            throw new DatanestRequestError(`Datanest API Failed: ${path}: ${response.status}`, response.status, await response.json());
+        }
+
+        return response;
     }
 
+    /**
+     * Send a GET request to the Datanest API
+     * @param path e.g. `v1/projects`
+     * @param params Query parameters
+     * @param fetchOptions
+     * @throws DatanestRequestError Request HTTP server or validation error
+     * @returns Fetch response with readable stream.
+     */
     public async get(path: string, params?: Record<string, any>, fetchOptions?: DatanestRequestInit) {
         return await this.sendRequest('GET', path, params, fetchOptions);
     }
 
+    /**
+     * Send a POST request to the Datanest API
+     * @param path e.g. `v1/projects`
+     * @param params Will be converted to JSON in request body
+     * @param fetchOptions
+     * @throws DatanestRequestError Request HTTP server or validation error
+     * @returns Fetch response with readable stream.
+     */
     public async post(path: string, params?: Record<string, any>, fetchOptions?: DatanestRequestInit) {
         return await this.sendRequest('POST', path, params, fetchOptions);
     }
 
+    /**
+     * Send a PATCH request to the Datanest API
+     * @param path e.g. `v1/projects/{uuid}`
+     * @param params Will be converted to JSON in request body
+     * @param fetchOptions
+     * @throws DatanestRequestError Request HTTP server or validation error
+     * @returns Fetch response with readable stream.
+     */
     public async patch(path: string, params?: Record<string, any>, fetchOptions?: DatanestRequestInit) {
         return await this.sendRequest('PATCH', path, params, fetchOptions);
     }
 
+    /**
+     * Send a PUT request to the Datanest API
+     * @param path e.g. `v1/projects/{uuid}`
+     * @param params Will be converted to JSON in request body
+     * @param fetchOptions
+     * @throws DatanestRequestError Request HTTP server or validation error
+     * @returns Fetch response with readable stream.
+     */
     public async put(path: string, params?: Record<string, any>, fetchOptions?: DatanestRequestInit) {
         return await this.sendRequest('PUT', path, params, fetchOptions);
     }
 
+    /**
+     * Send a DELETE request to the Datanest API
+     * @param path e.g. `v1/projects/{uuid}`
+     * @param params Query parameters
+     * @param fetchOptions
+     * @throws DatanestRequestError Request HTTP server or validation error
+     * @returns Fetch response with readable stream.
+     */
     public async delete(path: string, params?: Record<string, any>, fetchOptions?: DatanestRequestInit) {
         return await this.sendRequest('DELETE', path, params, fetchOptions);
     }
 
+    /**
+     * Set the base URL for the Datanest API
+     * @param baseUrl e.g. `https://app.datanest.earth/api`
+     */
     public setBaseUrl(baseUrl: string) {
         this.baseUrl = baseUrl;
     }
-
-    /**
-     * You can use this method to set a custom fetch client
-     * e.g. to use a mock fetch client in test.
-     * Or use `node-fetch` in earlier node.js version (untested).
-     * @param fetchClient A fetch client that implements the fetch API
-     */
-    private setFetchClient(fetchClient: any) {
-        this.fetchClient = fetchClient;
-    }
 }
 
+/**
+ * From Fetch API
+ */
 interface RequestInit {
     /** A BodyInit object or null to set request's body. */
     body?: BodyInit | null;
@@ -134,6 +189,22 @@ interface RequestInit {
     window?: null;
 }
 
-export type DatanestRequestInit = {
-    timeout?: number;
-} & RequestInit;
+export type DatanestRequestInit = RequestInit;
+
+export class DatanestRequestError extends Error {
+    /**
+     * HTTP status code
+     */
+    public status: number;
+
+    /**
+     * Server response data
+     */
+    public data: any;
+
+    constructor(message: string, status: number, data: any) {
+        super(message);
+        this.status = status;
+        this.data = data;
+    }
+}

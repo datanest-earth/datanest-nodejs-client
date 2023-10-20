@@ -1,6 +1,6 @@
 {
   "name": "@datanest-earth/nodejs-client",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Datanest API Client to easily create signed requests",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
