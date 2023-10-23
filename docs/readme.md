@@ -52,6 +52,10 @@ We recommend using `Accept` and `Content-Type` headers with `application/json` v
 
 [See Client Implementation in Node.js](../src/index.ts)
 
+## POSTMAN
+
+[See Postman Collection](./postman/)
+
 ## Model Type Definitions
 
 See Typescript type definitions:
@@ -59,57 +63,4 @@ See Typescript type definitions:
 
 ## Endpoints
 
-### GET /v1/projects?page=1
-
-Returns a list of projects.
-The `page` query parameter is optional.
-
-#### Response Body
-
-```json
-{
-    "data": Project[],
-    "meta": {
-        "current_page": number,
-        "last_page": number,
-        "per_page": number,
-        "total": number,
-    }
-}
-```
-
-### GET /v1/projects/:id
-
-Returns a single project.
-
-#### Response Body
-
-```json
-{
-    "project": Project
-}
-```
-
-### POST /v1/projects
-
-Creates a new project.
-
-#### Request Body
-
-```json
-{
-    "project": Project,
-    "project_link": "https://app.datanest.earth/open-project/{id}"
-}
-```
-- [Project](../src/projects.ts)
-
-#### Response Body
-
-```json
-{
-    "project": Project,
-    "project_link": "https://app.datanest.earth/open-project/{id}"
-}
-```
-- [Project](../src/projects.ts)
+- [Projects API](./endpoints/projects.md)

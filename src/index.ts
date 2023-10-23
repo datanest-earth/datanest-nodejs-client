@@ -55,14 +55,14 @@ export default class DatanestClient {
             ...(fetchOptions?.headers ?? {}),
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.apiKey}`,
+            'X-API-Key': this.apiKey,
         };
         if (this.clientId) {
             headers['X-Client-ID'] = this.clientId;
         }
         const options: DatanestRequestInit = {
             redirect: 'error',
-            mode: 'no-cors',
+            mode: method !== 'DELETE' && method !== 'PATCH' ? 'no-cors' : undefined,
             ...fetchOptions,
             method,
             headers,

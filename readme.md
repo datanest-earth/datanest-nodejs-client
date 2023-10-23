@@ -5,15 +5,13 @@ Please see the [Datanest API documentation](docs/readme.md) for more information
 This is a Node JS implementation of [datanest.earth](https://datanest.earth)'s REST API client.
 You should use this lightweight package to easily start using the API.
 
-**If you are NOT using Node.js** you can use this package as [an implementation example](https://github.com/search?q=repo%3Adatanest-earth%2Fdatanest-nodejs-client+DatanestClient&type=code).
+**If you are NOT using Node.js** you can use this package as [an implementation example](https://github.com/search?q=repo%3Adatanest-earth%2Fdatanest-nodejs-client+DatanestClient&type=code). Or see the [API documentation](docs/readme.md) for more information.
 
 Please contact [hello@datanest.earth](mailto:hello@datanest.earth) to request an API key and Secret.
 
 ## Requirements
 
 If you wish to use this Node package, you will need to have Node installed on your machine.
-
-This package is in ESM module format.
 
 We recommend the latest stable version of Node.
 - Tested on Node v20.8.0
