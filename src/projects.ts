@@ -141,6 +141,7 @@ type PaginatedResponse<T> = {
  * @param client Datanest REST API Client
  * @param page Page number
  * @param archived Show archived projects instead?
+ * @throws DatanestResponseError Request HTTP server or validation error
  * @returns 
  */
 export async function listProjects(client: DatanestClient, page = 1, archived = false) {
@@ -150,6 +151,13 @@ export async function listProjects(client: DatanestClient, page = 1, archived = 
     return data as PaginatedResponse<Project>;
 }
 
+/**
+ * Get a single project via UUID
+ * @param client 
+ * @param projectUuid 
+ * @throws DatanestResponseError Request HTTP server or validation error
+ * @returns 
+ */
 export async function getProject(client: DatanestClient, projectUuid: string) {
     const response = await client.get('v1/projects/' + projectUuid);
 
@@ -160,6 +168,13 @@ export async function getProject(client: DatanestClient, projectUuid: string) {
     };
 }
 
+/**
+ * Create a Datanest Project
+ * @param client 
+ * @param projectData 
+ * @throws DatanestResponseError Request HTTP server or validation error
+ * @returns 
+ */
 export async function createProject(client: DatanestClient, projectData: ProjectCreationData & Partial<Project>) {
     const response = await client.post('v1/projects', projectData);
     if (response.status !== 201) {
@@ -173,6 +188,13 @@ export async function createProject(client: DatanestClient, projectData: Project
     };
 }
 
+/**
+ * Update properties of a project
+ * @param client 
+ * @param projectData 
+ * @throws DatanestResponseError Request HTTP server or validation error
+ * @returns 
+ */
 export async function patchProject(client: DatanestClient, projectData: Partial<ProjectCreationData>) {
     const response = await client.patch('v1/projects', projectData);
     if (response.status !== 200) {
@@ -190,9 +212,22 @@ export async function patchProject(client: DatanestClient, projectData: Partial<
  * Archive a project to hide it from users, it will be automatically deleted after some time.
  * @param client 
  * @param projectUuid 
+ * @throws DatanestResponseError Request HTTP server or validation error
  * @returns 
  */
 export async function archiveProject(client: DatanestClient, projectUuid: string) {
     await client.delete('v1/projects/' + projectUuid + '/archive');
+    return true;
+}
+
+/**
+ * Restore an archived project.
+ * @param client 
+ * @param projectUuid 
+ * @throws DatanestResponseError Request HTTP server or validation error
+ * @returns true
+ */
+export async function restoreProject(client: DatanestClient, projectUuid: string) {
+    await client.post('v1/projects/' + projectUuid + '/restore');
     return true;
 }

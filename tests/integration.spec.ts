@@ -31,7 +31,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(dataPage2.meta.current_page).equals(2);
     });
 
-    it('Create, get, patch and archive', async () => {
+    it('Create, get, patch and archive, restore and re-archive', async () => {
         const client = new DatanestClient();
         const response = await client.post('v1/projects', {
             project_number: 'test-' + Math.random().toString(36).substring(7),
@@ -70,6 +70,12 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         const responseDelete = await client.delete('v1/projects/' + data.project.uuid + "/archive");
         expect(responseDelete.status).equals(200);
+
+        const responseRestore = await client.post('v1/projects/' + data.project.uuid + "/restore");
+        expect(responseRestore.status).equals(200);
+
+        const responseDelete2 = await client.delete('v1/projects/' + data.project.uuid + "/archive");
+        expect(responseDelete2.status).equals(200);
     });
 
 } else {
