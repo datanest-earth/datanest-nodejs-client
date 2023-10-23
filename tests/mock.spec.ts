@@ -31,7 +31,7 @@ async function testMockRequest(method, endpoint, mockData, mockStatus = 200) {
 
     const expectedHeaders = {
         Accept: 'application/json',
-        Authorization: 'Bearer aaa-bbb-ccc-ddd',
+        'X-API-Key': 'aaa-bbb-ccc-ddd',
         'Content-Type': 'application/json',
 
         // Don't strictly check these values
@@ -41,7 +41,7 @@ async function testMockRequest(method, endpoint, mockData, mockStatus = 200) {
 
     const expectedOptions = {
         method,
-        mode: 'no-cors',
+        mode: method.toUpperCase() !== 'DELETE' && method.toUpperCase() !== 'PATCH' ? 'no-cors' : undefined,
         redirect: 'error',
     };
 

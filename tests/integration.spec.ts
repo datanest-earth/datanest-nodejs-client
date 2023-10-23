@@ -31,14 +31,13 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(dataPage2.meta.current_page).equals(2);
     });
 
-    it('POST v1/projects - Create project', async () => {
+    it('Create, get, patch and archive', async () => {
         const client = new DatanestClient();
         const response = await client.post('v1/projects', {
             project_number: 'test-' + Math.random().toString(36).substring(7),
             project_name: 'My project',
             project_client: 'My client',
             address_country: 'GB',
-            address_state: null,
         });
 
         expect(response.status).equals(201);
@@ -47,6 +46,30 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         expect(data.project_link).is.a('string');
         expect(data.project.uuid).is.a('string');
+
+        const responseGet = await client.get('v1/projects/' + data.project.uuid);
+
+        expect(responseGet.status).equals(200);
+
+        const dataGet = await responseGet.json();
+        expect(data).toEqual(dataGet);
+
+        const responsePatch = await client.patch('v1/projects/' + data.project.uuid, {
+            project_name: 'My project 2',
+        });
+
+        expect(responsePatch.status).equals(200);
+        const dataPatch = await responsePatch.json();
+        expect(dataPatch.project.project_number).equals(dataGet.project.project_number);
+        expect(dataPatch.project.project_name).equals('My project 2');
+
+        // Only the project_name and updated_at should have changed
+        dataGet.project.project_name = 'My project 2';
+        dataGet.project.updated_at = dataPatch.project.updated_at;
+        expect(dataPatch).toEqual(dataGet);
+
+        const responseDelete = await client.delete('v1/projects/' + data.project.uuid + "/archive");
+        expect(responseDelete.status).equals(200);
     });
 
 } else {

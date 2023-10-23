@@ -52,6 +52,10 @@ We recommend using `Accept` and `Content-Type` headers with `application/json` v
 
 [See Client Implementation in Node.js](../src/index.ts)
 
+## POSTMAN
+
+[See Postman Collection](./postman/)
+
 ## Model Type Definitions
 
 See Typescript type definitions:
@@ -63,6 +67,8 @@ See Typescript type definitions:
 
 Returns a list of projects.
 The `page` query parameter is optional.
+
+`archived=true` query parameter can be added to return archived projects, instead of only active projects.
 
 #### Response Body
 
@@ -78,7 +84,7 @@ The `page` query parameter is optional.
 }
 ```
 
-### GET /v1/projects/:id
+### GET /v1/projects/:uuid
 
 Returns a single project.
 
@@ -86,7 +92,21 @@ Returns a single project.
 
 ```json
 {
-    "project": Project
+    "project": Project,
+    "project_link": "https://app.datanest.earth/open-project/{uuid}"
+}
+```
+
+### DELETE /v1/projects/:uuid/archive
+
+Archive a project to hide it from users. This is a soft delete, the project will be fully deleted after 6 months by default.
+
+#### Response Body
+
+```json
+{
+    "message" => "Project archived",
+    "project": Project,
 }
 ```
 
@@ -99,7 +119,7 @@ Creates a new project.
 ```json
 {
     "project": Project,
-    "project_link": "https://app.datanest.earth/open-project/{id}"
+    "project_link": "https://app.datanest.earth/open-project/:uuid"
 }
 ```
 - [Project](../src/projects.ts)
@@ -109,7 +129,7 @@ Creates a new project.
 ```json
 {
     "project": Project,
-    "project_link": "https://app.datanest.earth/open-project/{id}"
+    "project_link": "https://app.datanest.earth/open-project/:uuid"
 }
 ```
 - [Project](../src/projects.ts)

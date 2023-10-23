@@ -1,0 +1,343 @@
+{
+    "info": {
+        "_postman_id": "28d3ee64-32fb-4b35-8f61-3ce55f3ba9dc",
+        "name": "Datanest Public API",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_exporter_id": "30686985"
+    },
+    "item": [
+        {
+            "name": "Get projects",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "x-signature",
+                        "value": "{{signature}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "x-api-key",
+                        "value": "{{api_key}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "x-timestamp",
+                        "value": "{{timestamp}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "https://staging.datanest.earth/api/v1/projects?page={{page}}",
+                    "protocol": "https",
+                    "host": [
+                        "staging",
+                        "datanest",
+                        "earth"
+                    ],
+                    "path": [
+                        "api",
+                        "v1",
+                        "projects"
+                    ],
+                    "query": [
+                        {
+                            "key": "page",
+                            "value": "{{page}}"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Get a project",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "x-signature",
+                        "value": "{{signature}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "x-api-key",
+                        "value": "{{api_key}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "x-timestamp",
+                        "value": "{{timestamp}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "https://staging.datanest.earth/api/v1/projects/:uuid",
+                    "protocol": "https",
+                    "host": [
+                        "staging",
+                        "datanest",
+                        "earth"
+                    ],
+                    "path": [
+                        "api",
+                        "v1",
+                        "projects",
+                        ":uuid"
+                    ],
+                    "variable": [
+                        {
+                            "key": "uuid",
+                            "value": "",
+                            "description": "The project's UUID"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Archive a project (soft delete)",
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    {
+                        "key": "x-signature",
+                        "value": "{{signature}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "x-api-key",
+                        "value": "{{api_key}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "x-timestamp",
+                        "value": "{{timestamp}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "https://staging.datanest.earth/api/v1/projects/:uuid/archive",
+                    "protocol": "https",
+                    "host": [
+                        "staging",
+                        "datanest",
+                        "earth"
+                    ],
+                    "path": [
+                        "api",
+                        "v1",
+                        "projects",
+                        ":uuid",
+                        "archive"
+                    ],
+                    "variable": [
+                        {
+                            "key": "uuid",
+                            "value": ""
+                        }
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Update a project",
+            "request": {
+                "method": "PATCH",
+                "header": [
+                    {
+                        "key": "x-signature",
+                        "value": "{{signature}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "x-api-key",
+                        "value": "{{api_key}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "x-timestamp",
+                        "value": "{{timestamp}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"project_client\": \"updated project client\"\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "https://staging.datanest.earth/api/v1/projects/:uuid",
+                    "protocol": "https",
+                    "host": [
+                        "staging",
+                        "datanest",
+                        "earth"
+                    ],
+                    "path": [
+                        "api",
+                        "v1",
+                        "projects",
+                        ":uuid"
+                    ],
+                    "variable": [
+                        {
+                            "key": "uuid",
+                            "value": ""
+                        }
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Create project",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "x-signature",
+                        "value": "{{signature}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "x-api-key",
+                        "value": "{{api_key}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "x-timestamp",
+                        "value": "{{timestamp}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                    },
+                    {
+                        "key": "",
+                        "value": "",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"project_number\": \"test\",\n    \"project_client\": \"Client\",\n    \"project_name\": \"Project name\",\n    \"project_address\": \"123 Test Street\",\n    \"address_country\": \"GB\"\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "https://staging.datanest.earth/api/v1/projects",
+                    "protocol": "https",
+                    "host": [
+                        "staging",
+                        "datanest",
+                        "earth"
+                    ],
+                    "path": [
+                        "api",
+                        "v1",
+                        "projects"
+                    ]
+                }
+            },
+            "response": []
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    "var timestamp = Math.floor(new Date().getTime() / 1000);",
+                    "var secret = pm.collectionVariables.get('api_secret');",
+                    "var url = pm.variables.replaceIn(pm.request.url.toString());",
+                    "var method = pm.request.method.toUpperCase();",
+                    "",
+                    "var content = method + ':' + url;",
+                    "if (pm.request.body) {",
+                    "    var body = pm.request.body.toString();",
+                    "    if (body.trim() !== \"\") {",
+                    "        content += ':' + pm.request.body;",
+                    "    }",
+                    "}",
+                    "content += ':' + timestamp;",
+                    "",
+                    "console.info('signature content', content);",
+                    "",
+                    "var signature = CryptoJS.HmacSHA256(content, secret);",
+                    "",
+                    "pm.collectionVariables.set(\"signature\",signature.toString());",
+                    "pm.collectionVariables.set('timestamp', timestamp);"
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "api_key",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "api_secret",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "signature",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "timestamp",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "page",
+            "value": "1",
+            "type": "string"
+        }
+    ]
+}
