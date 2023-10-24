@@ -2,6 +2,7 @@
     "info": {
         "_postman_id": "28d3ee64-32fb-4b35-8f61-3ce55f3ba9dc",
         "name": "Datanest Public API",
+        "description": "See authentication notes here: [https://github.com/datanest-earth/datanest-nodejs-client/tree/main/docs#readme](https://github.com/datanest-earth/datanest-nodejs-client/tree/main/docs#readme)",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
         "_exporter_id": "30686985"
     },
@@ -146,6 +147,57 @@
                         "projects",
                         ":uuid",
                         "archive"
+                    ],
+                    "variable": [
+                        {
+                            "key": "uuid",
+                            "value": ""
+                        }
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Restore a project",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "x-signature",
+                        "value": "{{signature}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "x-api-key",
+                        "value": "{{api_key}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "x-timestamp",
+                        "value": "{{timestamp}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "https://staging.datanest.earth/api/v1/projects/:uuid/restore",
+                    "protocol": "https",
+                    "host": [
+                        "staging",
+                        "datanest",
+                        "earth"
+                    ],
+                    "path": [
+                        "api",
+                        "v1",
+                        "projects",
+                        ":uuid",
+                        "restore"
                     ],
                     "variable": [
                         {
