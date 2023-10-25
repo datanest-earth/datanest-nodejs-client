@@ -118,5 +118,5 @@ Or in your code:
 import DatanestClient from '@datanest-earth/nodejs-client';
 
 const client = new DatanestClient();
-client.setBaseUrl('https://app.datanest.earth');
+client.setBaseUrl('https://app.datanest.earth/api');
 ```
