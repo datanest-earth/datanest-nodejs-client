@@ -1,8 +1,14 @@
 import DatanestClient, { DatanestResponseError } from "./index";
 
-enum ProjectType {
+export enum ProjectType {
+    /**
+     * Project with Enviro/Evalu8 module enabled
+     */
     PROJECT_TYPE_ENVIRO = 0,
-    PROJECT_TYPE_MAPS = 1,
+    /**
+     * Standard project (previously known as Maps or Figure project)
+     */
+    PROJECT_TYPE_STANDARD = 1,
 }
 
 /**
@@ -11,11 +17,11 @@ enum ProjectType {
 type Timestamp = string;
 
 /**
- * ISO 3166-1 alpha-2 country code
+ * Supported ISO 3166-1 alpha-2 country codes
  */
-type Country2CharCode = 'NZ' | 'GB' | 'US' | 'AU' | 'CA';
+export type Country2CharCode = 'NZ' | 'GB' | 'US' | 'AU' | 'CA';
 
-type MeasurementType = 'metre' | 'feet' | 'inch' | 'mm' | 'cm';
+export type MeasurementType = 'metre' | 'feet' | 'inch' | 'mm' | 'cm';
 
 type UUID = string;
 
@@ -65,6 +71,9 @@ type Project = {
     address_city: null | string,
     address_state: null | string,
 
+    /**
+     * Supported ISO 3166-1 alpha-2 country codes
+     */
     address_country: Country2CharCode,
     address_postcode: null | string,
     measurement_type: MeasurementType | null,
@@ -88,7 +97,13 @@ type ProjectCreationData = {
     project_address: string;
 
     /**
-     * ISO 3166-1 alpha-2 country code
+     * Project type: Enviro = 0 or Standard = 1
+     * @default 1
+     */
+    project_type?: ProjectType;
+
+    /**
+     * Supported ISO 3166-1 alpha-2 country codes
      */
     address_country: Country2CharCode;
 };

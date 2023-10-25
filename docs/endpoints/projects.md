@@ -2,12 +2,14 @@
 
 See [Authentication](../readme.md#authentication) for details on how to authenticate requests.
 
-### GET /v1/projects?page=1
+### GET /v1/projects?page=1&latest=true
 
 Returns a list of projects.
-The `page` query parameter is optional.
 
-`archived=true` query parameter can be added to return archived projects, instead of only active projects.
+Optional Query Parameters:
+- `page=2` number of page starting at 1
+- `latest=true` show the latest projects first
+- `archived=true` to return archived projects, instead of only active projects
 
 #### Response Body
 
@@ -26,6 +28,9 @@ The `page` query parameter is optional.
 ### GET /v1/projects/:uuid
 
 Returns a single project.
+
+#### Optional Query Parameters
+`?allow-archived=true` to include archived projects.
 
 #### Response Body
 
@@ -70,11 +75,13 @@ Creates a new project.
 
 ```json
 {
-    "project": Project,
-    "project_link": "https://app.datanest.earth/open-project/:uuid"
+    "project_number": "string",
+    "project_name": "string",
+    "project_client": "string",
+    "project_address": "Full address",
 }
 ```
-- [Project](../src/projects.ts)
+See more project fields here: [Project](../../src/projects.ts)
 
 #### Response Body
 
@@ -84,4 +91,5 @@ Creates a new project.
     "project_link": "https://app.datanest.earth/open-project/:uuid"
 }
 ```
-- [Project](../src/projects.ts)
+
+See more project fields here: [Project](../../src/projects.ts)
