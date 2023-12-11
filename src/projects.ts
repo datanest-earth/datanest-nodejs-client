@@ -1,4 +1,4 @@
-import DatanestClient, { DatanestResponseError } from "./index";
+import DatanestClient, { Country2CharCode, DatanestResponseError, MeasurementType, PaginatedResponse, Timestamp, UUID } from "./index";
 
 export enum ProjectType {
     /**
@@ -10,20 +10,6 @@ export enum ProjectType {
      */
     PROJECT_TYPE_STANDARD = 1,
 }
-
-/**
- * ISO 8601 date string
- */
-type Timestamp = string;
-
-/**
- * Supported ISO 3166-1 alpha-2 country codes
- */
-export type Country2CharCode = 'NZ' | 'GB' | 'US' | 'AU' | 'CA';
-
-export type MeasurementType = 'metre' | 'feet' | 'inch' | 'mm' | 'cm';
-
-type UUID = string;
 
 /**
  * A Datanest Project
@@ -106,49 +92,6 @@ type ProjectCreationData = {
      * Supported ISO 3166-1 alpha-2 country codes
      */
     address_country: Country2CharCode;
-};
-
-type PaginatedResponse<T> = {
-    data: T[],
-
-    /**
-     * @deprecated This may not be permanent
-     */
-    links: {
-        first: string,
-        last: string,
-        prev: null | string,
-        next: null | string,
-    },
-
-    meta: {
-        /**
-         * @deprecated This may not be permanent
-         */
-        links: {
-            url: null | string, label: string, active: boolean,
-        }[],
-
-        /**
-         * Current page number
-         */
-        current_page: number;
-
-        /**
-         * Last page number
-         */
-        last_page: number;
-
-        /**
-         * Number of items per page
-         */
-        per_page: number;
-
-        /**
-         * Total number of items
-         */
-        total: number;
-    },
 };
 
 /**
