@@ -606,6 +606,124 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Integrations API",
+			"item": [
+				{
+					"name": "Setup an Integration",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-signature",
+								"value": "{{signature}}",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-timestamp",
+								"value": "{{timestamp}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "api_key",
+									"value": "api-key-example-123131333",
+									"description": "The API key for the integration",
+									"type": "text"
+								},
+								{
+									"key": "service_url",
+									"value": "https://staging.myintegration.com/api",
+									"description": "Optionally override the base url for staging or bespoke deployments",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/integrations/:integrationKey",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"integrations",
+								":integrationKey"
+							],
+							"variable": [
+								{
+									"key": "integrationKey",
+									"value": ""
+								}
+							]
+						},
+						"description": "Setups or replaces integration keys for a specific integration of the Datanest Account indentified by the API Key."
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Integration",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-signature",
+								"value": "{{signature}}",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "x-timestamp",
+								"value": "{{timestamp}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/integrations/:integrationKey",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"integrations",
+								":integrationKey"
+							],
+							"variable": [
+								{
+									"key": "integrationKey",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [

@@ -1,10 +1,12 @@
 import { createHmac } from 'node:crypto';
 import * as projects from './projects';
 import * as gather from './gather';
+import * as integrations from './integrations';
 
 export {
     gather,
     projects,
+    integrations,
 }
 
 export default class DatanestClient {
