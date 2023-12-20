@@ -4,4 +4,4 @@ To get started quickly you can import the example [Postman Collection Config](./
 
 In the collection's variables, set your current value for `api_key` and `api_secret`.
 
-See the collection's Pre-request Script for an example of how to generate the `X-Signature` and `X-Timestamp` headers.
+See the collection's `Pre-request Script` for an example of how to generate the `X-Signature` and `X-Timestamp` headers.
