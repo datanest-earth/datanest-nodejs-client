@@ -11,11 +11,11 @@ If you need help please contact [hello@datanest.earth](mailto:hello@datanest.ear
 
 ## Obtaining API Keys
 
-Your Datanest Account Manager can generate API keys, from the Company Management page, API Keys section.
+Your Datanest Account Manager can generate API keys, from the Company Settings page, API Keys section.
 <details>
 <summary>Show Screenshot</summary>
 
-![API Key Management section](./docs/media/api-key-management.png)
+![API Key management section](./docs/media/api-key-management.png)
 
 </details>
 
@@ -60,7 +60,7 @@ Datanest's API uses API keys to authenticate requests along with a HMAC signatur
 
 ## Getting Started
 
-The client will automatically look for a local `.env` file to get the API key and secret.
+The client will automatically look for env variables to get the API key and secret. You can use the [dotenv](https://www.npmjs.com/package/dotenv) package to parse a `.env` file.
 
 Place your API key in a .env
 ```env
