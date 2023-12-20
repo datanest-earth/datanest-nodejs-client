@@ -7,6 +7,7 @@ export {
     gather,
     projects,
     integrations,
+    DatanestClient,
 }
 
 export default class DatanestClient {

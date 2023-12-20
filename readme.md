@@ -1,12 +1,11 @@
 # Datanest API Client for Node.js
 
-Please see the [Datanest API documentation](docs/readme.md) for more information.
-
 This is a Node JS implementation of [datanest.earth](https://datanest.earth)'s REST API client.
 You should use this lightweight package to easily start using the API.
 
-**If you are not using Node.js** you can use this package as [an implementation example](https://github.com/search?q=repo%3Adatanest-earth%2Fdatanest-nodejs-client+DatanestClient&type=code). Or see the [API documentation](docs/readme.md) for more information.
+**If you are not using Node.js** you can use this package as [an implementation example](https://github.com/search?q=repo%3Adatanest-earth%2Fdatanest-nodejs-client+DatanestClient&type=code).
 
+Please see the [Datanest API documentation](docs/readme.md) for more information.
 If you need help please contact [hello@datanest.earth](mailto:hello@datanest.earth) for technical support.
 
 ## Obtaining API Keys
@@ -90,6 +89,14 @@ const client = new DatanestClient('your-api-key', 'your-api-secret');
 ```
 </details>
 
+<details>
+<summary>Require for CommonJS projects</summary>
+
+```js
+const { DatanestClient, projects } = require("@datanest-earth/nodejs-client");
+```
+</details>
+
 ### Make GET, POST, PATCH, PUT, DELETE requests
 
 The client exposes the following methods to make requests to the API.
@@ -138,6 +145,28 @@ Function & Type Definitions:
 - [Integrations API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/0.2.5/modules/integrations.html)
 
 You can also see the [TypeScript source code](./src/)
+
+<details>
+<summary>Example</summary>
+
+```ts
+import DatanestClient, { projects as projectEndpoints } from '@datanest-earth/nodejs-client';
+import dotenv from 'dotenv';
+
+// Load .env
+dotenv.config();
+
+async function listProjects() {
+  const client = new DatanestClient();
+  client.setClientId("Company A Version 1");
+  const page = 1;
+  const projects = await projectEndpoints.listProjects(client, page);
+  console.log(projects);
+}
+
+listProjects();
+```
+</details>
 
 ## Postman
 

@@ -1,6 +1,6 @@
 {
   "name": "@datanest-earth/nodejs-client",
-  "version": "0.2.5",
+  "version": "0.3.0",
   "description": "Datanest API Client to easily create signed requests",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -12,10 +12,18 @@
     "index.mjs",
     "readme.md"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts --target node18",
+    "build": "tsup src/index.ts --format cjs,esm --dts --target node18 --no-splitting",
     "test": "vitest run",
     "test:dev": "vitest",
+    "types": "tsc --noEmit",
     "clean": "rm -r dist"
   },
   "repository": {
@@ -42,7 +50,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.8.7",
-    "tsup": "^7.2.0",
+    "tsup": "^8.0.0",
     "typescript": "^5.2.2",
     "vitest": "^0.34.6"
   }
