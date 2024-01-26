@@ -15,6 +15,76 @@ You can [learn more about Data Events here](https://app.datanest.earth/support/4
 
 ## Webhook Payloads
 
+Schema:
+```ts
+{ 
+    event: Event;
+    trigger: Trigger;
+    project: Project;
+    project_link: string;
+    item: Item | null;
+    file: File | null;
+    document: Document | null;
+}
+```
+
+### Event
+```ts
+{
+    id: number;
+    history_id: number;
+    label: string;
+}
+```
+
+### Trigger
+```ts
+{
+    id: number;
+    type: number;
+    reason: string;
+    reason_long: string;
+    payload: {
+        item_id?: number;
+        trigger_type?: number;
+        trigger_id?: number;
+        event_history_id?: number;
+        document_id?: number;
+        file_id?: string;
+    };
+}
+```
+
+### File
+```ts
+{
+    id: string;
+    display_name: string;
+    path: string;
+    size_mb: number;
+    link: string;
+    temporary_s3_link?: string;
+}
+```
+
+### Document
+```ts
+{
+    id: number;
+    type: number;
+    status: number;
+    has_been_exported: boolean;
+    name: string;
+    link: string;
+}
+```
+
+### Project
+[See Projects API](../endpoints/projects.md)
+
+### Item
+[See Gather API](../endpoints/gather.md)
+
 <details>
 <summary>Example 1: Gather App Item Updated or Created</summary>
 
@@ -202,13 +272,17 @@ The file, document and project `link`s are for the Datanest web application inte
         "id": 5113,
         "type": 0,
         "status": 0,
-        "has_been_exported": 1,
+        "has_been_exported": true,
         "name": "Document (1)",
         "link": "http:\/\/datanest.localhost:8080\/open-project\/005056a4-ecd7-4ded-87bc-dad952efe1a5?redirect=%2Fdeliver%2Fword%2Feditor%2F5113"
     }
 }
 ```
 </details>
+
+## Downloading Files
+
+When a `file` object is provided in the payload, there will be `temporary_s3_link` with a 10 minute expiration to download the file.
 
 ## Tips to prevent infinite loops
 
