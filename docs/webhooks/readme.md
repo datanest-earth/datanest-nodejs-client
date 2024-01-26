@@ -207,4 +207,4 @@ You can [learn more about Data Events here](https://app.datanest.earth/support/4
 
 ## Tips to prevent infinite loops
 
-You can use Data Event Conditions to check for example, a dropdown is set to "Ready for Review". The first action could be a "Set Gather Value" to set the dropdown to "Sent for Review", before the second action could be a "Send Email" action. This would prevent the email from being sent twice, especially if someone is making rapid changes during data collection. For the user to resend the email they can manually set it back to "Ready for Review" for the Data Event to trigger again.
+You can use Data Event Conditions to check, for example, a dropdown is set to "Ready for Review". The first action could be a "Set Gather Value" to set the dropdown to "Sent for Review", before the second action could be a "Send Email" action. This would prevent the email from being sent twice, especially if someone is making rapid changes during data collection. For the user to resend the email they can manually set it back to "Ready for Review" for the Data Event to trigger again.
