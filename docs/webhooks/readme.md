@@ -124,24 +124,27 @@ You can [learn more about Data Events here](https://app.datanest.earth/support/4
 <details>
 <summary>Example 2: Document Finalized</summary>
 
+When a `file` is provided, there will be `temporary_s3_link` with a 10 minute expiration to download the file.
+The file, document and project `link`s are for the Datanest web application intended for end-users.
+
 ```json
 {
     "event": {
         "id": 39,
-        "history_id": 336,
+        "history_id": 342,
         "label": "Finalized test"
     },
     "trigger": {
-        "id": 129,
+        "id": 143,
         "type": 6,
         "reason": "Auto Doc Finalized",
         "reason_long": "Auto Doc Finalized",
         "payload": {
-            "trigger_id": 129,
+            "trigger_id": 143,
             "trigger_type": 6,
             "document_id": 5113,
-            "file_id": "9b2e5304-bf60-4350-aad8-bdc3e64b7e6a",
-            "event_history_id": 336
+            "file_id": "9b2e7091-22bc-4a25-b9d7-d6701a50387a",
+            "event_history_id": 342
         }
     },
     "project": {
@@ -182,16 +185,18 @@ You can [learn more about Data Events here](https://app.datanest.earth/support/4
         "measurement_type": "inch",
         "timezone": "America\/Los_Angeles",
         "enviro_processed_at": null,
-        "updated_at": "2024-01-26T01:25:34.000000Z",
+        "updated_at": "2024-01-26T02:49:45.000000Z",
         "created_at": "2024-01-24T03:48:57.000000Z"
     },
     "project_link": "http:\/\/datanest.localhost:8080\/open-project\/005056a4-ecd7-4ded-87bc-dad952efe1a5",
     "item": null,
     "file": {
-        "id": "9b2e5304-bf60-4350-aad8-bdc3e64b7e6a",
-        "display_name": "Data Event Webhooks - Document (1) - Claim-3 - #010.docx",
+        "id": "9b2e7091-22bc-4a25-b9d7-d6701a50387a",
+        "display_name": "Data Event Webhooks - Document (1) - Claim-6 - #013.docx",
         "path": "Auto Docs\/Document (1)",
-        "link": "http:\/\/datanest.localhost:8080\/open-project\/005056a4-ecd7-4ded-87bc-dad952efe1a5?redirect=%2Ffiles%2F9b2e5304-bf60-4350-aad8-bdc3e64b7e6a"
+        "size_mb": 0.028589248657227,
+        "link": "http:\/\/datanest.localhost:8080\/open-project\/005056a4-ecd7-4ded-87bc-dad952efe1a5?redirect=%2Ffile%2F9b2e7091-22bc-4a25-b9d7-d6701a50387a",
+        "temporary_s3_link": "https:\/\/datanest-staging.s3.ap-southeast-2.amazonaws.com\/files\/...(ommitted)"
     },
     "document": {
         "id": 5113,
