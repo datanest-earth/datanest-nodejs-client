@@ -1,9 +1,9 @@
 import { it, expect } from 'vitest';
 import dotenv from 'dotenv';
 import DatanestClient from '../src';
-import { User, getCompanyUsers, getProjectTeam, inviteCompanyUser } from '../src/user';
-import { addExternalUserToProject, addProjectTeamMember, removeExternalUserToProject, removeProjectTeamMember } from '../src/teams';
-import { Project, ProjectType, archiveProject, createProject } from '../src/projects';
+import { User, getCompanyUsers, inviteCompanyUser } from '../src/user';
+import { addExternalUserToProject, getProjectTeam, addProjectTeamMember, removeExternalUserToProject, removeProjectTeamMember } from '../src/teams';
+import { Project, ProjectType, createProject } from '../src/projects';
 
 dotenv.config();
 

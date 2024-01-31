@@ -57,7 +57,11 @@ bun add @datanest-earth/nodejs-client
 
 Datanest's API uses API keys to authenticate requests along with a HMAC signature [(see docs)](./docs/readme.md) [(see implementation example.)](https://github.com/search?q=repo%3Adatanest-earth/datanest-nodejs-client%20signRequest&type=code) The signature may be tricky to implement, so we recommend using this package to get started.
 
-## Getting Started
+## Full REST API Documentation
+  
+#### See the [Postman Documentation](docs/postman/readme.md)
+
+## Getting Started with Node.js
 
 The client will automatically look for env variables to get the API key and secret. You can use the [dotenv](https://www.npmjs.com/package/dotenv) package to parse a `.env` file.
 
@@ -124,7 +128,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 async function listProjects() {
-    const client = new DatanestClient();
+  const client = new DatanestClient();
     client.setClientId("Company A Version 1");
     const response = await client.get('v1/projects');
     const projects = await response.json();
@@ -135,14 +139,18 @@ listProjects();
 ```
 </details>
 
-## API Endpoints and Types
+## Node API Endpoints and Types
 
 This package includes endpoints with type definitions.
 
 Function & Type Definitions:
-- [Projects API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/0.2.5/modules/projects.html)
-- [Gather API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/0.2.5/modules/gather.html)
-- [Integrations API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/0.2.5/modules/integrations.html)
+- [Projects API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/projects.html)
+- [Gather API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/gather.html)
+- [Integrations API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/integrations.html)
+- [Company Users API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/users.html)
+- [Project Teams API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/teams.html)
+
+
 
 You can also see the [TypeScript source code](./src/)
 
@@ -167,10 +175,6 @@ async function listProjects() {
 listProjects();
 ```
 </details>
-
-## Postman
-
-See the [Postman Collection](docs/postman/readme.md)
 
 ## Testing
 

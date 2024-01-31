@@ -4,18 +4,17 @@ import { User } from "./user";
 /**
  * Get team members, external users and manager of a project
  * @param client Datanest REST API Client
- * @param page Page number
- * @param archived Show archived projects instead?
+ * @param projectUuid UUID of the project
  * @throws DatanestResponseError Request HTTP server or validation error
  * @returns 
  */
-export async function getProjectTeam(client: DatanestClient, page = 1, archived = false) {
-    const response = await client.get('v1/projects', { archived, page });
+export async function getProjectTeam(client: DatanestClient, projectUuid: UUID) {
+    const response = await client.get('v1/projects/' + projectUuid + '/teams');
 
     const data = await response.json();
     return data as {
         project_manager: User,
-        team_members: User[],
+        members: User[],
         external_users: User[],
     }
 }

@@ -34,37 +34,3 @@ export async function deleteCompanyUser(client: DatanestClient, userUuid: UUID):
     const data = await response.json();
     return data;
 }
-
-/**
- * Get team members, external users and manager of a project
- * @param client Datanest REST API Client
- * @param page Page number
- * @param archived Show archived projects instead?
- * @throws DatanestResponseError Request HTTP server or validation error
- * @returns 
- */
-export async function getProjectTeam(client: DatanestClient, projectUuid: UUID) {
-    const response = await client.get('v1/projects/' + projectUuid + '/teams');
-
-    const data = await response.json();
-    return data as {
-        project_manager: User,
-        members: User[],
-        external_users: User[],
-    }
-}
-
-/**
- * Update project manager, team members and external invites
- * @param client 
- * @param projectUuid 
- * @throws DatanestResponseError Request HTTP server or validation error
- * @returns 
- */
-export async function updateProjectTeam(client: DatanestClient, projectUuid: UUID, teamData: any) {
-
-}
-
-export async function removeProjectTeamMember(client: DatanestClient, projectUuid: UUID, teamData: any) {
-
-}
