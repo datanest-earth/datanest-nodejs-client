@@ -36,6 +36,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(updatedUser.initials).equals('TU');
 
         await deleteCompanyUser(client, user.uuid);
+    }, {
+        timeout: 15000,
     });
 
 } else {

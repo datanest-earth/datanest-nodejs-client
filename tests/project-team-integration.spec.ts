@@ -70,6 +70,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users2.members.find(u => u.email === randomEmail)).to.be.undefined;
         expect(users.external_users.find(u => u.email === randomEmail)).to.be.undefined;
 
+    }, {
+        timeout: 15000,
     });
 
     it('Invite external user, add to project, remove from project', async () => {
