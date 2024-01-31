@@ -87,6 +87,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users.members.find(u => u.email === randomEmail)).to.be.undefined;
 
         await removeExternalUserToProject(client, testProject.uuid, externalUser.uuid);
+    }, {
+        timeout: 15000,
     });
 
 } else {
