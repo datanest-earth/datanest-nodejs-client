@@ -1,7 +1,6 @@
 import { it, expect, beforeAll } from 'vitest';
 import dotenv from 'dotenv';
 import DatanestClient, { gather, projects } from '../src';
-import { ProjectType } from '../src/projects';
 
 dotenv.config();
 

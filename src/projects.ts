@@ -14,7 +14,7 @@ export enum ProjectType {
 /**
  * A Datanest Project
  */
-type Project = {
+export type Project = {
     uuid: UUID,
     project_number: string,
     project_name: string,
