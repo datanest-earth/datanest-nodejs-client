@@ -50,6 +50,45 @@ export type Item = {
 
 export type ItemWithDetails = Item & Record<string, any | any[]>;
 
+export type Document = {
+    id: number;
+    project_uuid: UUID;
+    /**
+     * User who created the Document
+     */
+    creator_uuid: UUID;
+    name: string;
+    type: 'word' | 'excel';
+    status: number;
+    status_updated_at: string | null;
+    has_been_exported: boolean;
+    next_export_number: number;
+    /**
+     * Template file UUID
+     */
+    file_uuid: UUID;
+    /**
+     * Template file name
+     */
+    file_name: string;
+    errors: {
+        [key: number]: {
+            message?: string,
+            command?: string,
+        };
+    } | null;
+};
+
+export type DataEvent = {
+    id: number;
+    project_uuid: UUID;
+    label: string;
+    is_enabled: boolean;
+    created_at: Timestamp;
+    updated_at: Timestamp;
+    deleted_at: Timestamp | null;
+};
+
 /**
  * List apps in project with pagination
  * @param client Datanest REST API Client
@@ -126,4 +165,52 @@ export async function getAppSchema(client: DatanestClient, appUuid: string) {
 
     const data = await response.json();
     return data as App;
+}
+
+/**
+ * List shared app groups, app groups can include multiple Apps, Data Events and Auto Docs
+ * @param client
+ * @param page
+ * @returns 
+ */
+export async function listSharedAppGroups(client: DatanestClient, page = 1) {
+    const response = await client.get('v1/apps/share-groups', { page });
+
+    const data = await response.json();
+    return data as PaginatedResponse<{
+        /**
+         * Unique group identifier for shared app group, used for importing
+         */
+        share_group: string;
+        group_title: string;
+        /**
+         * Scope of the shared app group
+         */
+        shareable_type: string;
+        group_description: string | null;
+        /**
+         * Group icon URL as a temporary S3 URL
+         */
+        icon_url: string;
+
+        apps: App[];
+        documents: Document[];
+        data_events: DataEvent[];
+    }>;
+}
+
+/**
+ * Import shared app group, with its accompanying Apps, Data Events and Auto Docs
+ * @param client
+ * @param projectUuid
+ * @param shareGroup
+ * @returns 
+ */
+export async function importAppGroup(client: DatanestClient, projectUuid: UUID, shareGroup: string) {
+    const response = await client.post('v1/projects/' + projectUuid + '/apps/import-share-group', {
+        share_group: shareGroup,
+    });
+
+    await response.json();
+    return true;
 }
