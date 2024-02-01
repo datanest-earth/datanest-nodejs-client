@@ -72,6 +72,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(sharedAppGroups.data[0].group_title).is.a('string');
 
         await gather.importAppGroup(client, projectUuid, sharedAppGroups.data[0].share_group);
+    }, {
+        timeout: 15000,
     });
 
 } else {
