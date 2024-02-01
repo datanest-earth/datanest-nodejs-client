@@ -63,6 +63,19 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(appSchema.title).is.a('string');
     });
 
+    it('Can list and import shared app group', async () => {
+        const client = new DatanestClient();
+        const sharedAppGroups = await gather.listSharedAppGroups(client);
+
+        expect(sharedAppGroups.data).is.an('array');
+        expect(sharedAppGroups.data[0].share_group).is.a('string');
+        expect(sharedAppGroups.data[0].group_title).is.a('string');
+
+        await gather.importAppGroup(client, projectUuid, sharedAppGroups.data[0].share_group);
+    }, {
+        timeout: 15000,
+    });
+
 } else {
     it('Skipping gather integration tests', () => { });
     console.warn('[WARN] Skipping gather integration tests because DATANEST_API_KEY, DATANEST_API_SECRET or DATANEST_API_BASE_URL is not set.');
