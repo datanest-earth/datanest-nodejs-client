@@ -25,10 +25,10 @@ You can provide the address components via the following fields:
 You may include a `project_address` with the full address, or it will be constructed from the components above.
 
 #### Option C: Latitude and Longitude
-`latitude` and `longitude` can be used to specify the location of the project. This is useful when the address is not known.
+`latitude` and `longitude` can be used to specify the location of the project. This is useful when the address is not known, or you do not have it broken down into components.
 If you do not provide an address the system will attempt to reverse geocode the lat/long to get an address. The address will not be overwritten.
 
-If you do not provide an address, the lat/long can be looked up. 
+If you provide an address, the lat/long can be looked up. 
 
 ### GET /v1/projects?page=1&latest=true
 
