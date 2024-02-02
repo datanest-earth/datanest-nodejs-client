@@ -76,6 +76,42 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         timeout: 15000,
     });
 
+    it('Can create, edit and delete Gather Items', async () => {
+        const client = new DatanestClient();
+        const sharedAppGroups = await gather.listSharedAppGroups(client);
+
+        await gather.importAppGroup(client, projectUuid, sharedAppGroups.data[0].share_group);
+        // We need to get the imported app's UUID
+        // We cannot use a master app UUID, in another project
+        const apps = await gather.listProjectApps(client, projectUuid);
+
+        const itemDetails = await gather.createGatherItem(client, projectUuid, apps.apps[0].uuid, {
+            title: "Test Gather Item",
+            some_nonsense_section: {
+                some_nonsense_field: "Some nonsense value"
+            }
+        });
+
+        expect(itemDetails.id).is.a('number');
+        expect(itemDetails.title).equals("Test Gather Item");
+        expect(itemDetails.skipped_sections[0]).equals("some_nonsense_section");
+        expect(itemDetails.skipped_fields).is.an('array');
+
+        const updatedItemDetails = await gather.updateGatherItem(client, projectUuid, itemDetails.id, {
+            title: "Test Gather Item Updated",
+            some_nonsense_section: {
+                some_nonsense_field: "Some nonsense value updated"
+            }
+        });
+
+        expect(updatedItemDetails.id).equals(itemDetails.id);
+        expect(updatedItemDetails.title).equals("Test Gather Item Updated");
+        expect(updatedItemDetails.skipped_sections[0]).equals("some_nonsense_section");
+        expect(updatedItemDetails.skipped_fields).is.an('array');
+
+        await gather.deleteItem(client, projectUuid, itemDetails.id);
+    })
+
 } else {
     it('Skipping gather integration tests', () => { });
     console.warn('[WARN] Skipping gather integration tests because DATANEST_API_KEY, DATANEST_API_SECRET or DATANEST_API_BASE_URL is not set.');

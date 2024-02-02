@@ -50,6 +50,14 @@ export type Item = {
 
 export type ItemWithDetails = Item & Record<string, any | any[]>;
 
+export type ItemUpdatableData = {
+    title?: string;
+    lab_title?: string | null;
+    original_title?: string | null;
+    latitude?: null | number;
+    longitude?: null | number;
+}
+
 export type Document = {
     id: number;
     project_uuid: UUID;
@@ -210,6 +218,62 @@ export async function importAppGroup(client: DatanestClient, projectUuid: UUID, 
     const response = await client.post('v1/projects/' + projectUuid + '/apps/import-share-group', {
         share_group: shareGroup,
     });
+
+    await response.json();
+    return true;
+}
+
+export type ItemUpdateMeta = {
+    /**
+     * List of skipped section keys that were not found in the app.
+     */
+    skipped_sections: string[];
+    /**
+     * List of skipped field keys that were not found in the app.
+     */
+    skipped_fields: string[];
+};
+
+/**
+ * Create an Item with Gather Sections and Fields
+ * @param client 
+ * @param projectUuid 
+ * @param appUuid 
+ * @param data 
+ * @returns 
+ */
+export async function createGatherItem(client: DatanestClient, projectUuid: UUID, appUuid: UUID, data: ItemUpdatableData & Record<string, any>) {
+    data.app_uuid = appUuid;
+    const response = await client.post('v1/projects/' + projectUuid + '/items', data);
+
+    const responseData = await response.json();
+    return responseData as ItemWithDetails & ItemUpdateMeta;
+}
+
+/**
+ * Update an Item with Gather Sections and Fields
+ * @param client 
+ * @param projectUuid 
+ * @param itemId 
+ * @param data 
+ * @returns 
+ */
+export async function updateGatherItem(client: DatanestClient, projectUuid: UUID, itemId: number, data: ItemUpdatableData & Record<string, any>) {
+    const response = await client.patch('v1/projects/' + projectUuid + '/items/' + itemId, data);
+
+    const responseData = await response.json();
+    return responseData as ItemWithDetails & ItemUpdateMeta;
+}
+
+/**
+ * Delete a Gather Item
+ * @param client 
+ * @param projectUuid 
+ * @param itemId 
+ * @returns 
+ */
+export async function deleteItem(client: DatanestClient, projectUuid: UUID, itemId: number) {
+    const response = await client.delete('v1/projects/' + projectUuid + '/items/' + itemId);
 
     await response.json();
     return true;
