@@ -149,8 +149,7 @@ Function & Type Definitions:
 - [Integrations API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/integrations.html)
 - [Company Users API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/users.html)
 - [Project Teams API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/teams.html)
-
-
+- [Files API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/files.html)
 
 You can also see the [TypeScript source code](./src/)
 
