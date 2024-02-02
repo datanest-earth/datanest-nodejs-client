@@ -2,6 +2,34 @@
 
 See [Authentication](../readme.md#authentication) for details on how to authenticate requests.
 
+## Project Addresses
+
+A `project_country` as a 2-char ISO code is required for project creation.
+
+#### Option A: Full Address with lookup
+
+Providing a full or partial address via `project_address`. This will trigger a lookup to fill in the address fields using best-effort via the Google Places API.
+
+#### Option B: Full Address with components
+
+You can provide the address components via the following fields:
+```js
+'address_street'
+'address_locality'
+'address_city'
+'address_state'
+'address_country'
+'address_postcode'
+```
+
+You may include a `project_address` with the full address, or it will be constructed from the components above.
+
+#### Option C: Latitude and Longitude
+`latitude` and `longitude` can be used to specify the location of the project. This is useful when the address is not known or not precise.
+If you do not provide an address the system will attempt to reverse geocode the lat/long to get an address.
+
+If you provide an address, the lat/long will be used to find an address. The provided address will not be overwritten.
+
 ### GET /v1/projects?page=1&latest=true
 
 Returns a list of projects.
