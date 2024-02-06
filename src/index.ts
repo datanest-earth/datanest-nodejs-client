@@ -4,6 +4,7 @@ import * as gather from './gather';
 import * as integrations from './integrations';
 import * as teams from './teams';
 import * as user from './user';
+import * as files from './files';
 
 export {
     DatanestClient,
@@ -12,6 +13,7 @@ export {
     integrations,
     teams,
     user,
+    files,
 }
 
 export default class DatanestClient {

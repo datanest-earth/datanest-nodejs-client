@@ -71,7 +71,12 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(sharedAppGroups.data[0].share_group).is.a('string');
         expect(sharedAppGroups.data[0].group_title).is.a('string');
 
-        await gather.importAppGroup(client, projectUuid, sharedAppGroups.data[0].share_group);
+        const importedData = await gather.importAppGroup(client, projectUuid, sharedAppGroups.data[0].share_group);
+        expect(importedData.apps).is.an('array');
+        expect(importedData.apps[0].uuid).is.a('string');
+        expect(importedData.apps[0].title).is.a('string');
+        expect(importedData.data_events).is.an('array');
+        expect(importedData.documents).is.an('array');
     }, {
         timeout: 15000,
     });
@@ -110,7 +115,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(updatedItemDetails.skipped_fields).is.an('array');
 
         await gather.deleteItem(client, projectUuid, itemDetails.id);
-    })
+    }, { timeout: 15000 })
 
 } else {
     it('Skipping gather integration tests', () => { });

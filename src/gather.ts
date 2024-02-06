@@ -219,8 +219,11 @@ export async function importAppGroup(client: DatanestClient, projectUuid: UUID, 
         share_group: shareGroup,
     });
 
-    await response.json();
-    return true;
+    return await response.json() as {
+        apps: App[];
+        documents: Document[];
+        data_events: DataEvent[];
+    }
 }
 
 export type ItemUpdateMeta = {

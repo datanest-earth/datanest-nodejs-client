@@ -64,6 +64,10 @@ See Typescript type definitions:
 ## Endpoints
 
 - [Projects API](./endpoints/projects.md)
+- [Files API](./endpoints/files.md)
+- [Gather API](./endpoints/gather.md)
+- [Integrations API](./endpoints/integrations.md)
+- [Teams API](./endpoints/teams.md)
 
 ## Data Event Webhooks
 
