@@ -73,7 +73,7 @@ export async function getProjectFiles(client: DatanestClient, projectUuid: UUID,
  * @throws DatanestResponseError Request HTTP server or validation error
  */
 export async function getProjectFile(client: DatanestClient, projectUuid: UUID, fileUuid: UUID) {
-    const response = await client.get('v1/projects/' + projectUuid + '/files');
+    const response = await client.get('v1/projects/' + projectUuid + '/files/' + fileUuid);
 
     const data = await response.json();
     return data as File & {
