@@ -123,6 +123,7 @@ export async function getProject(client: DatanestClient, projectUuid: string) {
     return data as {
         project: Project;
         project_link: string;
+        collection_link: string;
     };
 }
 
