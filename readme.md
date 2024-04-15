@@ -18,6 +18,8 @@ Your Datanest Account Manager can generate API keys, from the Company Settings p
 
 </details>
 
+> If you cannot see the API Keys section it is possible your subscription does not include API access. Please [contact us to request API access](mailto:hello@datanest.earth?subject=API%20Access%20Request).
+
 ## Requirements
 
 If you wish to use this Node package, you will need to have Node installed on your machine.
@@ -175,7 +177,7 @@ listProjects();
 ```
 </details>
 
-## Testing
+## Testing and Dedicated Hosting Endpoints
 
 You can override the default API endpoint by setting the `DATANEST_API_BASE_URL` environment variable.
 

@@ -1,4 +1,5 @@
 import DatanestClient, { Country2CharCode, DatanestResponseError, MeasurementType, PaginatedResponse, Timestamp, UUID } from "./index";
+import { CompanyWorkflow } from "./workflows";
 
 export enum ProjectType {
     /**
@@ -20,6 +21,7 @@ export type Project = {
     project_name: string,
     project_client: string,
     project_type: ProjectType,
+    workflow_id: number | null,
     archived: boolean,
     is_confidential: boolean,
     is_confirmed: boolean,
@@ -92,6 +94,26 @@ type ProjectCreationData = {
      * Supported ISO 3166-1 alpha-2 country codes
      */
     address_country: Country2CharCode;
+
+    workflow_assignments?: ProjectWorkflowAssignments;
+};
+
+/**
+ * By assigning a workflow a project can be pre-configured with:
+ * Gather Apps, Auto Docs & Map Figures
+ * Workflows can be configured to assign users to control which apps they can access
+ * Tip: You can find company workflows and their IDs from getCompanyWorkflows in the workflows namespace
+ */
+type ProjectWorkflowAssignments = {
+    workflow_id: number;
+
+    workflow_apps?: {
+        workflow_app_id: number;
+        /**
+         * Set currently assigned users to the project's app group
+         */
+        user_uuids: UUID[];
+    }[];
 };
 
 /**
@@ -122,6 +144,7 @@ export async function getProject(client: DatanestClient, projectUuid: string) {
     const data = await response.json();
     return data as {
         project: Project;
+        workflow: CompanyWorkflow | null;
         project_link: string;
         collection_link: string;
     };
@@ -154,8 +177,8 @@ export async function createProject(client: DatanestClient, projectData: Project
  * @throws DatanestResponseError Request HTTP server or validation error
  * @returns 
  */
-export async function patchProject(client: DatanestClient, projectData: Partial<ProjectCreationData>) {
-    const response = await client.patch('v1/projects', projectData);
+export async function patchProject(client: DatanestClient, projectUuid: string, projectData: Partial<ProjectCreationData>) {
+    const response = await client.patch('v1/projects/' + projectUuid, projectData);
     if (response.status !== 200) {
         throw new DatanestResponseError(`Failed to create project: ${response.status}`, response.status, await response.json());
     }

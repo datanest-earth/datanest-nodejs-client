@@ -40,22 +40,21 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         // Restore, and clean up by archiving again.
 
         const client = new DatanestClient();
-        const [response, enviroCreateResponse] = await Promise.all([
-            await client.post('v1/projects', {
-                project_number: 'test-' + Math.random().toString(36).substring(7),
-                project_name: 'My project',
-                project_client: 'My client',
-                address_country: 'GB',
-                project_type: ProjectType.PROJECT_TYPE_STANDARD,
-            }),
-            await client.post('v1/projects', {
-                project_number: 'test-' + Math.random().toString(36).substring(7),
-                project_name: 'Latest project',
-                project_client: 'My client',
-                address_country: 'GB',
-                project_type: ProjectType.PROJECT_TYPE_ENVIRO,
-            }),
-        ]);
+        const response = await client.post('v1/projects', {
+            project_number: 'test-' + Math.random().toString(36).substring(7),
+            project_name: 'My project',
+            project_client: 'My client',
+            address_country: 'GB',
+            project_type: ProjectType.PROJECT_TYPE_STANDARD,
+        });
+
+        const enviroCreateResponse = await client.post('v1/projects', {
+            project_number: 'test-' + Math.random().toString(36).substring(7),
+            project_name: 'Latest project',
+            project_client: 'My client',
+            address_country: 'GB',
+            project_type: ProjectType.PROJECT_TYPE_ENVIRO,
+        });
 
         expect(response.status).equals(201);
 
@@ -118,7 +117,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const responseRestore = await client.post('v1/projects/' + data.project.uuid + "/restore");
         expect(responseRestore.status).equals(200);
 
-        await client.delete('v1/projects/' + data.project.uuid + "/archive")
+        await client.delete('v1/projects/' + data.project.uuid + "/archive");
     }, {
         timeout: 15000,
     });

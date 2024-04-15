@@ -24,7 +24,7 @@
     "test": "vitest run",
     "test:dev": "vitest",
     "types": "tsc --noEmit",
-    "clean": "rm -r dist"
+    "clean": "rm -r dist || echo 'Nothing to clean'"
   },
   "repository": {
     "type": "git",
