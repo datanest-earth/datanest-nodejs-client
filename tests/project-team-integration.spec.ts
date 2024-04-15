@@ -148,7 +148,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users3.workflow_assignments?.workflow_apps[0].users.find(u => u.email === secondWorkflowUser.email)).to.be.undefined;
 
         await archiveProject(client, workflowProject.uuid);
-    }, { timeout: 15000 });
+    }, { timeout: 10000 });
 
     it('Test external workflow users', async () => {
         const [customRoles, workflows] = await Promise.all([getCompanyCustomRoles(client), getCompanyWorkflows(client)]);
@@ -199,7 +199,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users3.workflow_assignments?.workflow_apps[0].users.find(u => u.email === newExternalUser.email)).to.be.undefined;
 
         await archiveProject(client, workflowProject.uuid);
-    });
+    }, { timeout: 8000 });
 
     it('Teardown test project', async () => {
         await archiveProject(client, testProject.uuid);
