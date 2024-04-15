@@ -120,8 +120,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         })).project;
 
         const users = await getProjectTeam(client, workflowProject.uuid);
-        console.log('users.members', users.members, randomProjectManager.email, workflowUser.email);
-        console.log('users.workflow.app[0]', users.workflow_assignments?.workflow_apps[0].users, workflowUser.email);
         expect(users.workflow_assignments?.workflow_apps[0].users.find(u => u.email === workflowUser.email), 'New workflow user should be in the workflow app users').to.not.be.undefined;
         expect(users.members.find(u => u.email === workflowUser.email), 'Workflow user must be automatically made a team member').to.not.be.undefined;
         expect(users.members.find(u => u.email === randomProjectManager.email), 'Project manager should still be a team member too').to.not.be.undefined;
