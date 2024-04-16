@@ -199,7 +199,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users3.workflow_assignments?.workflow_apps[0].users.find(u => u.email === newExternalUser.email)).to.be.undefined;
 
         await archiveProject(client, workflowProject.uuid);
-    }, { timeout: 8000 });
+    }, { timeout: 15000 });
 
     it('Teardown test project', async () => {
         await archiveProject(client, testProject.uuid);
