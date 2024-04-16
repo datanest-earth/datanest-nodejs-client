@@ -152,8 +152,9 @@ Function & Type Definitions:
 - [Company Users API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/users.html)
 - [Project Teams API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/teams.html)
 - [Files API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/files.html)
+- [Company Workflows & Custom Roles API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/workflows.html)
 
-You can also see the [TypeScript source code](./src/)
+You can also see the [TypeScript source code](./src/), this can be useful to understand the API request & responses type definitions.
 
 <details>
 <summary>Example</summary>
