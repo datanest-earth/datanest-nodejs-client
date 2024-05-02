@@ -8,7 +8,7 @@ dotenv.config();
 if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.env.DATANEST_API_BASE_URL) {
     it('GET project files, if there is a file check you can get the project link', async () => {
         const client = new DatanestClient();
-        const files = await getProjectFiles(client, '2b9fdb0a-8756-49c3-b61d-bca7f9d8c967');
+        const files = await getProjectFiles(client, 'd91c8a4e-5dc8-48ba-bdc1-5584ff94b4c9');
 
         expect(files.data).is.an('array');
         if (!files.data.length) {
@@ -19,7 +19,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(files.data[0].display_name).is.a('string');
         expect(files.data[0].path).is.a('string');
 
-        const file = await getProjectFile(client, '2b9fdb0a-8756-49c3-b61d-bca7f9d8c967', files.data[0].uuid);
+        const file = await getProjectFile(client, 'd91c8a4e-5dc8-48ba-bdc1-5584ff94b4c9', files.data[0].uuid);
         expect(file.uuid).is.a('string');
         expect(file.temporary_url).is.a('string');
 

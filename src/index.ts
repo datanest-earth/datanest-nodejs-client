@@ -1,18 +1,26 @@
 import { createHmac } from 'node:crypto';
 import * as projects from './projects';
+import * as workflows from './workflows';
 import * as gather from './gather';
 import * as integrations from './integrations';
 import * as teams from './teams';
-import * as user from './user';
+import * as users from './users';
 import * as files from './files';
+
+/**
+ * @deprecated Use `users` namespace instead
+ */
+const user = users;
 
 export {
     DatanestClient,
     gather,
     projects,
+    workflows,
     integrations,
     teams,
     user,
+    users,
     files,
 }
 
@@ -22,6 +30,15 @@ export default class DatanestClient {
     private baseUrl: string;
     private clientId: string | null = null;
 
+    /**
+     * Create a new Datanest API client
+     * Note: You can use environment variables instead of using
+     *       the constructor params `apiKey` and `apiSecret`
+     * ENV:
+     * - `DATANEST_API_KEY`
+     * - `DATANEST_API_SECRET`
+     * - `DATANEST_API_BASE_URL` (optional) Default: https://app.datanest.earth/api 
+     */
     constructor(apiKey?: string, apiSecret?: string) {
         this.apiKey = apiKey || process.env.DATANEST_API_KEY || '';
         this.apiSecret = apiSecret || process.env.DATANEST_API_SECRET || '';
@@ -29,6 +46,10 @@ export default class DatanestClient {
 
         // Remove trailing slash
         this.baseUrl = this.baseUrl.replace(/\/$/, '');
+
+        if (!this.baseUrl.endsWith('/api')) {
+            throw new Error('Invalid base URL. Must end with "/api"');
+        }
 
         if (this.apiKey === "" || this.apiSecret === "") {
             throw new Error('API key and secret are required.');
@@ -61,6 +82,10 @@ export default class DatanestClient {
         method = method.toUpperCase();
         // remove leading slash
         path = path.replace(/^\//, '');
+
+        if (path.startsWith('api/')) {
+            throw new Error('Invalid endpoint, must not start with "api/"');
+        }
 
         const headers: any = {
             ...(fetchOptions?.headers ?? {}),

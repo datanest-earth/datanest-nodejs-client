@@ -18,6 +18,8 @@ Your Datanest Account Manager can generate API keys, from the Company Settings p
 
 </details>
 
+> If you cannot see the API Keys section it is possible your subscription does not include API access. Please [contact us to request API access](mailto:hello@datanest.earth?subject=API%20Access%20Request).
+
 ## Requirements
 
 If you wish to use this Node package, you will need to have Node installed on your machine.
@@ -150,8 +152,9 @@ Function & Type Definitions:
 - [Company Users API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/users.html)
 - [Project Teams API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/teams.html)
 - [Files API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/files.html)
+- [Company Workflows & Custom Roles API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/workflows.html)
 
-You can also see the [TypeScript source code](./src/)
+You can also see the [TypeScript source code](./src/), this can be useful to understand the API request & responses type definitions.
 
 <details>
 <summary>Example</summary>
@@ -175,7 +178,7 @@ listProjects();
 ```
 </details>
 
-## Testing
+## Testing and Dedicated Hosting Endpoints
 
 You can override the default API endpoint by setting the `DATANEST_API_BASE_URL` environment variable.
 

@@ -1,7 +1,7 @@
 import { it, expect } from 'vitest';
 import dotenv from 'dotenv';
 import DatanestClient from '../src';
-import { deleteCompanyUser, getCompanyUsers, inviteCompanyUser, patchCompanyUser } from '../src/user';
+import { deleteCompanyUser, getCompanyUsers, inviteCompanyUser, patchCompanyUser } from '../src/users';
 
 dotenv.config();
 

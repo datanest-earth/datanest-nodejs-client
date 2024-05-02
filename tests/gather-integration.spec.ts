@@ -10,9 +10,29 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     let appUuid: string;
     let itemId: number;
     beforeAll(async () => {
-        const paginatedProjects = await projects.listProjects(new DatanestClient());
+        const client = new DatanestClient();
+        const newProject = await projects.createProject(client, {
+            project_number: 'test-' + Math.random().toString(36).substring(7),
+            project_name: 'My project',
+            project_client: 'My client',
+            address_country: 'GB',
+            project_address: '123 Fake Street',
+            project_type: projects.ProjectType.PROJECT_TYPE_STANDARD,
+        });
+        projectUuid = newProject.project.uuid;
 
-        projectUuid = paginatedProjects.data[0].uuid;
+        const sharedAppGroups = await gather.listSharedAppGroups(client);
+        await gather.importAppGroup(client, projectUuid, sharedAppGroups.data[0].share_group);
+        // We need to get the imported app's UUID
+        // We cannot use a master app UUID, in another project
+        const apps = await gather.listProjectApps(client, projectUuid);
+
+        await gather.createGatherItem(client, projectUuid, apps.apps[0].uuid, {
+            title: "Test Gather Item",
+            some_nonsense_section: {
+                some_nonsense_field: "Some nonsense value"
+            }
+        });
     });
 
     it('GET v1/projects/:project_uuid/apps - List apps', async () => {
