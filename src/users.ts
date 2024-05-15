@@ -7,8 +7,8 @@ export type User = {
     initials?: string | null;
 }
 
-export async function getCompanyUsers(client: DatanestClient): Promise<PaginatedResponse<User>> {
-    const response = await client.get('v1/users');
+export async function getCompanyUsers(client: DatanestClient, params?: { page?: number, query?: string }): Promise<PaginatedResponse<User>> {
+    const response = await client.get('v1/users', params);
 
     const data = await response.json();
     return data;

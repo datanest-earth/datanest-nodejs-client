@@ -66,9 +66,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(data.project.project_type).toBe(ProjectType.PROJECT_TYPE_STANDARD);
         expect(enviroCreateResponseData.project.project_type).toBe(ProjectType.PROJECT_TYPE_ENVIRO);
 
-        const [responseGet, responseGetLatest] = await Promise.all([
-            client.get('v1/projects/' + data.project.uuid),
+        const [responseGetLatest, responseGet] = await Promise.all([
             client.get('v1/projects', { latest: true }),
+            client.get('v1/projects/' + data.project.uuid),
         ]);
 
         expect(responseGet.status).equals(200);

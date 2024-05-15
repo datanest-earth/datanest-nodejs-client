@@ -110,7 +110,8 @@ export default class DatanestClient {
                 const queryParams = new URLSearchParams(params);
                 if (queryParams.size) {
                     queryParams.sort();
-                    url += `?${queryParams}`;
+                    // replace all spaces with %20, as URLSearchParams uses + instead of %20
+                    url += `?${queryParams.toString().replace(/\+/g, '%20')}`;
                 }
             } else {
                 options.body = JSON.stringify(params);

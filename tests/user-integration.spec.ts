@@ -16,7 +16,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users.data[0].email).is.a('string');
     });
 
-    it('POST, PATCH and DELETE /v1/users', async () => {
+    it('POST, GET search, PATCH and DELETE /v1/users', async () => {
         const client = new DatanestClient();
         const randomEmail = 'test-' + Math.random().toString(36).substring(7) + '@user.com';
         const user = await inviteCompanyUser(client, {
@@ -27,13 +27,19 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(user.name).equals('Test User');
         expect(user.email).equals(randomEmail);
 
+        const newName = 'Test User ' + Math.random().toString(36).substring(7);
         const updatedUser = await patchCompanyUser(client, user.uuid, {
-            name: 'Test User 2',
+            name: newName,
             initials: 'TU',
         });
+
         expect(updatedUser.uuid).equals(user.uuid);
-        expect(updatedUser.name).equals('Test User 2');
+        expect(updatedUser.name).equals(newName);
         expect(updatedUser.initials).equals('TU');
+
+        const users = await getCompanyUsers(client, { query: newName });
+        expect(users.data).is.an('array');
+        expect(users.data[0].name).equals(newName);
 
         await deleteCompanyUser(client, user.uuid);
     }, {
