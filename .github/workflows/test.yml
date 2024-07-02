@@ -39,6 +39,7 @@ jobs:
         run: pnpm install
 
       - name: Run tests
+        if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
         env:
           DATANEST_API_BASE_URL: ${{ secrets.DATANEST_API_BASE_URL }}
           DATANEST_API_KEY: ${{ secrets.DATANEST_API_KEY }}
