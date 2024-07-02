@@ -40,7 +40,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users.members).is.an('array');
         expect(users.members[0].email).equals(randomProjectManager.email);
         expect(users.external_users).is.an('array');
-    });
+    }, { timeout: 15000 });
 
     it('Invite company user, add to project, remove from project', async () => {
         const randomEmail = 'invited-' + Math.random().toString(36).substring(7) + '@user.com';
@@ -156,7 +156,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users3.workflow_assignments?.workflow_apps[0].users.find(u => u.email === secondWorkflowUser.email)).to.be.undefined;
 
         await archiveProject(client, workflowProject.uuid);
-    }, { timeout: 10000 });
+    }, { timeout: 30000 });
 
     it('Test external workflow users', async () => {
         const [customRoles, workflows] = await Promise.all([getCompanyCustomRoles(client), getCompanyWorkflows(client)]);
@@ -211,7 +211,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
     it('Teardown test project', async () => {
         await archiveProject(client, testProject.uuid);
-    });
+    }, { timeout: 10000 });
 
 } else {
     it.only('Skipping integration tests', () => { });
