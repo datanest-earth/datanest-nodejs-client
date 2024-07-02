@@ -47,6 +47,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             expect(projectAppList.apps[0].title).is.a('string');
             expect(projectAppList.apps[0].system_reference).is.a('string');
         }
+    }, {
+        timeout: 15000,
     });
 
     it('GET v1/projects/:project_uuid/apps/:app_id - List apps\' items', async () => {
@@ -72,6 +74,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(itemWithDetails.id).equals(itemId);
         expect(itemWithDetails.app_uuid).equals(appUuid);
         expect(itemWithDetails.title).is.a('string');
+    }, {
+        timeout: 15000,
     });
 
     it('GET v1/apps/:app_uuid/schema - Get App Schema (structure of the app form)', async () => {
@@ -81,6 +85,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         expect(appSchema.uuid).equals(appUuid);
         expect(appSchema.title).is.a('string');
+    }, {
+        timeout: 15000,
     });
 
     it('Can list and import shared app group', async () => {
