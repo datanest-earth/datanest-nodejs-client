@@ -1,15 +1,6 @@
-name: Node.js 20 CI
+name: Integration Tests
 
 on:
-  push:
-    branches:
-      - main # Adjust to match your main branch name
-  pull_request:
-    branches:
-      - main # Adjust to match your main branch name
-    types:
-      - opened
-      - synchronize
   workflow_dispatch:
 
 jobs:
@@ -45,6 +36,3 @@ jobs:
           DATANEST_API_KEY: ${{ secrets.DATANEST_API_KEY }}
           DATANEST_API_SECRET: ${{ secrets.DATANEST_API_SECRET }}
         run: pnpm test
-
-      - name: Build
-        run: pnpm build
