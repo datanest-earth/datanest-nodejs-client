@@ -1,15 +1,6 @@
-name: Node.js 20 CI
+name: Integration Tests
 
 on:
-  push:
-    branches:
-      - main # Adjust to match your main branch name
-  pull_request:
-    branches:
-      - main # Adjust to match your main branch name
-    types:
-      - opened
-      - synchronize
   workflow_dispatch:
 
 jobs:
@@ -39,11 +30,9 @@ jobs:
         run: pnpm install
 
       - name: Run tests
+        if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
         env:
           DATANEST_API_BASE_URL: ${{ secrets.DATANEST_API_BASE_URL }}
           DATANEST_API_KEY: ${{ secrets.DATANEST_API_KEY }}
           DATANEST_API_SECRET: ${{ secrets.DATANEST_API_SECRET }}
         run: pnpm test
-
-      - name: Build
-        run: pnpm build

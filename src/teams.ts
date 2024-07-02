@@ -36,7 +36,7 @@ export async function getProjectTeam(client: DatanestClient, projectUuid: UUID) 
     }
 }
 
-export async function addProjectTeamMember(client: DatanestClient, projectUuid: UUID, userUuid: UUID, customRoleId?: number | null): Promise<User> {
+export async function addProjectTeamMember(client: DatanestClient, projectUuid: UUID, userUuid: UUID, customRoleId?: number | null): Promise<TeamUser> {
     const response = await client.post('v1/projects/' + projectUuid + '/teams/members/' + userUuid, {
         custom_role_id: customRoleId,
     });
@@ -50,7 +50,7 @@ export async function removeProjectTeamMember(client: DatanestClient, projectUui
     return data.user;
 }
 
-export async function addExternalUserToProject(client: DatanestClient, projectUuid: UUID, userData: { email: string, name?: string | null, custom_role_id?: number | null }): Promise<User> {
+export async function addExternalUserToProject(client: DatanestClient, projectUuid: UUID, userData: { email: string, name?: string | null, custom_role_id?: number | null }): Promise<TeamUser> {
     const response = await client.post('v1/projects/' + projectUuid + '/teams/external-users', userData);
     const data = await response.json();
     return data.user;
@@ -58,6 +58,14 @@ export async function addExternalUserToProject(client: DatanestClient, projectUu
 
 export async function removeExternalUserToProject(client: DatanestClient, projectUuid: UUID, userUuidOrEmail: UUID | string): Promise<User> {
     const response = await client.delete('v1/projects/' + projectUuid + '/teams/external-users/' + userUuidOrEmail);
+    const data = await response.json();
+    return data.user;
+}
+
+export async function updateProjectMemberRole(client: DatanestClient, projectUuid: UUID, userUuid: UUID, customRoleId: number | null): Promise<TeamUser> {
+    const response = await client.patch('v1/projects/' + projectUuid + '/teams/members/' + userUuid + '/custom-role', {
+        custom_role_id: customRoleId,
+    });
     const data = await response.json();
     return data.user;
 }
