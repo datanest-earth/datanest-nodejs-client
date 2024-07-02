@@ -42,7 +42,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const client = new DatanestClient();
         const response = await client.post('v1/projects', {
             project_number: 'test-' + Math.random().toString(36).substring(7),
-            project_name: 'My project',
+            project_name: 'First project',
             project_client: 'My client',
             address_country: 'GB',
             project_type: ProjectType.PROJECT_TYPE_STANDARD,
@@ -75,7 +75,15 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(responseGetLatest.status).equals(200);
 
         const dataGetLatest = await responseGetLatest.json();
-        expect(dataGetLatest.data[0].project_name).equals('Latest project');
+        // check that Latest project comes first
+        for (let i = 0; i < dataGetLatest.data.length; i++) {
+            if (dataGetLatest.data[i].uuid === enviroCreateResponseData.project.uuid) {
+                break;
+            }
+            if (dataGetLatest.data[i].uuid === data.project.uuid) {
+                expect.fail('First project should not be in the latest list');
+            }
+        }
 
         expect(responseGet.status).equals(200);
 

@@ -82,7 +82,7 @@ type ProjectCreationData = {
     /**
      * Full postal address
      */
-    project_address: string;
+    project_address?: string;
 
     /**
      * Project type: Enviro = 0 or Standard = 1

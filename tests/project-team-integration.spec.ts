@@ -2,7 +2,7 @@ import { it, expect } from 'vitest';
 import dotenv from 'dotenv';
 import DatanestClient from '../src';
 import { User, getCompanyUsers, inviteCompanyUser } from '../src/users';
-import { addExternalUserToProject, getProjectTeam, addProjectTeamMember, removeExternalUserToProject, removeProjectTeamMember } from '../src/teams';
+import { addExternalUserToProject, getProjectTeam, addProjectTeamMember, removeExternalUserToProject, removeProjectTeamMember, updateProjectMemberRole } from '../src/teams';
 import { Project, ProjectType, archiveProject, createProject, patchProject } from '../src/projects';
 import { assignProjectWorkflowAppUser, unassignProjectWorkflowAppUser, getCompanyCustomRoles, getCompanyWorkflows } from '../src/workflows';
 
@@ -121,10 +121,16 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         const users = await getProjectTeam(client, workflowProject.uuid);
         expect(users.workflow_assignments?.workflow_apps[0].users.find(u => u.email === workflowUser.email), 'New workflow user should be in the workflow app users').to.not.be.undefined;
-        expect(users.members.find(u => u.email === workflowUser.email), 'Workflow user must be automatically made a team member').to.not.be.undefined;
+
+        const workflowUserFromTeam = users.members.find(u => u.email === workflowUser.email);
+        expect(workflowUserFromTeam, 'Workflow user must be automatically made a team member').to.not.be.undefined;
+        expect(workflowUserFromTeam?.custom_role_id).to.be.null;
         expect(users.members.find(u => u.email === randomProjectManager.email), 'Project manager should still be a team member too').to.not.be.undefined;
         expect(users.members.length, 'no one else was invited').to.equal(2);
         expect(users.external_users.length).to.equal(0);
+
+        const updatedWorkflowUser = await updateProjectMemberRole(client, workflowProject.uuid, workflowUser.uuid, customRoles[0].custom_role_id);
+        expect(updatedWorkflowUser.custom_role_id).to.be.equal(customRoles[0].custom_role_id);
 
         remainingUsers = remainingUsers.filter(cu => cu.uuid !== workflowUser.uuid);
         const secondWorkflowUser = remainingUsers[Math.floor(
@@ -140,6 +146,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const users2 = await getProjectTeam(client, workflowProject.uuid);
         expect(users2.members.find(u => u.email === secondWorkflowUser.email)?.custom_role_id).to.be.equal(customRoles[0].custom_role_id);
         expect(users2.workflow_assignments?.workflow_apps[0].users.find(u => u.email === secondWorkflowUser.email)).to.not.be.undefined;
+        const originalWorkflowUser = users2.members.find(u => u.email === workflowUser.email);
+        expect(originalWorkflowUser?.custom_role_id).to.be.equal(customRoles[0].custom_role_id);
 
         await removeProjectTeamMember(client, workflowProject.uuid, secondWorkflowUser.uuid);
 
@@ -199,7 +207,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users3.workflow_assignments?.workflow_apps[0].users.find(u => u.email === newExternalUser.email)).to.be.undefined;
 
         await archiveProject(client, workflowProject.uuid);
-    }, { timeout: 15000 });
+    }, { timeout: 20000 });
 
     it('Teardown test project', async () => {
         await archiveProject(client, testProject.uuid);
