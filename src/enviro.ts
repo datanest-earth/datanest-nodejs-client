@@ -96,6 +96,35 @@ export type EnviroChemicalWithAliases = EnviroChemical & {
     chemical_aliases: string[];
 };
 
+export type SampleResult = {
+    result_id: number;
+    exceeds_background: boolean;
+    sample_id: number;
+    linked_sample_id: number | null;
+    sample_custom_title: string;
+    sample_lab_title: string;
+    sample_start_depth: number | null;
+    sample_end_depth: number | null;
+    sample_latitude: number;
+    sample_longitude: number;
+    matrix: EnviroMatrix;
+    chemical_id: number;
+    chemical_casno: string;
+    chemical_title: string;
+    result: number | null;
+    lod_result: number | null;
+    display_result: number | null;
+    changed_result_value: number | null;
+    changed_result_reason: string | null;
+    units: string;
+    unit_multiplier: number;
+    pcb_value: number | null;
+    duplicate_rpd: number | null;
+    triplicate_rpd: number | null;
+    lab_flags: string | null;
+    comments: string | null;
+};
+
 /**
  * Get all Enviro Matrices with their aliases for Datanest
  * @throws DatanestResponseError Request HTTP server or validation error
@@ -158,5 +187,10 @@ export async function getProjectMatrices(client: DatanestClient, projectUuid: st
  */
 export async function getProjectScenarios(client: DatanestClient, projectUuid: string): Promise<{ scenarios: ProjectScenario[] }> {
     const response = await client.get('v1/projects/' + projectUuid + '/enviro/scenarios');
+    return await response.json();
+}
+
+export async function getProjectSampleChemicalResults(client: DatanestClient, projectUuid: string): Promise<PaginatedResponse<SampleResult>> {
+    const response = await client.get('v1/projects/' + projectUuid + '/enviro/samples/chemical-results');
     return await response.json();
 }

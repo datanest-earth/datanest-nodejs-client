@@ -1,4 +1,4 @@
-import { it, expect, beforeAll } from 'vitest';
+import { it, expect, beforeAll, afterAll } from 'vitest';
 import dotenv from 'dotenv';
 import DatanestClient, { gather, projects } from '../src';
 
@@ -33,6 +33,12 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
                 some_nonsense_field: "Some nonsense value"
             }
         });
+    });
+    afterAll(async () => {
+        if (projectUuid !== '') {
+            const client = new DatanestClient();
+            await projects.archiveProject(client, projectUuid);
+        }
     });
 
     it('GET v1/projects/:project_uuid/apps - List apps', async () => {
@@ -141,7 +147,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(updatedItemDetails.skipped_fields).is.an('array');
 
         await gather.deleteItem(client, projectUuid, itemDetails.id);
-    }, { timeout: 15000 })
+    }, { timeout: 15000 });
 
 } else {
     it('Skipping gather integration tests', () => { });

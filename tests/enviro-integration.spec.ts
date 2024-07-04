@@ -57,7 +57,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             projectUuid = enviroProjects.data[0].uuid;
         });
 
-        it('GET v1/projects/:project_uuid/matrices - List matrices active in project', async () => {
+        it('GET v1/projects/:project_uuid/enviro/matrices - List matrices active in project', async () => {
             const client = new DatanestClient();
             const projectMatrices = await enviro.getProjectMatrices(client, projectUuid);
 
@@ -72,7 +72,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             expect(projectMatrices.matrices[0].aliases).is.an('array');
         });
 
-        it('GET v1/projects/:project_uuid/scenarios - List project scenario active', async () => {
+        it('GET v1/projects/:project_uuid/enviro/scenarios - List project scenario active', async () => {
             const client = new DatanestClient();
             const projectScenarios = await enviro.getProjectScenarios(client, projectUuid);
 
@@ -120,6 +120,26 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
                 expect(scenario.criteria_set.exclude_non_detects).is.a('boolean');
                 expect(scenario.criteria_set.is_background).is.a('boolean');
             }
+        });
+
+        it('GET v1/projects/:project_uuid/enviro/samples/chemical-results - List chemicals active in project', async () => {
+            const client = new DatanestClient();
+            const results = await enviro.getProjectSampleChemicalResults(client, projectUuid);
+
+            expect(results.data).is.an('array');
+            if (results.data.length === 0) {
+                it.skip('No samples found in project');
+                return;
+            }
+
+            const sample = results.data[0];
+            expect(sample.result_id).is.a('number');
+            expect(sample.sample_id).is.a('number');
+            expect(sample.chemical_id).is.a('number');
+            expect(sample.chemical_title).is.a('string');
+            expect(sample.chemical_casno).is.a('string');
+            expect(sample.matrix).is.a('string');
+            expect(sample.result).is.oneOf(['number', null]);
         });
     });
 
