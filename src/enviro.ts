@@ -190,7 +190,16 @@ export async function getProjectScenarios(client: DatanestClient, projectUuid: s
     return await response.json();
 }
 
-export async function getProjectSampleChemicalResults(client: DatanestClient, projectUuid: string): Promise<PaginatedResponse<SampleResult>> {
-    const response = await client.get('v1/projects/' + projectUuid + '/enviro/samples/chemical-results');
+/**
+ * Get sample chemical results from a project
+ * @param filters.casno Optionally filter by one or more CAS numbers
+ * @param filters.sample_ids Optionally filter by one or more Datanest sample ids
+ * @throws DatanestResponseError Request HTTP server or validation error
+ */
+export async function getProjectSampleChemicalResults(client: DatanestClient, projectUuid: string, filters?: {
+    casno?: string[];
+    sample_ids?: number[];
+}): Promise<PaginatedResponse<SampleResult>> {
+    const response = await client.get('v1/projects/' + projectUuid + '/enviro/samples/chemical-results', filters);
     return await response.json();
 }

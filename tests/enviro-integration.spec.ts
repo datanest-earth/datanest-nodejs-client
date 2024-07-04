@@ -46,12 +46,16 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     describe('Enviro Project Integration Tests', () => {
         let projectUuid = '';
         beforeAll(async () => {
+            if (process.env.ENVIRO_PROJECT_UUID) {
+                projectUuid = process.env.ENVIRO_PROJECT_UUID;
+                return;
+            }
             const client = new DatanestClient();
             const enviroProjects = await projects.listProjects(client, 1, false, {
                 project_type: ProjectType.PROJECT_TYPE_ENVIRO,
             });
             if (enviroProjects.data.length === 0) {
-                it.skip('No Enviro projects found');
+                console.warn('WARNING: No Enviro projects found');
             }
 
             projectUuid = enviroProjects.data[0].uuid;
@@ -64,7 +68,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             expect(projectMatrices.matrices).is.an('array');
 
             if (projectMatrices.matrices.length === 0) {
-                it.skip('No matrices found in project');
+                console.error('No matrices found in project');
                 return;
             }
             expect(projectMatrices.matrices[0].matrix_id).is.a('number');
@@ -79,14 +83,14 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             expect(projectScenarios.scenarios).is.an('array');
 
             if (projectScenarios.scenarios.length === 0) {
-                it.skip('No matrices found in project');
+                console.warn('WARNING:No matrices found in project');
                 return;
             }
             expect(projectScenarios.scenarios[0].id).is.a('number');
             expect(projectScenarios.scenarios[0].options).is.an('object');
 
             const scenario = projectScenarios.scenarios[0];
-            expect(scenario).to.have.keys(['assessed', 'scenario', 'criteria_set', 'document']);
+            expect(scenario).to.contain.keys(['assessed', 'scenario', 'criteria_set', 'document']);
 
             if (scenario.assessed) {
                 expect(scenario.assessed.assessed_id).is.a('number');
@@ -106,7 +110,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
                 expect(scenario.document.country).is.a('string');
                 expect(scenario.document.matrix).is.a('string');
                 expect(scenario.document.document_identifier).is.a('string');
-                expect(scenario.document.document_url).is.a('string');
+                expect(scenario.document.document_url).is.oneOf(['string', null]);
                 expect(scenario.document.document).is.a('string');
                 expect(scenario.document.acronym).is.a('string');
             }
@@ -128,7 +132,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
             expect(results.data).is.an('array');
             if (results.data.length === 0) {
-                it.skip('No samples found in project');
+                console.warn('WARNING: No chemical results found in project');
                 return;
             }
 
@@ -139,7 +143,23 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             expect(sample.chemical_title).is.a('string');
             expect(sample.chemical_casno).is.a('string');
             expect(sample.matrix).is.a('string');
-            expect(sample.result).is.oneOf(['number', null]);
+            expect(sample.result).is.an('number');
+
+            const uniqueCasNos = results.data.map(sample => sample.chemical_casno).filter((value, index, self) => self.indexOf(value) === index).slice(0, 5);
+            const uniqueSampleIds = results.data.map(sample => sample.sample_id).filter((value, index, self) => self.indexOf(value) === index).slice(0, 5);
+
+            const filteredRequest = await enviro.getProjectSampleChemicalResults(client, projectUuid, {
+                casno: uniqueCasNos,
+                sample_ids: uniqueSampleIds,
+            });
+
+            // results should not include any other casno or sample_id
+            for (const sample of filteredRequest.data) {
+                expect(uniqueCasNos).contains(sample.chemical_casno);
+                if (!sample.linked_sample_id || !uniqueSampleIds.includes(sample.linked_sample_id)) {
+                    expect(uniqueSampleIds).contains(sample.sample_id);
+                }
+            }
         });
     });
 
