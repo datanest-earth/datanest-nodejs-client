@@ -8,33 +8,59 @@ export type ProjectAssessed = {
     replace_na_values: boolean;
     test_hydrocarbons: string;
     by_matching_units: boolean;
-    by_documents: boolean;
+    by_standards: boolean;
     is_favourite: boolean;
     batch_number: null;
     from_assessed_id: null;
 };
 
-export type GuidelineDocument = {
-    document_id: number;
+export type GuidelineStandard = {
+    standard_id: number;
     batch: number;
     country: Country2CharCode;
     matrix: EnviroMatrix;
-    document_identifier: string;
-    document_url: string;
-    document: string;
-    document_shorthand: string | null;
+    standard_identifier: string;
+    standard_url: string;
+    standard: string;
+    standard_shorthand: string | null;
     formatted_title: string;
     acronym: string;
     type: string;
     hq_type: string | null;
-    new_revision_document_id: null;
-    by_document_specific: boolean;
+    new_revision_standard_id: null;
+    by_standard_specific: boolean;
+};
+
+export type Guideline = {
+    id: number;
+    is_custom_guideline: boolean;
+    is_hierarchy_only: boolean;
+    standard_id: number;
+    chemical_id: number;
+    chemical_title: string;
+    chemical_casno: string;
+    company_standard_id: null;
+    original_guideline_id: null;
+    superseded_guideline_id: null;
+    pathways: string;
+    soil_type: null;
+    value_min: number;
+    value_max: number | null;
+    value_alphanumeric: null;
+    units: string;
+    groundwater_depth: null | number;
+    soil_depth: null | number;
+    cec_value: null | number;
+    ph_value: null | number;
+    clay_content: null | number;
+    produce_consumption_percentage: null | number;
+    table_reference: null | string;
 };
 
 export type GuidelineScenario = {
     id: number;
     basis: string;
-    media: string;
+    matrix: EnviroMatrix;
     land_use: string;
     type: null;
     full_title: null;
@@ -61,7 +87,7 @@ export type ProjectScenario = {
     assessed: ProjectAssessed | null;
     scenario: GuidelineScenario | null;
     criteria_set: CriteriaSet | null;
-    document: GuidelineDocument | null;
+    standard: GuidelineStandard | null;
 };
 
 export type CriteriaSet = {
@@ -187,6 +213,39 @@ export async function getProjectMatrices(client: DatanestClient, projectUuid: st
  */
 export async function getProjectScenarios(client: DatanestClient, projectUuid: string): Promise<{ scenarios: ProjectScenario[] }> {
     const response = await client.get('v1/projects/' + projectUuid + '/enviro/scenarios');
+    return await response.json();
+}
+
+
+/**
+ * Get all Guideline Standards of a project
+ * @throws DatanestResponseError Request HTTP server or validation error
+ */
+export async function getProjectScenarioStandards(client: DatanestClient, projectUuid: string, scenarioId: number, filters?: {
+    page?: number;
+    standard_id?: number;
+    standard_ids?: number[];
+}): Promise<PaginatedResponse<GuidelineStandard> & {
+    guideline_scenario: GuidelineScenario;
+}> {
+    const response = await client.get('v1/projects/' + projectUuid + '/enviro/scenarios/' + scenarioId + '/standards', filters);
+    return await response.json();
+}
+
+/**
+ * Get all Guidelines of a project
+ * @throws DatanestResponseError Request HTTP server or validation error
+ */
+export async function getProjectScenarioGuidelines(client: DatanestClient, projectUuid: string, scenarioId: number, filters?: {
+    page?: number;
+    standard_id?: number;
+    standard_ids?: number[];
+    chemical_id?: number;
+    chemical_ids?: number[];
+}): Promise<PaginatedResponse<Guideline> & {
+    guideline_scenario: GuidelineScenario;
+}> {
+    const response = await client.get('v1/projects/' + projectUuid + '/enviro/scenarios/' + scenarioId + '/guidelines', filters);
     return await response.json();
 }
 

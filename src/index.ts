@@ -285,7 +285,7 @@ export type PaginatedResponse<T> = {
     /**
      * @deprecated This may not be permanent
      */
-    links: {
+    links?: {
         first: string,
         last: string,
         prev: null | string,
@@ -296,7 +296,7 @@ export type PaginatedResponse<T> = {
         /**
          * @deprecated This may not be permanent
          */
-        links: {
+        links?: {
             url: null | string, label: string, active: boolean,
         }[],
 
