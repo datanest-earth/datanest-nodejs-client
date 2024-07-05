@@ -167,7 +167,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             expect(filteredGuidelinesByBoth.data.map(guideline => guideline.chemical_id).filter((value, index, self) => self.indexOf(value) === index)).to.have.length.lessThanOrEqual(chemicalIds.length);
         });
 
-        it('GET v1/projects/:project_uuid/enviro/samples/chemical-results - List chemicals active in project', async () => {
+        it('GET v1/projects/:project_uuid/enviro/samples/chemical-results', async () => {
             const client = new DatanestClient();
             const results = await enviro.getProjectSampleChemicalResults(client, projectUuid);
 
