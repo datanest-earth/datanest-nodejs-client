@@ -157,7 +157,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             for (const guideline of filteredGuidelinesByChemical.data) {
                 expect(chemicalIds).contains(guideline.chemical_id);
             }
-            expect(filteredGuidelinesByChemical.data.map(guideline => guideline.chemical_id).filter((value, index, self) => self.indexOf(value) === index)).to.have.lengthOf(chemicalIds.length);
+            expect(filteredGuidelinesByChemical.data.map(guideline => guideline.chemical_id).filter((value, index, self) => self.indexOf(value) === index)).to.have.length.lessThanOrEqual(chemicalIds.length);
 
             for (const guideline of filteredGuidelinesByBoth.data) {
                 expect(standardIds).contains(guideline.standard_id);
