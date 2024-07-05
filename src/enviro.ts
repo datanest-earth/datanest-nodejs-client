@@ -35,6 +35,7 @@ export type Guideline = {
     id: number;
     is_custom_guideline: boolean;
     is_hierarchy_only: boolean;
+    guideline_scenario_id: number;
     standard_id: number;
     chemical_id: number;
     chemical_title: string;
