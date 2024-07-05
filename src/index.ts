@@ -1,6 +1,7 @@
 import { createHmac } from 'node:crypto';
 import * as projects from './projects';
 import * as workflows from './workflows';
+import * as enviro from './enviro';
 import * as gather from './gather';
 import * as integrations from './integrations';
 import * as teams from './teams';
@@ -14,6 +15,7 @@ const user = users;
 
 export {
     DatanestClient,
+    enviro,
     gather,
     projects,
     workflows,
@@ -283,7 +285,7 @@ export type PaginatedResponse<T> = {
     /**
      * @deprecated This may not be permanent
      */
-    links: {
+    links?: {
         first: string,
         last: string,
         prev: null | string,
@@ -294,7 +296,7 @@ export type PaginatedResponse<T> = {
         /**
          * @deprecated This may not be permanent
          */
-        links: {
+        links?: {
             url: null | string, label: string, active: boolean,
         }[],
 

@@ -124,8 +124,10 @@ type ProjectWorkflowAssignments = {
  * @throws DatanestResponseError Request HTTP server or validation error
  * @returns 
  */
-export async function listProjects(client: DatanestClient, page = 1, archived = false) {
-    const response = await client.get('v1/projects', { archived, page });
+export async function listProjects(client: DatanestClient, page = 1, archived = false, filters?: {
+    project_type?: ProjectType;
+}) {
+    const response = await client.get('v1/projects', { archived, page, project_type: filters?.project_type });
 
     const data = await response.json();
     return data as PaginatedResponse<Project>;
