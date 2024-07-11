@@ -295,7 +295,7 @@ Your Webhook receiving system should verify the X-Signature header for best secu
 
 ![](./images/api-key-webhook-designate.png)
 
-There will only ever be one webhook designated API Key per company. Designating a new key will automatically revoke the previous key as the webhook designate.
+There will only ever be one webhook designated API Key per company. Designating a new key will automatically revoke the previous key as the webhook designated key.
 
 
 #### Headers
