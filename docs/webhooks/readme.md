@@ -319,3 +319,5 @@ Once set, the webhook will contain the following headers for authentication:
     ```
     <url>:<method>:<X-Timestamp>
     ```
+#### Verification
+ Please refer `src/webhook.ts` > `authenticateWebhook` function for auth verification implementation.
