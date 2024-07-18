@@ -1,4 +1,5 @@
 import DatanestClient, { Country2CharCode, PaginatedResponse } from "./index";
+import { BBox } from "./maps";
 
 export type ProjectAssessed = {
     assessed_id: number;
@@ -261,5 +262,33 @@ export async function getProjectSampleChemicalResults(client: DatanestClient, pr
     sample_ids?: number[];
 }): Promise<PaginatedResponse<SampleResult>> {
     const response = await client.get('v1/projects/' + projectUuid + '/enviro/samples/chemical-results', filters);
+    return await response.json();
+}
+
+/**
+ * Get all sample locations of a project
+ * @throws DatanestResponseError Request HTTP server or validation error
+ */
+export async function getProjectSampleLocations(client: DatanestClient, projectUuid: string, filters?: {
+    bbox?: BBox;
+    include_geojson?: boolean;
+    page?: number;
+    /** Search for samples by title, lab title or original titles */
+    search?: string;
+}) {
+    const response = await client.get('v1/projects/' + projectUuid + '/enviro/samples/locations', filters);
+    return await response.json();
+}
+
+/**
+ * Get all samples of a project
+ * @throws DatanestResponseError Request HTTP server or validation error
+ */
+export async function getProjectSamples(client: DatanestClient, projectUuid: string, filters?: {
+    page?: number;
+    /** Search for samples by title, lab title or original titles */
+    search?: string;
+}) {
+    const response = await client.get('v1/projects/' + projectUuid + '/enviro/samples', filters);
     return await response.json();
 }

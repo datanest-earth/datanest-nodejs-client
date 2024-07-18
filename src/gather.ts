@@ -1,4 +1,5 @@
-import DatanestClient, { DatanestResponseError, PaginatedResponse, Timestamp, UUID } from "./index";
+import DatanestClient, { PaginatedResponse, Timestamp, UUID } from "./index";
+import { BBox, GeoJsonFeature } from "./maps";
 
 export type App = {
     uuid: UUID;
@@ -33,6 +34,8 @@ export type Item = {
     longitude: null | number;
     title: string;
     lab_title?: string | null;
+    original_title?: string | null;
+    geojson?: GeoJsonFeature | null;
     enviro_start_depth: null | number;
     enviro_end_depth: null | number;
     enviro_soil_description: null | string;
@@ -111,14 +114,6 @@ export async function listProjectApps(client: DatanestClient, projectUuid: UUID)
     return data as { apps: App[] };
 }
 
-type ProjectItemsOptions = {
-    /**
-     * Filter items by master App UUID.
-     * This can be the UUID of a master App or a UUID of a shared App.
-     */
-    template_app_uuid?: UUID;
-};
-
 /**
  * List items of all kinds in project with pagination
  * @param client Datanest REST API Client
@@ -126,8 +121,19 @@ type ProjectItemsOptions = {
  * @throws DatanestResponseError Request HTTP server or validation error
  * @returns 
  */
-export async function listProjectItems(client: DatanestClient, projectUuid: UUID, page = 1, options: ProjectItemsOptions = {}) {
-    const response = await client.get('v1/projects/' + projectUuid + "/items", { page, ...options });
+export async function listProjectItems(client: DatanestClient, projectUuid: UUID, page = 1, filters: {
+    bbox?: BBox;
+    include_geojson?: boolean;
+    page?: number;
+    /** Search for samples by title, lab title or original titles */
+    search?: string;
+    /**
+     * Filter items by master App UUID.
+     * This can be the UUID of a master App or a UUID of a shared App.
+     */
+    template_app_uuid?: UUID;
+} = {}) {
+    const response = await client.get('v1/projects/' + projectUuid + "/items", { page, ...filters });
 
     const data = await response.json();
     return data as PaginatedResponse<Item>;
@@ -154,8 +160,13 @@ export async function getProjectItemDetails(client: DatanestClient, projectUuid:
  * @throws DatanestResponseError Request HTTP server or validation error
  * @returns 
  */
-export async function listProjectAppItems(client: DatanestClient, projectUuid: UUID, appUuid: UUID, page = 1) {
-    const response = await client.get('v1/projects/' + projectUuid + "/apps/" + appUuid + '/items', { page });
+export async function listProjectAppItems(client: DatanestClient, projectUuid: UUID, appUuid: UUID, page = 1, filters?: {
+    bbox?: BBox;
+    include_geojson?: boolean;
+    /** Search for samples by title, lab title or original titles */
+    search?: string;
+}) {
+    const response = await client.get('v1/projects/' + projectUuid + "/apps/" + appUuid + '/items', { page, ...filters });
 
     const data = await response.json();
     return data as PaginatedResponse<Item>;
