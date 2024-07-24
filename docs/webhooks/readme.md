@@ -25,6 +25,8 @@ Schema:
     item: Item | null;
     file: File | null;
     document: Document | null;
+    artifacts: Artifact[];
+    log: Log[];
 }
 ```
 
@@ -55,7 +57,48 @@ Schema:
 }
 ```
 
-### File
+## Artifact
+An artifact is added for each output of a Data Event Action.
+E.g. a Figure or Auto Doc is generated as part of a previous action.
+Please see the full example output below for more details.
+```ts
+{
+    type: string;
+    artifact_label?: string;
+    artifact_type?: string;
+    action_id?: number;
+    action_label?: string;
+    app_uuid?: string;
+    item_id?: number;
+    field_id?: number;
+    app_title?: string;
+    field_label?: string;
+    new_value?: string;
+    trigger_id?: number;
+    trigger_type?: string;
+    recipients?: string[];
+    subject?: string;
+    body?: string;
+    attachments?: Attachment[];
+    webhook_url?: string;
+    sent_at?: string;
+    files?: File[];
+    graph_id?: number;
+}
+```
+
+## Log
+A log is added for each step of the Data Event.
+Log is an array of arrays with length 3, with the following format:
+```ts
+[
+    0: string, // Log level 
+    1: string, // Timestamp
+    2: string, // Log Message
+]
+```
+
+### File (Legacy)
 ```ts
 {
     id: string;
@@ -67,7 +110,7 @@ Schema:
 }
 ```
 
-### Document
+### Document (Legacy)
 ```ts
 {
     id: number;
@@ -91,40 +134,43 @@ Schema:
 ```json
 {
     "event": {
-        "id": 37,
-        "history_id": 333,
-        "label": "Claim Completed"
+        "id": 5420,
+        "history_id": 2622,
+        "label": "test"
     },
     "trigger": {
-        "id": 139,
+        "id": 5680,
         "type": 2,
         "reason": "App Item Updated",
-        "reason_long": "App Item Updated",
+        "reason_long": "App Item Updated by Brandon De Rose",
         "payload": {
-            "item_id": 1128954,
+            "item_id": 1337157,
             "trigger_type": 2,
-            "trigger_id": 139,
-            "event_history_id": 333
+            "trigger_id": 5680,
+            "triggered_by_user_id": "5a1359c1-6a87-4862-a613-67ec4d3a2955",
+            "event_history_id": 2622
         }
     },
     "project": {
-        "uuid": "005056a4-ecd7-4ded-87bc-dad952efe1a5",
-        "project_number": "Data Event Webhooks",
-        "project_name": "Sopoline Burton",
-        "project_client": "Tempor do aliquid no",
+        "uuid": "abfe47e9-741c-4a63-b44c-6347dcbdbe16",
+        "project_number": "0101010101010101001",
+        "project_name": "STRESS TEST PROJECT",
+        "project_client": "TESTING",
         "project_type": 1,
-        "project_manager_uuid": "b4d84c46-1513-42ac-9d9f-dd56fa3d853c",
+        "project_manager_uuid": "e38b7dcf-8443-47ab-95c8-40db6762d5ae",
+        "workflow_id": null,
         "archived": false,
         "is_confidential": false,
         "is_confirmed": true,
-        "latitude": 40.7094756,
-        "longitude": -74.0072955,
+        "latitude": -43.5594505,
+        "longitude": 172.6868801,
         "storage_needs_calc": true,
         "storage_usage_mb": 0,
         "has_soil_upload": false,
         "has_water_upload": false,
         "has_leachate_upload": false,
         "has_soilgas_upload": false,
+        "has_sediment_upload": false,
         "has_xrf_data": false,
         "has_chemical_misalignment": false,
         "has_sample_merging_misalignment": false,
@@ -134,42 +180,47 @@ Schema:
         "has_spatial_misalignment": false,
         "is_gather_non_spatial_view": false,
         "is_legacy_gather_table": true,
-        "project_address": "123 William Street, New York, NY, USA",
-        "google_place_id": "ChIJIaGbBBhawokRUmbgNsUmr-s",
-        "address_street": "123 William Street",
-        "address_locality": "Manhattan",
-        "address_city": "New York",
-        "address_state": "New York",
-        "address_country": "United States",
-        "address_postcode": "10038",
-        "measurement_type": "inch",
-        "timezone": "America\/Los_Angeles",
+        "project_address": "15\/24 Broad Street, Woolston, Christchurch, New Zealand",
+        "google_place_id": "EjwxNS8yNCBCcm9hZCBTdHJlZXQsIFdvb2xzdG9uLCBDaHJpc3RjaHVyY2ggODAyMywgTmV3IFplYWxhbmQiOBo2CjASLgoUChIJF8YrK3wnMm0RTE0r_2qTXd0QGCoUChIJAxQoK3wnMm0RH5cYn4ue4-kSAjE1",
+        "address_street": "24 Broad Street",
+        "address_locality": "Broad Street",
+        "address_city": "Woolston",
+        "address_state": "Canterbury",
+        "address_country": "NZ",
+        "address_postcode": "8023",
+        "measurement_type": "metre",
+        "timezone": "UTC",
         "enviro_processed_at": null,
-        "updated_at": "2024-01-26T01:25:34.000000Z",
-        "created_at": "2024-01-24T03:48:57.000000Z"
+        "updated_at": "2024-07-24T04:25:34.000000Z",
+        "created_at": "2024-06-18T22:28:41.000000Z"
     },
-    "project_link": "http:\/\/datanest.localhost:8080\/open-project\/005056a4-ecd7-4ded-87bc-dad952efe1a5",
+    "workflow": null,
+    "project_link": "http:\/\/datanest.localhost:8080\/open-project\/abfe47e9-741c-4a63-b44c-6347dcbdbe16",
+    "collection_link": "http:\/\/datanest.localhost:8080\/open-project\/abfe47e9-741c-4a63-b44c-6347dcbdbe16?redirect=%2Fgather%3Fredirect%3Dcollection",
     "item": {
-        "id": 1128954,
-        "project_uuid": "005056a4-ecd7-4ded-87bc-dad952efe1a5",
-        "app_uuid": "d0b47e4b-6b98-4b77-aee4-2b02a25898ec",
+        "id": 1337157,
+        "project_uuid": "abfe47e9-741c-4a63-b44c-6347dcbdbe16",
+        "app_uuid": "9f6ce399-84c9-4318-a9d6-70d3f16afe75",
         "type": 3,
-        "title": "Test",
+        "title": "Soil Logging (TabLogs Enviro)-1",
         "lab_title": null,
         "original_title": null,
-        "latitude": 40.7094756,
-        "longitude": -74.0072955,
-        "label_title": null,
+        "latitude": -43.5595023,
+        "longitude": 172.6868331,
         "sample_type": 3,
+        "display_sample_type": "Gather",
         "hidden": false,
         "icon_size": null,
-        "label_position": "{\"lat\": null, \"lng\": null}",
-        "is_label_hidden": 0,
+        "label_position": {
+            "offsetX": 0,
+            "offsetY": 0
+        },
+        "is_label_hidden": false,
         "label_color": null,
         "label_shadow_color": null,
         "label_size": null,
-        "is_label_underlined": null,
-        "is_label_asterisk_appended": null,
+        "is_label_underlined": false,
+        "is_label_asterisk_appended": false,
         "marker_type": 0,
         "enviro_start_depth": null,
         "enviro_end_depth": null,
@@ -180,13 +231,232 @@ Schema:
         "enviro_duplicate_of_id": null,
         "enviro_triplicate_of_id": null,
         "enviro_composite_of": null,
-        "enviro_matrix": 0,
-        "created_at": "2024-01-25T00:20:28.000000Z",
-        "updated_at": "2024-01-25T00:20:28.000000Z",
+        "enviro_matrix": "soil",
+        "created_at": "2024-06-18T23:05:14.000000Z",
+        "updated_at": "2024-06-18T23:10:57.000000Z",
         "deleted_at": null
     },
     "file": null,
-    "document": null
+    "document": null,
+    "artifacts": [
+        {
+            "type": "trigger",
+            "artifact_label": "App Item Updated by Brandon De Rose",
+            "trigger_id": 5680,
+            "trigger_type": "App Item Updated"
+        },
+        {
+            "type": "action",
+            "artifact_type": "Set Gather Value",
+            "action_id": 11374,
+            "action_label": null,
+            "app_uuid": "9f6ce399-84c9-4318-a9d6-70d3f16afe75",
+            "item_id": 1337157,
+            "field_id": 553327,
+            "app_title": "Soil Logging (TabLogs Enviro)",
+            "field_label": "Reviewed by",
+            "new_value": null
+        },
+        {
+            "type": "action",
+            "artifact_type": "Generate Maps Figure",
+            "action_id": 11375,
+            "action_label": null,
+            "files": [
+                {
+                    "uuid": "9c96651c-a12c-45f6-8b0d-f2a58d47f378",
+                    "project_uuid": "abfe47e9-741c-4a63-b44c-6347dcbdbe16",
+                    "display_name": "Figure 1. Untitled Figure.png",
+                    "path": "Figures",
+                    "size_mb": 0.24438190460205,
+                    "version": 18,
+                    "is_final": false,
+                    "virus_status": 1,
+                    "review_status": 0,
+                    "review_comments": null,
+                    "formatter_comments": null,
+                    "created_at": "2024-07-23T01:19:14.000000Z",
+                    "updated_at": "2024-07-24T04:33:46.000000Z",
+                    "deleted_at": null
+                }
+            ]
+        },
+        {
+            "type": "action",
+            "artifact_type": "Send Email",
+            "action_id": 11376,
+            "action_label": null,
+            "recipients": [
+                "bob@smith.com"
+            ],
+            "subject": "Data Event App Item Updated",
+            "body": "Soil Logging (TabLogs Enviro) was App Item Updated by Brandon De Rose with reference Soil Logging (TabLogs Enviro)-1",
+            "attachments": [
+                {
+                    "id": "2xqkrcm",
+                    "file": {
+                        "id": "9c96651c-a12c-45f6-8b0d-f2a58d47f378",
+                        "path": "Figures",
+                        "context": null,
+                        "s3_file": "files\/5e2910e0100e8\/19686\/Figures\/Figure 1. Untitled Figure_58107.png",
+                        "size_mb": 0.24356460571289,
+                        "version": 3,
+                        "is_final": false,
+                        "created_at": "2024-07-23T01:19:14.000000Z",
+                        "deleted_at": null,
+                        "expires_at": null,
+                        "is_pending": false,
+                        "project_id": 19686,
+                        "updated_at": "2024-07-23T01:20:54.000000Z",
+                        "document_id": null,
+                        "display_name": "Figure 1. Untitled Figure.png",
+                        "virus_status": 1,
+                        "review_status": 0,
+                        "review_comments": null,
+                        "comments_file_id": null,
+                        "uploader_user_id": null,
+                        "formatter_comments": null
+                    },
+                    "name": "Figure 1. Untitled Figure.png",
+                    "type": "File",
+                    "file_id": "9c96651c-a12c-45f6-8b0d-f2a58d47f378",
+                    "figure_id": null,
+                    "document_id": null,
+                    "convert_to_pdf": false,
+                    "auto_doc_options": null
+                }
+            ]
+        },
+        {
+            "type": "action",
+            "artifact_type": "Send Webhook",
+            "action_id": 11377,
+            "action_label": null,
+            "webhook_url": "https:\/\/webhook.site\/70d82285-9c73-4820-8fba-048971fed129",
+            "sent_at": "2024-07-24T04:33:49.826622Z"
+        },
+        {
+            "type": "action",
+            "artifact_type": "Generate Maps Figure",
+            "action_id": 11378,
+            "action_label": null,
+            "files": [
+                {
+                    "uuid": "9c98a185-5ef6-4775-8667-5458cd3f38e2",
+                    "project_uuid": "abfe47e9-741c-4a63-b44c-6347dcbdbe16",
+                    "display_name": "Figure Basemap Figure.png",
+                    "path": "Figures",
+                    "size_mb": 0.12800884246826,
+                    "version": 6,
+                    "is_final": false,
+                    "virus_status": 1,
+                    "review_status": 0,
+                    "review_comments": null,
+                    "formatter_comments": null,
+                    "created_at": "2024-07-24T03:59:48.000000Z",
+                    "updated_at": "2024-07-24T04:34:03.000000Z",
+                    "deleted_at": null
+                }
+            ]
+        },
+        {
+            "type": "action",
+            "artifact_type": "Generate Insights Graph",
+            "action_id": 11379,
+            "action_label": null,
+            "files": [
+                {
+                    "uuid": "9c9665d9-e113-4747-93bc-c30ce83c6f98",
+                    "project_uuid": "abfe47e9-741c-4a63-b44c-6347dcbdbe16",
+                    "display_name": "Untitled 745 - 1 - 1.png",
+                    "path": "Data Insights\/Untitled 745",
+                    "size_mb": 0.004267692565918,
+                    "version": 27,
+                    "is_final": false,
+                    "virus_status": 1,
+                    "review_status": 0,
+                    "review_comments": null,
+                    "formatter_comments": null,
+                    "created_at": "2024-07-23T01:21:18.000000Z",
+                    "updated_at": "2024-07-24T04:34:10.000000Z",
+                    "deleted_at": null
+                }
+            ],
+            "graph_id": 745
+        }
+    ],
+    "log": [
+        [
+            "INFO",
+            "2024-07-24T04:33:32.539534Z",
+            "Event started. Trigger: App Item Updated by Brandon De Rose"
+        ],
+        [
+            "INFO",
+            "2024-07-24T04:33:32.544858Z",
+            "All Conditions passed!"
+        ],
+        [
+            "INFO",
+            "2024-07-24T04:33:32.553760Z",
+            "Set Gather Value for Reviewed by to \"NULL\""
+        ],
+        [
+            "INFO",
+            "2024-07-24T04:33:32.555614Z",
+            "Starting Figure generation..."
+        ],
+        [
+            "INFO",
+            "2024-07-24T04:33:48.599407Z",
+            "Generated Figure: Figure 1. Untitled Figure.png taking 16.04 seconds."
+        ],
+        [
+            "INFO",
+            "2024-07-24T04:33:48.601236Z",
+            "Starting Email action..."
+        ],
+        [
+            "INFO",
+            "2024-07-24T04:33:48.601358Z",
+            "Sending email to bob@smith.com"
+        ],
+        [
+            "INFO",
+            "2024-07-24T04:33:48.666253Z",
+            "Attaching File: Figure 1. Untitled Figure.png"
+        ],
+        [
+            "INFO",
+            "2024-07-24T04:33:48.666631Z",
+            "Sending email with subject: Data Event App Item Updated"
+        ],
+        [
+            "INFO",
+            "2024-07-24T04:33:50.856276Z",
+            "Successfully sent POST Webhook to https:\/\/webhook.site\/..."
+        ],
+        [
+            "INFO",
+            "2024-07-24T04:33:50.858485Z",
+            "Starting Figure generation..."
+        ],
+        [
+            "INFO",
+            "2024-07-24T04:34:05.892166Z",
+            "Generated Figure: Figure Basemap Figure.png taking 15.03 seconds."
+        ],
+        [
+            "INFO",
+            "2024-07-24T04:34:05.893100Z",
+            "Starting Insights Graph generation..."
+        ],
+        [
+            "INFO",
+            "2024-07-24T04:34:11.904622Z",
+            "Generated Insights Graphs successfully"
+        ]
+    ]
 }
 ```
 </details>
