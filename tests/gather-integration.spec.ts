@@ -1,6 +1,7 @@
 import { it, expect, beforeAll, afterAll } from 'vitest';
 import dotenv from 'dotenv';
 import DatanestClient, { gather, projects } from '../src';
+import { listProjectItems } from '../src/gather';
 
 dotenv.config();
 
@@ -148,6 +149,33 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         await gather.deleteItem(client, projectUuid, itemDetails.id);
     }, { timeout: 15000 });
+
+    it('Can filter items by bounding box', async () => {
+        const mapsProjectUuid = process.env.MAPS_PROJECT_UUID || process.env.ENVIRO_PROJECT_UUID || projectUuid;
+        const client = new DatanestClient();
+        const allProjectItems = await listProjectItems(client, mapsProjectUuid);
+        let minLat = 90;
+        let maxLat = -90;
+        let minLon = 180;
+        let maxLon = -180;
+        for (let item of allProjectItems.data) {
+            if (item.latitude && item.longitude) {
+                minLat = Math.min(minLat, item.latitude);
+                maxLat = Math.max(maxLat, item.latitude);
+                minLon = Math.min(minLon, item.longitude);
+                maxLon = Math.max(maxLon, item.longitude);
+            }
+        }
+
+        const bboxItems = await listProjectItems(client, mapsProjectUuid, 1, {
+            bbox: [minLon, minLat, maxLon, maxLat / 2]
+        });
+        expect(bboxItems.data).is.an('array');
+        expect(bboxItems.meta.total).is.lessThan(allProjectItems.meta.total);
+        if (bboxItems.data.length === 0) {
+            console.warn('Warning: No items found in the bounding box, unable to verify bbox filter worked');
+        }
+    });
 
 } else {
     it('Skipping gather integration tests', () => { });

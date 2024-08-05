@@ -270,6 +270,14 @@ export class DatanestResponseError extends Error {
  */
 export type Timestamp = string;
 
+export type Timestamps = {
+    created_at: Timestamp,
+    updated_at: Timestamp,
+};
+export type SoftDelete = {
+    deleted_at?: Timestamp | null,
+};
+
 /**
  * Supported ISO 3166-1 alpha-2 country codes
  */
