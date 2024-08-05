@@ -59,6 +59,11 @@ bun add @datanest-earth/nodejs-client
 
 Datanest's API uses API keys to authenticate requests along with a HMAC signature [(see docs)](./docs/readme.md) [(see implementation example.)](https://github.com/search?q=repo%3Adatanest-earth/datanest-nodejs-client%20signRequest&type=code) The signature may be tricky to implement, so we recommend using this package to get started.
 
+### Security Notice
+
+**Do not expose your API key and secret in client-side code.**
+This package is intended for server-side use only.
+
 ## Full REST API Documentation
   
 #### See the [Postman Documentation](docs/postman/readme.md)
