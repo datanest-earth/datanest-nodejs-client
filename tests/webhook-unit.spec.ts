@@ -71,44 +71,42 @@ const REQUEST_BODY = {
   document: null,
 };
 
-if (process.env.DATANEST_API_SECRET) {
-  it("should authenticate webhook", async () => {
-    const request = new Request(
-      "https://webhook.site/cb397c76-85b3-4710-8935-9f30fb439774",
-      {
-        method: "POST",
-        headers: {
-          "X-Signature":
-            "8b9dcd522db8757a5656a4819c269f6634f862f9460629f4d15fb17981dfda4e",
-          "X-Timestamp": "1720756735",
-        },
-        body: JSON.stringify(REQUEST_BODY),
-      }
-    );
-    const secretKey = process.env.DATANEST_API_SECRET as string;
-    const result = await authenticateWebhook(request, secretKey, true);
-    expect(result).toBe(true);
-  });
+// Only used for unit testing the signature below, not a valid secret.
+const secretKey = '2ccad589-ba74-4a0f-8914-aecb00e05816';
 
-  it("should not authenticate webhook: bad timestamp", async () => {
-    const request = new Request(
-      "https://webhook.site/cb397c76-85b3-4710-8935-9f30fb439774",
-      {
-        method: "POST",
-        headers: {
-          "X-Signature":
-            "8b9dcd522db8757a5656a4819c269f6634f862f9460629f4d15fb17981dfda4e",
-          "X-Timestamp": "1720756735",
-        },
-        body: JSON.stringify(REQUEST_BODY),
-      }
-    );
-    const secretKey = process.env.DATANEST_API_SECRET as string;;
-    const result = await authenticateWebhook(request, secretKey);
-    expect(result).toBe(false);
-  });
+it("should authenticate webhook", async () => {
+  const request = new Request(
+    "https://webhook.site/cb397c76-85b3-4710-8935-9f30fb439774",
+    {
+      method: "POST",
+      headers: {
+        "X-Signature":
+          "075acc1b30a33b753c247d39e0765a7ea107cb5086421ae05460427760464242",
+        "X-Timestamp": "1720756735",
+      },
+      body: JSON.stringify(REQUEST_BODY),
+    }
+  );
+  const result = await authenticateWebhook(request, secretKey, true);
+  expect(result).toBe(true);
+});
 
-}
+it("should not authenticate webhook: bad timestamp", async () => {
+  const request = new Request(
+    "https://webhook.site/cb397c76-85b3-4710-8935-9f30fb439774",
+    {
+      method: "POST",
+      headers: {
+        "X-Signature":
+          "f653ea2d3aecd628c2484b489abc754faf66b380ad2e68285820bb7fde54976a",
+        "X-Timestamp": "1720756735",
+      },
+      body: JSON.stringify(REQUEST_BODY),
+    }
+  );
+  const result = await authenticateWebhook(request, secretKey, true);
+  expect(result).toBe(false);
+});
 
 it("should not authenticate webhook: bad signature", async () => {
   const request = new Request(
