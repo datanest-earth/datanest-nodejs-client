@@ -557,3 +557,37 @@ When a `file` object is provided in the payload, there will be `temporary_s3_lin
 ## Tips to prevent infinite loops
 
 You can use Data Event Conditions to check, for example, a dropdown is set to "Ready for Review". The first action could be a "Set Gather Value" to set the dropdown to "Sent for Review", before the second action could be a "Send Email" action. This would prevent the email from being sent twice, especially if someone is making rapid changes during data collection. For the user to resend the email they can manually set it back to "Ready for Review" for the Data Event to trigger again.
+
+
+## Webhook Authentication
+
+Your Webhook receiving system should verify the X-Signature header for best security practice, ensuring requests have actually come from Datanest. You can authenticate the webhooks sent by Datanest by setting up an API key in the Datanest web application under `Company Settings > API Keys` and designating the key to be used for webhook authentication.
+
+![](./images/api-key-webhook-designate.png)
+
+There will only ever be one webhook designated API Key per company. Designating a new key will automatically revoke the previous key as the webhook designated key.
+
+
+#### Headers
+
+Once set, the webhook will contain the following headers for authentication:
+
+- `X-API-Key`
+- `X-Timestamp`
+- `X-Signature`
+
+#### X-Signature Hash Details
+
+- **Hash Format**: SHA256 HMAC
+- **Hash Key**: API Secret Key
+- **Hash Payload**
+    **With body**:
+    ```
+    <url>:<method>:<body>:<X-Timestamp>
+    ```
+    **Without body**:
+    ```
+    <url>:<method>:<X-Timestamp>
+    ```
+#### Verification
+ Please refer `src/webhook.ts` > `authenticateWebhook` function for auth verification implementation.
