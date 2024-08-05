@@ -16,9 +16,8 @@ export async function authenticateWebhook(
   ) {
     return false;
   }
-  const content = `${request.method}:${request.url}:${
-    request.body ? (await request.text()).replace(/\//g, "\\/") + ":" : ""
-  }${timestamp}`;
+  const content = `${request.method}:${request.url}:${request.body ? (await request.text()).replace(/\//g, "\\/") + ":" : ""
+    }${timestamp}`;
   const hmac = createHmac("sha256", secretKey);
   const hash = hmac.update(content).digest("hex");
   return hash === signature;
