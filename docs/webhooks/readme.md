@@ -15,6 +15,8 @@ You can [learn more about Data Events here](https://app.datanest.earth/support/4
 
 ## Webhook Payloads
 
+You can find [TypeScript definitions for the Webhook request payload here](../../src/webhook.ts)
+
 Schema:
 ```ts
 { 
