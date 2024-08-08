@@ -39,6 +39,10 @@ export type File = {
     project_uuid: UUID;
     display_name: string;
     path: string;
+    /** Link to the web interface */
+    link?: string;
+    /** S3 file download link (expires after 10 minutes) */
+    temporary_url?: string;
     size_mb: null | number;
     version: number;
     is_final: boolean;

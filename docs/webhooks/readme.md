@@ -1,7 +1,7 @@
 
 ## Data Event Webhooks
 
-In the Datanest Web application, you can configure Data Event "Webhook Actions". These can be triggered by a number of 'Triggers' such as Gather App items (custom form data) being created, modified, a Gather Public Form is submitted, or when an Auto Doc file is marked finalized. More triggers are being added all the time.
+In the Datanest Web application, you can configure Data Event "Webhook Actions". These can be triggered by a number of 'Triggers' such as Gather App items (custom form data) being created, modified, a Gather Public Form is submitted, or when an Auto Doc file is marked finalized and more.
 
 You can add a "Send Webhook" Action to a data event to notify an external system of some event that has occurred in Datanest. This can be used to trigger a workflow in another system, or to send data to another system such as a third party API.
 
@@ -22,11 +22,15 @@ Schema:
     trigger: Trigger;
     project: Project;
     project_link: string;
+
+    // Various exports and artifacts from the Data Event
+    artifacts: Artifact[];
+    log: Log[];
+
+    // deprecated, use artifacts instead
     item: Item | null;
     file: File | null;
     document: Document | null;
-    artifacts: Artifact[];
-    log: Log[];
 }
 ```
 
@@ -98,6 +102,9 @@ Log is an array of arrays with length 3, with the following format:
 ]
 ```
 
+<details>
+<summary>Deprecated Payload Data</summary>
+
 ### File (Legacy)
 ```ts
 {
@@ -121,12 +128,9 @@ Log is an array of arrays with length 3, with the following format:
     link: string;
 }
 ```
+</details>
 
-### Project
-[See Projects API](../endpoints/projects.md)
-
-### Item
-[See Gather API](../endpoints/gather.md)
+## Payload Examples
 
 <details>
 <summary>Example 1: Gather App Item Updated or Created</summary>
@@ -461,7 +465,7 @@ Log is an array of arrays with length 3, with the following format:
 ```
 </details>
 
-<details>
+<!-- <details>
 <summary>Example 2: Document Finalized</summary>
 
 When a `file` is provided, there will be `temporary_s3_link` with a 10 minute expiration to download the file.
@@ -548,7 +552,29 @@ The file, document and project `link`s are for the Datanest web application inte
     }
 }
 ```
-</details>
+</details> -->
+
+## Tools for testing Webhooks
+
+#### Webhook.site
+You can test your Webhook URL by using a service like [Webhook.site](https://webhook.site) (not affiliated) to see the payload sent by Datanest.
+
+#### Ngrok
+You may want to use Ngrok to expose your local server to the internet for testing webhooks. [See Ngrok Getting Started](https://ngrok.com/docs/getting-started/)
+
+e.g. `ngrok http http://localhost:8080`
+
+This will expose your local server to the internet and provide a public URL like `https://12345678.ngrok.io` which can be used to receive webhooks from Datanest.
+
+## More Information
+
+You can retrieve more information about the project, item, or file by using the provided `uuid` or `id` in the payload.
+
+### Project REST API
+[See Projects API](../endpoints/projects.md)
+
+### Gather Item REST API
+[See Gather API](../endpoints/gather.md)
 
 ## Downloading Files
 
@@ -580,14 +606,14 @@ Once set, the webhook will contain the following headers for authentication:
 
 - **Hash Format**: SHA256 HMAC
 - **Hash Key**: API Secret Key
-- **Hash Payload**
-    **With body**:
-    ```
-    <url>:<method>:<body>:<X-Timestamp>
-    ```
-    **Without body**:
-    ```
-    <url>:<method>:<X-Timestamp>
-    ```
+- **Hash Payload**: `<url>:<method>:<body>:<X-Timestamp>`
+
 #### Verification
- Please refer `src/webhook.ts` > `authenticateWebhook` function for auth verification implementation.
+
+You can verify the webhook by hashing the payload with SHA256 using the API Secret Key and comparing it to the `X-Signature` header.
+
+The `X-Timestamp` header is used to prevent replay attacks. You can check the timestamp is within a reasonable time frame, e.g. +/- 60 seconds.
+
+#### Implementation Example
+
+Please refer to [src/webhook.ts](../../src/webhook.ts) > [authenticateWebhook](https://github.com/search?q=repo%3Adatanest-earth%2Fdatanest-nodejs-client%20authenticateWebhook&type=code) function for an auth verification implementation example.

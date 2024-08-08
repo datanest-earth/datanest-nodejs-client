@@ -125,3 +125,25 @@ it("should not authenticate webhook: bad signature", async () => {
   const result = await authenticateWebhook(request, secretKey, true);
   expect(result).toBe(false);
 });
+
+it("should not authenticate webhook: old timestamp", async () => {
+  const request = new Request(
+    "https://webhook.site/cb397c76-85b3-4710-8935-9f30fb439774",
+    {
+      method: "POST",
+      headers: {
+        "X-Signature":
+          "075acc1b30a33b753c247d39e0765a7ea107cb5086421ae05460427760464242",
+        "X-Timestamp": "1720756735",
+      },
+      body: JSON.stringify(REQUEST_BODY),
+    }
+  );
+  const [valid, invalid] = await Promise.all([
+    authenticateWebhook(request, secretKey, true),
+    authenticateWebhook(request, secretKey),
+  ]);
+  expect(valid).toBe(true);
+  expect(invalid).toBe(false);
+});
+
