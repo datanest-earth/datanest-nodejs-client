@@ -151,13 +151,16 @@ listProjects();
 This package includes endpoints with type definitions.
 
 Function & Type Definitions:
-- [Projects API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/projects.html)
-- [Gather API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/gather.html)
-- [Integrations API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/integrations.html)
-- [Company Users API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/users.html)
-- [Project Teams API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/teams.html)
-- [Files API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/files.html)
-- [Company Workflows & Custom Roles API](https://tsdocs.dev/docs/@datanest-earth/nodejs-client/latest/modules/workflows.html)
+- [Projects API](./src/projects.ts)
+- [Gather API](./src/gather.ts)
+- [Enviro API](./src/enviro.ts)
+- [Integrations API](./src/integrations.ts)
+- [Company Users API](./src/users.ts)
+- [Project Teams API](./src/teams.ts)
+- [Files API](./src/files.ts)
+- [Maps API](./src/maps.ts)
+- [Company Workflows & Custom Roles API](./src/workflows.ts)
+- [Webhook Types and Signature Verification](./src/webhook.ts)
 
 You can also see the [TypeScript source code](./src/), this can be useful to understand the API request & responses type definitions.
 
@@ -201,3 +204,61 @@ const client = new DatanestClient();
 client.setBaseUrl('https://app.datanest.earth/api');
 ```
 </details>
+
+## Handling Errors
+
+The client will throw a `DatanestResponseError` when the API returns a non-200/300 status code.
+
+```ts
+import DatanestClient, { DatanestResponseError } from '@datanest-earth/nodejs-client';
+
+// Disable the default behavior of logging error status and response data
+client.setLogErrors(false);
+
+// With await try-catch
+try {
+    await client.get('v1/projects/' + projectUuid);
+} catch (err) {
+    if (err instanceof DatanestResponseError) {
+      if (err.status === 404) {
+        // Something was not found
+        return;
+      }
+      console.error(err.message, err.data);
+    }
+    throw err;
+}
+
+// With callbacks
+client.get('v1/projects/' + projectUuid)
+  .then(response => {
+    if (!response.ok) {
+      throw new DatanestResponseError(response);
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log(data);
+  })
+  .catch(err => {
+    if (err instanceof DatanestResponseError) {
+      if (err.status === 404) {
+        // Something was not found
+        return;
+      }
+      console.error(err.message, err.data);
+    }
+    throw err;
+  });
+```
+
+### Error Codes
+
+- 400: Bad Request
+- 401: Unauthorized, likely an invalid API key or request signature
+- 403: Forbidden
+- 404: Not Found, either the url is incorrect or UUID or ID provided does not exist
+- 405: Method Not Allowed
+- 422: Unprocessable Entity, this indicates a validation error from your request body
+- 429: Too Many Requests, you are being rate-limited
+- 500: Internal Server Error - These should not happen, please contact support there is likely an issue on our end

@@ -31,6 +31,7 @@ export default class DatanestClient {
     private apiSecret: string;
     private baseUrl: string;
     private clientId: string | null = null;
+    private logErrors: boolean = true;
 
     /**
      * Create a new Datanest API client
@@ -56,6 +57,10 @@ export default class DatanestClient {
         if (this.apiKey === "" || this.apiSecret === "") {
             throw new Error('API key and secret are required.');
         }
+    }
+
+    public setLogErrors(logErrors: boolean) {
+        this.logErrors = logErrors;
     }
 
     private signRequest(url: string, requestOptions: DatanestRequestInit) {
@@ -125,7 +130,11 @@ export default class DatanestClient {
         const response = await fetch(url, options);
 
         if (response.status > 299) {
-            throw new DatanestResponseError(`Datanest API Failed: ${path}: ${response.status}`, response.status, await response.json());
+            const error = new DatanestResponseError(`Datanest API Failed: ${path}: ${response.status}`, response.status, await response.json());
+            if (this.logErrors) {
+                console.error(error.message, error.data);
+            }
+            throw error;
         }
 
         return response;
