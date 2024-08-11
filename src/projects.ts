@@ -22,6 +22,10 @@ export type Project = {
     project_client: string,
     project_type: ProjectType,
     workflow_id: number | null,
+    /** Timestamp of when the workflow started importing, null if importing is complete. */
+    workflow_importing_at: Timestamp | null,
+    /** Is the workflow currently importing in the background, more Apps, Auto Docs, Data Events and Figures may appear in the project */
+    is_workflow_importing: boolean;
     archived: boolean,
     is_confidential: boolean,
     is_confirmed: boolean,

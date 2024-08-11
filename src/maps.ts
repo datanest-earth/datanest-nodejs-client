@@ -1,5 +1,5 @@
 import { Item } from "./gather";
-import DatanestClient, { PaginatedResponse, SoftDelete, Timestamp, Timestamps, UUID } from "./index";
+import DatanestClient, { PaginatedResponse, SoftDelete, Timestamps, UUID } from "./index";
 
 export type GeoJsonFeature = {
     type: "Feature";
