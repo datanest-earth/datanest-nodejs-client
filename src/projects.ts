@@ -177,6 +177,28 @@ export async function createProject(client: DatanestClient, projectData: Project
 }
 
 /**
+ * Wait for a project workflow import to complete, up to a timeout
+ * @param client 
+ * @param projectUuid 
+ * @param timeout 
+ * @throw Error Timeout waiting for project workflow to complete
+ * @throw DatanestResponseError Request HTTP server or validation error
+ */
+export async function waitForProjectWorkflow(client: DatanestClient, projectUuid: string, timeout = 45000): Promise<Project> {
+    let projectData: Project | undefined = undefined;
+    const start = Date.now();
+    while (projectData?.workflow_importing_at !== null) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        projectData = (await getProject(client, projectUuid)).project;
+        if (Date.now() - start > timeout) {
+            throw new Error('Timeout waiting for project workflow to complete');
+        }
+    }
+
+    return projectData;
+}
+
+/**
  * Update properties of a project
  * @param client 
  * @param projectData 

@@ -206,6 +206,10 @@ export default class DatanestClient {
      */
     public setBaseUrl(baseUrl: string) {
         this.baseUrl = baseUrl;
+
+        if (!this.baseUrl.endsWith('/api')) {
+            throw new Error('Invalid base URL. Must end with "/api"');
+        }
     }
 
     /**
