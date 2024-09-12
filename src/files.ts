@@ -60,6 +60,15 @@ export type File = {
     deleted_at: Timestamp | null;
 };
 
+export type FileVersion = {
+    id: number;
+    file_uuid: UUID;
+    version: number;
+    size_mb: number;
+    created_at: Timestamp;
+    deleted_at: Timestamp | null;
+};
+
 /**
  * Get project files
  * @param client Datanest REST API Client
@@ -91,6 +100,48 @@ export async function getProjectFile(client: DatanestClient, projectUuid: UUID, 
          * This maybe undefined if the VirusStatus is FAILED.
          */
         temporary_url?: string
+    };
+}
+
+/**
+ * Get a project file with history
+ * @param client Datanest REST API Client
+ * @param projectUuid UUID of the project
+ * @param fileUuid UUID of the file
+ * @throws DatanestResponseError Request HTTP server or validation error
+ */
+export async function getProjectFileHistory(client: DatanestClient, projectUuid: UUID, fileUuid: UUID) {
+    const response = await client.get('v1/projects/' + projectUuid + '/files/' + fileUuid + '/history');
+
+    const data = await response.json();
+    return data as File & {
+        /**
+         * Temporary URL to download the file
+         * This maybe undefined if the VirusStatus is FAILED.
+         */
+        temporary_url?: string
+
+        previous_versions: FileVersion[];
+    };
+}
+
+/**
+ * Get project file version download url
+ * @param client Datanest REST API Client
+ * @param projectUuid UUID of the project
+ * @param fileUuid UUID of the file
+ * @param version Version number or id
+ * @throws DatanestResponseError Request HTTP server or validation error
+ */
+export async function getProjectFileVersionUrl(client: DatanestClient, projectUuid: UUID, fileUuid: UUID, version: number) {
+    const response = await client.get('v1/projects/' + projectUuid + '/files/' + fileUuid + '/history/' + version + '/temporary-url');
+
+    const data = await response.json();
+    return data as FileVersion & {
+        /**
+         * Temporary URL to download the file
+         */
+        temporary_url: string
     };
 }
 
