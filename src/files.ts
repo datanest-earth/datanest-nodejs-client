@@ -180,6 +180,9 @@ export async function createNewFileUploadUrl(client: DatanestClient, projectUuid
     };
 }
 
+/**
+ * Accept an uploaded file
+ */
 export async function acceptFile(client: DatanestClient, projectUuid: UUID, fileUuid: UUID): Promise<File> {
     const response = await client.post('v1/projects/' + projectUuid + '/files/' + fileUuid + '/accept-upload');
     const data = await response.json();
@@ -190,6 +193,9 @@ export async function deleteFile(client: DatanestClient, projectUuid: UUID, file
     await client.delete('v1/projects/' + projectUuid + '/files/' + fileUuid);
 }
 
+/**
+ * View recent notifications, which include file exports
+ */
 export async function getRecentNotifications(client: DatanestClient, projectUuid: UUID, page: number = 1) {
     const response = await client.get('v1/projects/' + projectUuid + '/notifications', { page });
     const data = await response.json();

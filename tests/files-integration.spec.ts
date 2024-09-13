@@ -143,7 +143,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(version2Download.temporary_url).is.a('string');
 
         await deleteFile(client, fileProjectUuid, file.uuid);
-    });
+    }, { timeout: 10000 });
 } else {
     it('Skipping integration tests', () => { });
     console.warn('[WARN] Skipping integration tests because DATANEST_API_KEY, DATANEST_API_SECRET or DATANEST_API_BASE_URL is not set.');
