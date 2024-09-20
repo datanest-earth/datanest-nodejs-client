@@ -146,7 +146,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         timeout: 15000,
     });
 
-    it.concurrent('Test Workflow user assignment, custom role assignment and team member integrity', async () => {
+    it('Test Workflow user assignment, custom role assignment and team member integrity', async () => {
         const [customRoles, workflows] = await Promise.all([getCompanyCustomRoles(client), getCompanyWorkflows(client)]);
         let remainingUsers = companyUsers.filter(cu => cu.uuid !== randomProjectManager.uuid);
         const workflowUser = remainingUsers[Math.floor(
