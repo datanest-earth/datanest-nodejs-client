@@ -76,8 +76,8 @@ export type FileVersion = {
  * @param page Page number
  * @throws DatanestResponseError Request HTTP server or validation error
  */
-export async function getProjectFiles(client: DatanestClient, projectUuid: UUID, page: number = 1) {
-    const response = await client.get('v1/projects/' + projectUuid + '/files', { page });
+export async function getProjectFiles(client: DatanestClient, projectUuid: UUID, page: number = 1, options?: { path?: string, latest?: boolean }) {
+    const response = await client.get('v1/projects/' + projectUuid + '/files', { page, ...options });
 
     const data = await response.json();
     return data as PaginatedResponse<File>;

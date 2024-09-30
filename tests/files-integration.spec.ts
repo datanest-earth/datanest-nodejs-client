@@ -7,9 +7,10 @@ import { readFileSync, unlink, unlinkSync, writeFileSync } from 'fs';
 dotenv.config();
 
 if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.env.DATANEST_API_BASE_URL) {
+    const fileProjectUuid = process.env.FILE_PROJECT_UUID || process.env.ENVIRO_PROJECT_UUID || 'd91c8a4e-5dc8-48ba-bdc1-5584ff94b4c9';
+    const filesToCleanup: string[] = [];
     it.concurrent('GET project files, if there is a file check you can get the project link', async () => {
         const client = new DatanestClient();
-        const fileProjectUuid = process.env.FILE_PROJECT_UUID || process.env.ENVIRO_PROJECT_UUID || 'd91c8a4e-5dc8-48ba-bdc1-5584ff94b4c9';
         const files = await getProjectFiles(client, fileProjectUuid);
 
         expect(files.data).is.an('array');
@@ -35,7 +36,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     });
 
     it.concurrent('Can upload a blob to a project', async () => {
-        const fileProjectUuid = process.env.FILE_PROJECT_UUID || process.env.ENVIRO_PROJECT_UUID || 'd91c8a4e-5dc8-48ba-bdc1-5584ff94b4c9';
         const client = new DatanestClient();
 
         const file = await uploadFile(client, fileProjectUuid, 'API Upload', 'test.txt', new Blob(['Hello, World!']));
@@ -47,20 +47,18 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const downloadedContents = await (await fetch(file.temporary_url!)).text();
         expect(downloadedContents).toBe('Hello, World!');
 
-        // Cleanup
-        await deleteFile(client, fileProjectUuid, file.uuid)
+        filesToCleanup.push(file.uuid);
     });
 
     it.concurrent('Can upload a local file with fs readFileSync api and create a export download notification', async () => {
-        const fileProjectUuid = process.env.FILE_PROJECT_UUID || process.env.ENVIRO_PROJECT_UUID || 'd91c8a4e-5dc8-48ba-bdc1-5584ff94b4c9';
         const client = new DatanestClient();
 
         writeFileSync('./test-with-notification.txt', 'Hello, World 2');
-        const file = await uploadFile(client, fileProjectUuid, 'API Upload', 'test-with-notification.txt', readFileSync('./test-with-notification.txt'), { create_notification: true });
+        const file = await uploadFile(client, fileProjectUuid, 'API Upload/Notification', 'test-with-notification.txt', readFileSync('./test-with-notification.txt'), { create_notification: true });
         unlinkSync('./test-with-notification.txt');
         expect(file.uuid).is.a('string');
         expect(file.display_name).toBe('test-with-notification.txt');
-        expect(file.path).toBe('API Upload');
+        expect(file.path).toBe('API Upload/Notification');
         expect(file.size_mb).toBeLessThan(0.01);
 
         const notifications = await getRecentNotifications(client, file.project_uuid);
@@ -81,44 +79,41 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     });
 
     it.concurrent('Can upload a string as a file', async () => {
-        const fileProjectUuid = process.env.FILE_PROJECT_UUID || process.env.ENVIRO_PROJECT_UUID || 'd91c8a4e-5dc8-48ba-bdc1-5584ff94b4c9';
         const client = new DatanestClient();
-
-        const file = await uploadFile(client, fileProjectUuid, 'API Upload', 'test-string-upload.txt', 'My content as a string', { create_notification: true });
+        const file = await uploadFile(client, fileProjectUuid, 'API Upload/String/', 'test-string-upload.txt', 'My content as a string', { create_notification: true });
         expect(file.uuid).is.a('string');
         expect(file.display_name).toBe('test-string-upload.txt');
-        expect(file.path).toBe('API Upload');
+        expect(file.path).toBe('API Upload/String'); // trims trailing slash
         expect(file.size_mb).toBeLessThan(0.01);
 
         const downloadedContents = await (await fetch(file.temporary_url!)).text();
         expect(downloadedContents).toBe('My content as a string');
 
-        await deleteFile(client, fileProjectUuid, file.uuid);
+        filesToCleanup.push(file.uuid);
     });
 
     it.concurrent('Version control', async () => {
-        const fileProjectUuid = process.env.FILE_PROJECT_UUID || process.env.ENVIRO_PROJECT_UUID || 'd91c8a4e-5dc8-48ba-bdc1-5584ff94b4c9';
         const uniqueFileName = 'multiple-versions-' + Math.random().toString(36).substring(7) + '.txt';
         const client = new DatanestClient();
 
-        const file = await uploadFile(client, fileProjectUuid, 'API Upload', uniqueFileName, 'Version 1');
+        const file = await uploadFile(client, fileProjectUuid, 'API Upload/Versions', uniqueFileName, 'Version 1');
         expect(file.uuid).is.a('string');
         expect(file.version).toBe(1);
         expect(file.display_name).toBe(uniqueFileName);
-        expect(file.path).toBe('API Upload');
+        expect(file.path).toBe('API Upload/Versions');
         expect(file.size_mb).toBeLessThan(0.01);
 
-        const fileV2 = await uploadFile(client, fileProjectUuid, 'API Upload', uniqueFileName, 'Version 2');
+        const fileV2 = await uploadFile(client, fileProjectUuid, 'API Upload/Versions', uniqueFileName, 'Version 2');
         expect(fileV2.uuid).toBe(file.uuid);
         expect(fileV2.version).toBe(2);
         expect(fileV2.display_name).toBe(uniqueFileName);
-        expect(fileV2.path).toBe('API Upload');
+        expect(fileV2.path).toBe('API Upload/Versions');
 
-        const fileV3 = await uploadFile(client, fileProjectUuid, 'API Upload', uniqueFileName, 'Version 3');
+        const fileV3 = await uploadFile(client, fileProjectUuid, 'API Upload/Versions', uniqueFileName, 'Version 3');
         expect(fileV3.uuid).toBe(file.uuid);
         expect(fileV3.version).toBe(3);
         expect(fileV3.display_name).toBe(uniqueFileName);
-        expect(fileV3.path).toBe('API Upload');
+        expect(fileV3.path).toBe('API Upload/Versions');
 
         const versions = await getProjectFileHistory(client, fileProjectUuid, file.uuid);
         expect(versions.previous_versions).is.an('array');
@@ -142,8 +137,24 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(version2Download.version).toBe(2);
         expect(version2Download.temporary_url).is.a('string');
 
-        await deleteFile(client, fileProjectUuid, file.uuid);
+        filesToCleanup.push(file.uuid);
     }, { timeout: 10000 });
+
+    it('Can filter files by path', async () => {
+        const client = new DatanestClient();
+
+        const files = await getProjectFiles(client, fileProjectUuid, 1, { path: 'API Upload/Versions/' });
+        expect(files.data).is.an('array');
+        expect(files.data.length).toBeGreaterThan(0);
+        expect(files.data.every(f => f.path.startsWith('API Upload/Versions'))).toBe(true);
+    });
+
+    it('deletes file', async () => {
+        const client = new DatanestClient();
+        for (const fileUuid of filesToCleanup) {
+            await deleteFile(client, fileProjectUuid, fileUuid);
+        }
+    });
 } else {
     it('Skipping integration tests', () => { });
     console.warn('[WARN] Skipping integration tests because DATANEST_API_KEY, DATANEST_API_SECRET or DATANEST_API_BASE_URL is not set.');
