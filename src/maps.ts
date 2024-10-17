@@ -82,15 +82,15 @@ export type FigureLayer = {
     id: number,
     project_uuid: UUID,
     figure_id: number,
-    title: string,
-    type: "item_group" | string,
+    title: string | null,
+    type: "item_group" | string | null,
     is_default_item_group: true,
     /** Internal unique identifier for the group */
-    group_marker_key: "0_#000000",
+    group_marker_key: string | null,
     /** URL to SVG image */
-    marker_svg_url: "http://datanest.localhost:8080/markers/1",
+    marker_svg_url: string | null,
     /** HEX color code */
-    marker_color: string,
+    marker_color: string | null,
     bbox: BBox | null,
     geojson: GeoJsonFeature | null,
 } & Timestamps & SoftDelete;
