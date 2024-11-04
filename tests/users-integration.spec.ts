@@ -1,7 +1,7 @@
 import { it, expect, afterAll, beforeAll } from 'vitest';
 import dotenv from 'dotenv';
 import DatanestClient from '../src';
-import { User, deleteCompanyUser, getCompanyUsers, inviteCompanyUser, patchCompanyUser } from '../src/users';
+import { User, deleteCompanyUser, getCompanyExternalUserProjects, getCompanyExternalUsers, getCompanyUsers, inviteCompanyUser, patchCompanyUser, purgeCompanyExternalUser } from '../src/users';
 import { addExternalUserToProject, getProjectTeam, addProjectTeamMember, removeExternalUserToProject, removeProjectTeamMember, updateProjectMemberRole } from '../src/teams';
 import { Project, ProjectType, archiveProject, createProject, getProject, patchProject, waitForProjectWorkflow } from '../src/projects';
 import { assignProjectWorkflowAppUser, unassignProjectWorkflowAppUser, getCompanyCustomRoles, getCompanyWorkflows } from '../src/workflows';
@@ -263,6 +263,46 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users3.members.find(u => u.email === newExternalUser.email)).to.be.undefined;
         expect(users3.external_users.find(u => u.email === newExternalUser.email), 'unassigning user should remain in project team but not assigned to app').to.not.be.undefined;
         expect(users3.workflow_assignments?.workflow_apps[0].users.find(u => u.email === newExternalUser.email)).to.be.undefined;
+    }, { timeout: 30000 });
+
+    it.concurrent('Test company external user management', async () => {
+        const newUserName = 'Bob ' + Math.random().toString(36).substring(7);
+        const newUserEmail = 'bob-' + Math.random().toString(36).substring(7) + '@user.com';
+        const externalUserProject = (await createProject(client, {
+            project_number: 'test-' + Math.random().toString(36).substring(7),
+            project_name: 'My external workflow project',
+            project_client: 'My client',
+            project_address: '123 Fake Street',
+            address_country: 'GB',
+            project_manager_uuid: randomProjectManager.uuid,
+            project_type: ProjectType.PROJECT_TYPE_STANDARD,
+        })).project;
+
+        const users = await getProjectTeam(client, externalUserProject.uuid);
+        expect(users.members.length).to.be.equal(1, 'Only the project manager should be in the projects team members');
+        expect(users.external_users.length).to.be.equal(0, 'Should not be any external users in new project');
+
+        const newExternalUser = await addExternalUserToProject(client, externalUserProject.uuid, {
+            email: newUserEmail,
+            name: newUserName,
+        });
+
+        const users2 = await getProjectTeam(client, externalUserProject.uuid);
+        expect(users2.members.find(u => u.email === newExternalUser.email)).to.be.undefined;
+        expect(users2.external_users.find(u => u.email === newExternalUser.email)).to.not.be.undefined;
+
+        const companyExternalUsers = await getCompanyExternalUsers(client);
+        const newExternalUser2 = companyExternalUsers.data.find(u => u.email === newExternalUser.email);
+        expect(newExternalUser2).to.not.be.undefined;
+
+        const projects = await getCompanyExternalUserProjects(client, newExternalUser.uuid);
+        expect(projects.data.length).to.be.equal(1);
+
+        await purgeCompanyExternalUser(client, newExternalUser.uuid);
+
+        const users3 = await getProjectTeam(client, externalUserProject.uuid);
+        expect(users3.members.find(u => u.email === newExternalUser.email)).to.be.undefined;
+        expect(users3.external_users.find(u => u.email === newExternalUser.email)).to.be.undefined;
     }, { timeout: 30000 });
 } else {
     it.only('Skipping integration tests', () => { });

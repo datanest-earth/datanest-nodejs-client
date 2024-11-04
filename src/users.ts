@@ -1,4 +1,5 @@
 import DatanestClient, { PaginatedResponse, UUID } from "./index";
+import { Project } from "./projects";
 
 export type User = {
     uuid: string;
@@ -33,4 +34,19 @@ export async function deleteCompanyUser(client: DatanestClient, userUuid: UUID):
 
     const data = await response.json();
     return data;
+}
+
+export async function getCompanyExternalUsers(client: DatanestClient, params?: { page?: number }): Promise<PaginatedResponse<User>> {
+    const response = await client.get('v1/company/external-users', params);
+    return await response.json();
+}
+
+export async function getCompanyExternalUserProjects(client: DatanestClient, externalUserUuid: string, params?: { page?: number }): Promise<PaginatedResponse<Project>> {
+    const response = await client.get('v1/company/external-users/' + externalUserUuid + '/projects', params);
+    return await response.json();
+}
+
+export async function purgeCompanyExternalUser(client: DatanestClient, externalUserUuid: string): Promise<PaginatedResponse<User>> {
+    const response = await client.delete('v1/company/external-users/' + externalUserUuid);
+    return await response.json();
 }
