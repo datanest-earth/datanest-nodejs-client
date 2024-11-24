@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import DatanestClient from '../src';
 import { User, deleteCompanyUser, getCompanyExternalUserProjects, getCompanyExternalUsers, getCompanyUsers, inviteCompanyUser, patchCompanyUser, purgeCompanyExternalUser } from '../src/users';
 import { addExternalUserToProject, getProjectTeam, addProjectTeamMember, removeExternalUserToProject, removeProjectTeamMember, updateProjectMemberRole } from '../src/teams';
-import { Project, ProjectType, archiveProject, createProject, getProject, patchProject, waitForProjectWorkflow } from '../src/projects';
+import { Project, ProjectType, archiveProject, createProject, patchProject, waitForProjectWorkflow } from '../src/projects';
 import { assignProjectWorkflowAppUser, unassignProjectWorkflowAppUser, getCompanyCustomRoles, getCompanyWorkflows } from '../src/workflows';
 
 dotenv.config();
