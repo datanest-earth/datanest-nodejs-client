@@ -201,8 +201,8 @@ Log is an array of arrays with length 3, with the following format:
         "created_at": "2024-06-18T22:28:41.000000Z"
     },
     "workflow": null,
-    "project_link": "http:\/\/datanest.localhost:8080\/open-project\/abfe47e9-741c-4a63-b44c-6347dcbdbe16",
-    "collection_link": "http:\/\/datanest.localhost:8080\/open-project\/abfe47e9-741c-4a63-b44c-6347dcbdbe16?redirect=%2Fgather%3Fredirect%3Dcollection",
+    "project_link": "http:\/\/datanest.localhost:8080\/p\/abfe47e9-741c-4a63-b44c-6347dcbdbe16",
+    "collection_link": "http:\/\/datanest.localhost:8080\/p\/abfe47e9-741c-4a63-b44c-6347dcbdbe16?redirect=%2Fgather%3Fredirect%3Dcollection",
     "item": {
         "id": 1337157,
         "project_uuid": "abfe47e9-741c-4a63-b44c-6347dcbdbe16",
@@ -534,14 +534,14 @@ The file, document and project `link`s are for the Datanest web application inte
         "updated_at": "2024-01-26T02:49:45.000000Z",
         "created_at": "2024-01-24T03:48:57.000000Z"
     },
-    "project_link": "http:\/\/datanest.localhost:8080\/open-project\/005056a4-ecd7-4ded-87bc-dad952efe1a5",
+    "project_link": "http:\/\/datanest.localhost:8080\/p\/005056a4-ecd7-4ded-87bc-dad952efe1a5",
     "item": null,
     "file": {
         "id": "9b2e7091-22bc-4a25-b9d7-d6701a50387a",
         "display_name": "Data Event Webhooks - Document (1) - Claim-6 - #013.docx",
         "path": "Auto Docs\/Document (1)",
         "size_mb": 0.028589248657227,
-        "link": "http:\/\/datanest.localhost:8080\/open-project\/005056a4-ecd7-4ded-87bc-dad952efe1a5?redirect=%2Ffile%2F9b2e7091-22bc-4a25-b9d7-d6701a50387a",
+        "link": "http:\/\/datanest.localhost:8080\/p\/005056a4-ecd7-4ded-87bc-dad952efe1a5?redirect=%2Ffile%2F9b2e7091-22bc-4a25-b9d7-d6701a50387a",
         "temporary_s3_link": "https:\/\/datanest-staging.s3.ap-southeast-2.amazonaws.com\/files\/...(ommitted)"
     },
     "document": {
@@ -550,7 +550,7 @@ The file, document and project `link`s are for the Datanest web application inte
         "status": 0,
         "has_been_exported": true,
         "name": "Document (1)",
-        "link": "http:\/\/datanest.localhost:8080\/open-project\/005056a4-ecd7-4ded-87bc-dad952efe1a5?redirect=%2Fdeliver%2Fword%2Feditor%2F5113"
+        "link": "http:\/\/datanest.localhost:8080\/p\/005056a4-ecd7-4ded-87bc-dad952efe1a5?redirect=%2Fdeliver%2Fword%2Feditor%2F5113"
     }
 }
 ```
