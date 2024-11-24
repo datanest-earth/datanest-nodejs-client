@@ -1,6 +1,11 @@
 import DatanestClient, { PaginatedResponse, UUID } from "./index";
 import { Project } from "./projects";
 
+/**
+ * Workspaces allow for grouping of multiple sub-projects or a larger Workspace.
+ * Workspaces group Projects for convenience of switching between similar Projects.
+ * Some companies may want to use Workspaces for grouping Client's Projects.
+ */
 export type Workspace = {
     uuid: UUID;
     name: string;
@@ -37,8 +42,9 @@ export async function deleteWorkspace(client: DatanestClient, uuid: string): Pro
     await client.delete('v1/workspaces/' + uuid);
 }
 
-export async function getWorkspaceWithProjects(client: DatanestClient, uuid: string): Promise<{ projects: PaginatedResponse<Project>, workspace: Workspace, workspace_link: string }> {
-    const response = await client.get('v1/workspaces/' + uuid);
+/** @param page Page number for Workspace's projects */
+export async function getWorkspaceWithProjects(client: DatanestClient, uuid: string, page: number = 1): Promise<{ projects: Project[], workspace: Workspace, workspace_link: string }> {
+    const response = await client.get('v1/workspaces/' + uuid, { page });
     const data = await response.json();
     return data;
 }

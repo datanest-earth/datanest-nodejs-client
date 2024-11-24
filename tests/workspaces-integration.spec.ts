@@ -35,9 +35,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(workspace.projects_count).toBe(2);
 
         const currentProjects = await getWorkspaceWithProjects(client, workspace.uuid);
-        expect(currentProjects.projects.data.length).toBe(2);
-        expect(currentProjects.projects.data.every(p => projectUuids.includes(p.uuid))).toBe(true);
-        assignedProjects = currentProjects.projects.data;
+        expect(currentProjects.projects.length).toBe(2);
+        expect(currentProjects.projects.every(p => projectUuids.includes(p.uuid))).toBe(true);
+        assignedProjects = currentProjects.projects;
     });
 
     it('Can assign the same project to another workspace', async () => {
@@ -46,12 +46,16 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(newWorkspace.projects_count).toBe(0);
 
         const projectUuid = assignedProjects[0].uuid;
+        // Test that assigning a project twice only add it once
+        await assignProjectsToWorkspace(client, newWorkspace.uuid, [projectUuid]);
         newWorkspace = (await assignProjectsToWorkspace(client, newWorkspace.uuid, [projectUuid])).workspace;
         expect(newWorkspace.projects_count).toBe(1);
 
         const currentProjects = await getWorkspaceWithProjects(client, newWorkspace.uuid);
-        expect(currentProjects.projects.data.length).toBe(1);
-        expect(currentProjects.projects.data[0].uuid).toBe(projectUuid);
+        expect(currentProjects.projects.length).toBe(1);
+        expect(currentProjects.projects[0].uuid).toBe(projectUuid);
+
+        await deleteWorkspace(client, newWorkspace.uuid);
     });
 
     it('Unassign a project from workspace', async () => {
@@ -61,8 +65,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(workspace.projects_count).toBe(1);
 
         const currentProjects = await getWorkspaceWithProjects(client, workspace.uuid);
-        expect(currentProjects.projects.data.length).toBe(1);
-        expect(currentProjects.projects.data[0].uuid).toBe(assignedProjects[1].uuid);
+        expect(currentProjects.projects.length).toBe(1);
+        expect(currentProjects.projects[0].uuid).toBe(assignedProjects[1].uuid);
     });
 
     it('Can update name and delete workspace', async () => {
