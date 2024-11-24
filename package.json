@@ -1,6 +1,6 @@
 {
   "name": "@datanest-earth/nodejs-client",
-  "version": "0.8.3",
+  "version": "0.9.0",
   "description": "Datanest API Client to easily create signed requests",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -46,12 +46,12 @@
   },
   "homepage": "https://github.com/datanest-earth/datanest-nodejs-client#readme",
   "optionalDependencies": {
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
     "@types/node": "^20.8.7",
-    "tsup": "^8.0.0",
-    "typescript": "^5.2.2",
-    "vitest": "^0.34.6"
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.5"
   }
 }
