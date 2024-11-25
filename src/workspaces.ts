@@ -43,7 +43,7 @@ export async function deleteWorkspace(client: DatanestClient, uuid: string): Pro
 }
 
 /** @param page Page number for Workspace's projects */
-export async function getWorkspaceWithProjects(client: DatanestClient, uuid: string, page: number = 1): Promise<{ projects: Project[], workspace: Workspace, workspace_link: string }> {
+export async function getWorkspaceWithProjects(client: DatanestClient, uuid: string, page: number = 1): Promise<{ projects: PaginatedResponse<Project>, workspace: Workspace, workspace_link: string }> {
     const response = await client.get('v1/workspaces/' + uuid, { page });
     const data = await response.json();
     return data;
