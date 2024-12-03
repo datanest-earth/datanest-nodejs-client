@@ -63,9 +63,9 @@ const REQUEST_BODY = {
   },
   workflow: null,
   project_link:
-    "http://datanest.localhost:8080/open-project/cf63f22e-e05d-44f3-a055-bb25fee9097f",
+    "http://datanest.localhost:8080/p/cf63f22e-e05d-44f3-a055-bb25fee9097f",
   collection_link:
-    "http://datanest.localhost:8080/open-project/cf63f22e-e05d-44f3-a055-bb25fee9097f?redirect=%2Fgather%3Fredirect%3Dcollection",
+    "http://datanest.localhost:8080/p/cf63f22e-e05d-44f3-a055-bb25fee9097f?redirect=%2Fgather%3Fredirect%3Dcollection",
   item: null,
   file: null,
   document: null,
