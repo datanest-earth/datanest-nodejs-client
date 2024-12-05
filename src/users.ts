@@ -8,7 +8,7 @@ export type User = {
     initials?: string | null;
 }
 
-export async function getCompanyUsers(client: DatanestClient, params?: { page?: number, query?: string }): Promise<PaginatedResponse<User>> {
+export async function getCompanyUsers(client: DatanestClient, params?: { page?: number, query?: string, latest?: boolean }): Promise<PaginatedResponse<User>> {
     const response = await client.get('v1/users', params);
 
     const data = await response.json();
@@ -36,7 +36,7 @@ export async function deleteCompanyUser(client: DatanestClient, userUuid: UUID):
     return data;
 }
 
-export async function getCompanyExternalUsers(client: DatanestClient, params?: { page?: number }): Promise<PaginatedResponse<User>> {
+export async function getCompanyExternalUsers(client: DatanestClient, params?: { page?: number, latest?: boolean }): Promise<PaginatedResponse<User>> {
     const response = await client.get('v1/company/external-users', params);
     return await response.json();
 }

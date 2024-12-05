@@ -32,7 +32,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(dataPage2.meta.current_page).equals(2);
     });
 
-    it('Create, get, patch and archive, restore and re-archive', async () => {
+    it('Create, get, patch and archive, restore and re-archive', {
+        timeout: 15000,
+    }, async () => {
         // Create 2 projects of each type
         // Check the GET and GET list endpoints
         // Patch the first project's name
@@ -126,8 +128,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(responseRestore.status).equals(200);
 
         await client.delete('v1/projects/' + data.project.uuid + "/archive");
-    }, {
-        timeout: 15000,
     });
 
 } else {
