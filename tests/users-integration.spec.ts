@@ -46,7 +46,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         }
     });
 
-    it('POST, GET search, PATCH and DELETE /v1/users', async () => {
+    it('POST, GET search, PATCH and DELETE /v1/users', {
+        timeout: 15000,
+    }, async () => {
         const client = new DatanestClient();
         const randomEmail = 'test-' + Math.random().toString(36).substring(7) + '@user.com';
         const user = await inviteCompanyUser(client, {
@@ -72,8 +74,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users.data[0].name).equals(newName);
 
         await deleteCompanyUser(client, user.uuid);
-    }, {
-        timeout: 15000,
     });
 
     it.concurrent('GET /v1/users', async () => {
@@ -85,7 +85,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users.data[0].email).is.a('string');
     });
 
-    it.concurrent('GET projects/:projectUuid/teams', async () => {
+    it.concurrent('GET projects/:projectUuid/teams', { timeout: 15000 }, async () => {
         const users = await getProjectTeam(client, testProject.uuid);
 
         expect(users.project_manager).is.an('object');
@@ -95,9 +95,11 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users.members).is.an('array');
         expect(users.members[0].email).equals(randomProjectManager.email);
         expect(users.external_users).is.an('array');
-    }, { timeout: 15000 });
+    });
 
-    it.concurrent('Invite company user, add to project, remove from project', async () => {
+    it.concurrent('Invite company user, add to project, remove from project', {
+        timeout: 15000,
+    }, async () => {
         const randomEmail = 'invited-' + Math.random().toString(36).substring(7) + '@user.com';
         const user = await inviteCompanyUser(client, {
             email: randomEmail,
@@ -126,11 +128,11 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users2.members.find(u => u.email === randomEmail)).to.be.undefined;
         expect(users.external_users.find(u => u.email === randomEmail)).to.be.undefined;
 
-    }, {
-        timeout: 15000,
     });
 
-    it.concurrent('Invite external user, add to project, remove from project', async () => {
+    it.concurrent('Invite external user, add to project, remove from project', {
+        timeout: 15000,
+    }, async () => {
         const randomEmail = 'external-' + Math.random().toString(36).substring(7) + '@user.com';
         const externalUser = await addExternalUserToProject(client, testProject.uuid, {
             email: randomEmail,
@@ -142,11 +144,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users.members.find(u => u.email === randomEmail)).to.be.undefined;
 
         await removeExternalUserToProject(client, testProject.uuid, externalUser.uuid);
-    }, {
-        timeout: 15000,
     });
 
-    it('Test Workflow user assignment, custom role assignment and team member integrity', async () => {
+    it('Test Workflow user assignment, custom role assignment and team member integrity', { timeout: 45000 }, async () => {
         const [customRoles, workflows] = await Promise.all([getCompanyCustomRoles(client), getCompanyWorkflows(client)]);
         let remainingUsers = companyUsers.filter(cu => cu.uuid !== randomProjectManager.uuid);
         const workflowUser = remainingUsers[Math.floor(
@@ -179,6 +179,10 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         const users = await getProjectTeam(client, workflowProject1.uuid);
         expect(users.workflow_assignments?.workflow_apps[0].users.find(u => u.email === workflowUser.email), 'New workflow user should be in the workflow app users').to.not.be.undefined;
+        const workflowAppsCount = users.workflow_assignments?.workflow_apps.length;
+        expect(workflowAppsCount).to.not.be.undefined;
+        const firstWorkflowAppId = users.workflow_assignments?.workflow_apps[0].workflow_app_id;
+        expect(firstWorkflowAppId).to.not.be.undefined;
 
         const workflowUserFromTeam = users.members.find(u => u.email === workflowUser.email);
         expect(workflowUserFromTeam, 'Workflow user must be automatically made a team member').to.not.be.undefined;
@@ -202,6 +206,10 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         });
 
         const users2 = await getProjectTeam(client, workflowProject1.uuid);
+        console.log('users2.workflow_assignments?.workflow_apps', users2.workflow_assignments?.workflow_apps);
+        console.log('users2.members', users2.members, secondWorkflowUser);
+        expect(users2.workflow_assignments?.workflow_apps.length).to.be.equal(workflowAppsCount);
+        expect(users2.workflow_assignments?.workflow_apps[0].workflow_app_id).to.be.equal(firstWorkflowAppId);
         expect(users2.members.find(u => u.email === secondWorkflowUser.email)?.custom_role_id).to.be.equal(customRoles[0].custom_role_id);
         expect(users2.workflow_assignments?.workflow_apps[0].users.find(u => u.email === secondWorkflowUser.email)).to.not.be.undefined;
         const originalWorkflowUser = users2.members.find(u => u.email === workflowUser.email);
@@ -210,11 +218,13 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         await removeProjectTeamMember(client, workflowProject1.uuid, secondWorkflowUser.uuid);
 
         const users3 = await getProjectTeam(client, workflowProject1.uuid);
+        expect(users3.workflow_assignments?.workflow_apps.length).to.be.equal(workflowAppsCount);
+        expect(users3.workflow_assignments?.workflow_apps[0].workflow_app_id).to.be.equal(firstWorkflowAppId);
         expect(users3.members.find(u => u.email === secondWorkflowUser.email)).to.be.undefined;
         expect(users3.workflow_assignments?.workflow_apps[0].users.find(u => u.email === secondWorkflowUser.email)).to.be.undefined;
-    }, { timeout: 45000 });
+    });
 
-    it.concurrent('Test external workflow users', async () => {
+    it.concurrent('Test external workflow users', { timeout: 30000 }, async () => {
         const [customRoles, workflows] = await Promise.all([getCompanyCustomRoles(client), getCompanyWorkflows(client)]);
         expect(customRoles.length).to.be.greaterThan(0, "Prerequisite: There should be at least one custom role (CompanyRoleProfile) in the test company");
         expect(workflows.data.length).to.be.greaterThan(0, "Prerequisite: There should be at least one workflow in the test company");
@@ -263,7 +273,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users3.members.find(u => u.email === newExternalUser.email)).to.be.undefined;
         expect(users3.external_users.find(u => u.email === newExternalUser.email), 'unassigning user should remain in project team but not assigned to app').to.not.be.undefined;
         expect(users3.workflow_assignments?.workflow_apps[0].users.find(u => u.email === newExternalUser.email)).to.be.undefined;
-    }, { timeout: 30000 });
+    });
 
     it.concurrent('Test company external user management', async () => {
         const newUserName = 'Bob ' + Math.random().toString(36).substring(7);
@@ -291,7 +301,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users2.members.find(u => u.email === newExternalUser.email)).to.be.undefined;
         expect(users2.external_users.find(u => u.email === newExternalUser.email)).to.not.be.undefined;
 
-        const companyExternalUsers = await getCompanyExternalUsers(client);
+        const companyExternalUsers = await getCompanyExternalUsers(client, { latest: true });
         const newExternalUser2 = companyExternalUsers.data.find(u => u.email === newExternalUser.email);
         expect(newExternalUser2).to.not.be.undefined;
 
@@ -303,7 +313,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const users3 = await getProjectTeam(client, externalUserProject.uuid);
         expect(users3.members.find(u => u.email === newExternalUser.email)).to.be.undefined;
         expect(users3.external_users.find(u => u.email === newExternalUser.email)).to.be.undefined;
-    }, { timeout: 30000 });
+    });
 } else {
     it.only('Skipping integration tests', () => { });
     console.warn('[WARN] Skipping integration tests because DATANEST_API_KEY, DATANEST_API_SECRET or DATANEST_API_BASE_URL is not set.');

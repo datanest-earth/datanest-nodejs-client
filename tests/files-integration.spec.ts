@@ -92,7 +92,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         filesToCleanup.push(file.uuid);
     });
 
-    it.concurrent('Version control', async () => {
+    it.concurrent('Version control', { timeout: 10000 }, async () => {
         const uniqueFileName = 'multiple-versions-' + Math.random().toString(36).substring(7) + '.txt';
         const client = new DatanestClient();
 
@@ -138,7 +138,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(version2Download.temporary_url).is.a('string');
 
         filesToCleanup.push(file.uuid);
-    }, { timeout: 10000 });
+    });
 
     it('Can filter files by path', async () => {
         const client = new DatanestClient();

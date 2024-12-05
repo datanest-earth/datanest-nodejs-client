@@ -44,7 +44,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         }
     });
 
-    it('GET v1/projects/:project_uuid/apps - List apps', async () => {
+    it('GET v1/projects/:project_uuid/apps - List apps', {
+        timeout: 15000,
+    }, async () => {
         const client = new DatanestClient();
         const projectAppList = await gather.listProjectApps(client, projectUuid);
 
@@ -56,8 +58,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             expect(projectAppList.apps[0].title).is.a('string');
             expect(projectAppList.apps[0].system_reference).is.a('string');
         }
-    }, {
-        timeout: 15000,
     });
 
     it.concurrent('GET v1/projects/:project_uuid/apps/:app_id - List apps\' items', async () => {
@@ -75,7 +75,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         }
     });
 
-    it('GET v1/projects/:project_uuid/items/:item_id - Get Item details', async () => {
+    it('GET v1/projects/:project_uuid/items/:item_id - Get Item details', {
+        timeout: 15000,
+    }, async () => {
         const client = new DatanestClient();
         expect(itemId).is.a('number', 'itemId is not set unable to perform this test');
         const itemWithDetails = await gather.getProjectItemDetails(client, projectUuid, itemId);
@@ -83,22 +85,22 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(itemWithDetails.id).equals(itemId);
         expect(itemWithDetails.app_uuid).equals(appUuid);
         expect(itemWithDetails.title).is.a('string');
-    }, {
-        timeout: 15000,
     });
 
-    it.concurrent('GET v1/apps/:app_uuid/schema - Get App Schema (structure of the app form)', async () => {
+    it.concurrent('GET v1/apps/:app_uuid/schema - Get App Schema (structure of the app form)', {
+        timeout: 15000,
+    }, async () => {
         const client = new DatanestClient();
         expect(appUuid).is.a('string', 'appUuid is not set unable to perform this test');
         const appSchema = await gather.getAppSchema(client, appUuid);
 
         expect(appSchema.uuid).equals(appUuid);
         expect(appSchema.title).is.a('string');
-    }, {
-        timeout: 15000,
     });
 
-    it.concurrent('Can list and import shared app group', async () => {
+    it.concurrent('Can list and import shared app group', {
+        timeout: 15000,
+    }, async () => {
         const client = new DatanestClient();
         const sharedAppGroups = await gather.listSharedAppGroups(client);
 
@@ -112,11 +114,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(importedData.apps[0].title).is.a('string');
         expect(importedData.data_events).is.an('array');
         expect(importedData.documents).is.an('array');
-    }, {
-        timeout: 15000,
     });
 
-    it.concurrent('Can create, edit and delete Gather Items', async () => {
+    it.concurrent('Can create, edit and delete Gather Items', { timeout: 15000 }, async () => {
         const client = new DatanestClient();
         const sharedAppGroups = await gather.listSharedAppGroups(client);
 
@@ -150,7 +150,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(updatedItemDetails.skipped_fields).is.an('array');
 
         await gather.deleteItem(client, projectUuid, itemDetails.id);
-    }, { timeout: 15000 });
+    });
 
     it.concurrent('Can filter items by bounding box', async () => {
         const mapsProjectUuid = process.env.MAPS_PROJECT_UUID || process.env.ENVIRO_PROJECT_UUID || projectUuid;
