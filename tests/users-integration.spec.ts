@@ -206,8 +206,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         });
 
         const users2 = await getProjectTeam(client, workflowProject1.uuid);
-        console.log('users2.workflow_assignments?.workflow_apps', users2.workflow_assignments?.workflow_apps);
-        console.log('users2.members', users2.members, secondWorkflowUser);
         expect(users2.workflow_assignments?.workflow_apps.length).to.be.equal(workflowAppsCount);
         expect(users2.workflow_assignments?.workflow_apps[0].workflow_app_id).to.be.equal(firstWorkflowAppId);
         expect(users2.members.find(u => u.email === secondWorkflowUser.email)?.custom_role_id).to.be.equal(customRoles[0].custom_role_id);
@@ -275,7 +273,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users3.workflow_assignments?.workflow_apps[0].users.find(u => u.email === newExternalUser.email)).to.be.undefined;
     });
 
-    it.concurrent('Test company external user management', async () => {
+    it.concurrent('Test company external user management', { timeout: 10000 }, async () => {
         const newUserName = 'Bob ' + Math.random().toString(36).substring(7);
         const newUserEmail = 'bob-' + Math.random().toString(36).substring(7) + '@user.com';
         const externalUserProject = (await createProject(client, {
