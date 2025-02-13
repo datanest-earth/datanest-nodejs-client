@@ -1,7 +1,7 @@
 import { it, expect } from 'vitest';
 import dotenv from 'dotenv';
 import DatanestClient from '../src';
-import { ProjectType } from '../src/projects';
+import { createProject, patchProject, ProjectType } from '../src/projects';
 
 dotenv.config();
 
@@ -128,6 +128,42 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(responseRestore.status).equals(200);
 
         await client.delete('v1/projects/' + data.project.uuid + "/archive");
+    });
+
+    it('supports additional fields', async () => {
+        const client = new DatanestClient();
+        const [createdWithout, createWith] = await Promise.all([
+            createProject(client, {
+                project_number: 'test-' + Math.random().toString(36).substring(7),
+                project_name: 'Project with Additional Fields',
+                project_client: 'My client',
+                address_country: 'NZ',
+            }),
+            createProject(client, {
+                project_number: 'test-' + Math.random().toString(36).substring(7),
+                project_name: 'Project with Additional Fields',
+                project_client: 'My client',
+                address_country: 'NZ',
+                additional: {
+                    my_additional_field: 'test',
+                    my_reference: 'ref123',
+                },
+            }),
+        ]);
+
+        expect(createdWithout.project.additional).equals(null);
+        expect(createWith.project.additional).is.an('object');
+        expect(createWith.project.additional?.my_additional_field).equals('test');
+        expect(createWith.project.additional?.my_reference).equals('ref123');
+
+        const updatedProject = await patchProject(client, createdWithout.project.uuid, {
+            additional: {
+                added_after_creation: 'yes',
+            },
+        });
+
+        expect(updatedProject.project.additional).is.an('object');
+        expect(updatedProject.project.additional?.added_after_creation).equals('yes');
     });
 
 } else {
