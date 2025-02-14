@@ -63,6 +63,9 @@ export type Project = {
     address_city: null | string,
     address_state: null | string,
 
+    /** Additional fields can be configured in Company Settings -> Workflow Settings */
+    additional: null | Record<string, string>,
+
     /**
      * Supported ISO 3166-1 alpha-2 country codes
      */
@@ -100,6 +103,8 @@ type ProjectCreationData = {
     address_country: Country2CharCode;
 
     workflow_assignments?: ProjectWorkflowAssignments;
+
+    additional?: Record<string, string>;
 };
 
 /**
