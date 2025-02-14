@@ -1,11 +1,12 @@
-import { it, expect } from 'vitest';
+import { it, expect, afterAll } from 'vitest';
 import dotenv from 'dotenv';
-import DatanestClient from '../src';
-import { createProject, patchProject, ProjectType } from '../src/projects';
+import DatanestClient, { projects } from '../src';
+import { archiveProject, createProject, patchProject, ProjectType } from '../src/projects';
 
 dotenv.config();
 
 if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.env.DATANEST_API_BASE_URL) {
+    const projectsToDelete: string[] = [];
 
     it('Ordered query params', async () => {
         const client = new DatanestClient();
@@ -150,6 +151,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
                 },
             }),
         ]);
+        projectsToDelete.push(createdWithout.project.uuid, createWith.project.uuid);
 
         expect(createdWithout.project.additional).equals(null);
         expect(createWith.project.additional).is.an('object');
@@ -164,6 +166,11 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         expect(updatedProject.project.additional).is.an('object');
         expect(updatedProject.project.additional?.added_after_creation).equals('yes');
+    });
+
+    afterAll(async () => {
+        const client = new DatanestClient();
+        await Promise.all(projectsToDelete.map(uuid => archiveProject(client, uuid)));
     });
 
 } else {

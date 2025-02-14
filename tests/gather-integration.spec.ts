@@ -36,7 +36,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
                 some_nonsense_field: "Some nonsense value"
             }
         });
-    });
+    }, 20_000);
     afterAll(async () => {
         if (projectUuid !== '') {
             const client = new DatanestClient();
@@ -116,7 +116,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(importedData.documents).is.an('array');
     });
 
-    it.concurrent('Can create, edit and delete Gather Items', { timeout: 15000 }, async () => {
+    it.concurrent('Can create, edit and delete Gather Items', { timeout: 25000 }, async () => {
         const client = new DatanestClient();
         const sharedAppGroups = await gather.listSharedAppGroups(client);
 
