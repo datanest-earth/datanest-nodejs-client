@@ -10,7 +10,7 @@ export type CompanyDetails = {
     ref: string;
     company_name: string;
     team_role_defaults: TeamRoleDefaults | null;
-    project_additional_settings: ProjectAdditionalSetting[] | null;
+    project_additional_settings: ProjectAdditionalSetting[];
     /** Updates daily, new accounts may be null */
     storage_usage_mb: number | null;
     /** Null is unlimited */
