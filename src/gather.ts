@@ -238,14 +238,26 @@ export async function importAppGroup(client: DatanestClient, projectUuid: UUID, 
 }
 
 export type ItemUpdateMeta = {
-    /**
-     * List of skipped section keys that were not found in the app.
-     */
-    skipped_sections: string[];
-    /**
-     * List of skipped field keys that were not found in the app.
-     */
-    skipped_fields: string[];
+    warnings: {
+        /**
+         * List of skipped section keys that were not found in the app.
+         */
+        skipped_sections: string[];
+        /**
+         * List of skipped field keys that were not found in the app.
+         */
+        skipped_fields: string[];
+
+        /**
+         * Duplicate section system_references that were found in the app during update or create.
+         */
+        duplicate_section_references: string[];
+
+        /**
+         * Duplicate field system_references that were found in the app during update or create.
+         */
+        duplicate_field_references: string[];
+    },
 };
 
 /**
