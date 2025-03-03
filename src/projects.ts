@@ -63,8 +63,11 @@ export type Project = {
     address_city: null | string,
     address_state: null | string,
 
-    /** Additional fields can be configured in Company Settings -> Workflow Settings */
-    additional: null | Record<string, string>,
+    /** 
+     * Additional fields can be configured in Company Settings -> Workflow Settings
+     * Record null values are removed and will be undefined.
+     */
+    additional: null | Record<string, string | number>,
 
     /**
      * Supported ISO 3166-1 alpha-2 country codes
@@ -104,7 +107,11 @@ type ProjectCreationData = {
 
     workflow_assignments?: ProjectWorkflowAssignments;
 
-    additional?: Record<string, string>;
+    /**
+     * Additional fields can be configured in Company Settings -> Workflow Settings
+     * Provide null to remove the field
+     */
+    additional?: Record<string, string | number | null>;
 };
 
 /**
