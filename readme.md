@@ -87,6 +87,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const client = new DatanestClient();
+
+// Optionally you may identify your integration for logging and support purposes
+client.setClientId("My Company Integration");
 ```
 
 <details>
