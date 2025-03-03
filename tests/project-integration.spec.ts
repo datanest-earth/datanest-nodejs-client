@@ -158,14 +158,17 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(createWith.project.additional?.my_additional_field).equals('test');
         expect(createWith.project.additional?.my_reference).equals('ref123');
 
-        const updatedProject = await patchProject(client, createdWithout.project.uuid, {
+        const updatedProject = await patchProject(client, createWith.project.uuid, {
             additional: {
                 added_after_creation: 'yes',
+                my_reference: null,
             },
         });
 
         expect(updatedProject.project.additional).is.an('object');
-        expect(updatedProject.project.additional?.added_after_creation).equals('yes');
+        expect(updatedProject.project.additional?.added_after_creation).equals('yes', 'New field should be added');
+        expect(updatedProject.project.additional?.my_additional_field).equals('test', 'Old field should be retained');
+        expect(updatedProject.project.additional?.my_reference).equals(undefined, 'Fields are completely removed with null');
     });
 
     afterAll(async () => {
