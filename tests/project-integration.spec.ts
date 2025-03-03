@@ -147,7 +147,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
                 address_country: 'NZ',
                 additional: {
                     my_additional_field: 'test',
-                    my_reference: 'ref123',
+                    my_reference: 123,
                 },
             }),
         ]);
@@ -156,7 +156,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(createdWithout.project.additional).equals(null);
         expect(createWith.project.additional).is.an('object');
         expect(createWith.project.additional?.my_additional_field).equals('test');
-        expect(createWith.project.additional?.my_reference).equals('ref123');
+        expect(createWith.project.additional?.my_reference).equals(123);
 
         const updatedProject = await patchProject(client, createWith.project.uuid, {
             additional: {
