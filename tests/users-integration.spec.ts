@@ -46,9 +46,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         }
     });
 
-    it('POST, GET search, PATCH and DELETE /v1/users', {
-        timeout: 15000,
-    }, async () => {
+    it('POST, GET search, PATCH and DELETE /v1/users', async () => {
         const client = new DatanestClient();
         const randomEmail = 'test-' + Math.random().toString(36).substring(7) + '@user.com';
         const user = await inviteCompanyUser(client, {
@@ -85,7 +83,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users.data[0].email).is.a('string');
     });
 
-    it.concurrent('GET projects/:projectUuid/teams', { timeout: 15000 }, async () => {
+    it.concurrent('GET projects/:projectUuid/teams', async () => {
         const users = await getProjectTeam(client, testProject.uuid);
 
         expect(users.project_manager).is.an('object');
@@ -97,9 +95,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users.external_users).is.an('array');
     });
 
-    it.concurrent('Invite company user, add to project, remove from project', {
-        timeout: 15000,
-    }, async () => {
+    it.concurrent('Invite company user, add to project, remove from project', async () => {
         const randomEmail = 'invited-' + Math.random().toString(36).substring(7) + '@user.com';
         const user = await inviteCompanyUser(client, {
             email: randomEmail,
@@ -130,9 +126,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
     });
 
-    it.concurrent('Invite external user, add to project, remove from project', {
-        timeout: 15000,
-    }, async () => {
+    it.concurrent('Invite external user, add to project, remove from project', async () => {
         const randomEmail = 'external-' + Math.random().toString(36).substring(7) + '@user.com';
         const externalUser = await addExternalUserToProject(client, testProject.uuid, {
             email: randomEmail,
@@ -146,7 +140,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         await removeExternalUserToProject(client, testProject.uuid, externalUser.uuid);
     });
 
-    it('Test Workflow user assignment, custom role assignment and team member integrity', { timeout: 45000 }, async () => {
+    it('Test Workflow user assignment, custom role assignment and team member integrity', async () => {
         const [customRoles, workflows] = await Promise.all([getCompanyCustomRoles(client), getCompanyWorkflows(client)]);
         let remainingUsers = companyUsers.filter(cu => cu.uuid !== randomProjectManager.uuid);
         const workflowUser = remainingUsers[Math.floor(
@@ -222,7 +216,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users3.workflow_assignments?.workflow_apps[0].users.find(u => u.email === secondWorkflowUser.email)).to.be.undefined;
     });
 
-    it.concurrent('Test external workflow users', { timeout: 30000 }, async () => {
+    it.concurrent('Test external workflow users', async () => {
         const [customRoles, workflows] = await Promise.all([getCompanyCustomRoles(client), getCompanyWorkflows(client)]);
         expect(customRoles.length).to.be.greaterThan(0, "Prerequisite: There should be at least one custom role (CompanyRoleProfile) in the test company");
         expect(workflows.data.length).to.be.greaterThan(0, "Prerequisite: There should be at least one workflow in the test company");
@@ -273,7 +267,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users3.workflow_assignments?.workflow_apps[0].users.find(u => u.email === newExternalUser.email)).to.be.undefined;
     });
 
-    it.concurrent('Test company external user management', { timeout: 10000 }, async () => {
+    it.concurrent('Test company external user management', async () => {
         const newUserName = 'Bob ' + Math.random().toString(36).substring(7);
         const newUserEmail = 'bob-' + Math.random().toString(36).substring(7) + '@user.com';
         const externalUserProject = (await createProject(client, {

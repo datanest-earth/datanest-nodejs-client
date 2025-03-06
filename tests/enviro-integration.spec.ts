@@ -35,7 +35,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             expect(companyMatrices.data).is.an('array');
         });
 
-        it('GET v1/enviro/chemicals/alias-profiles - Chemical Aliases Profiles', { timeout: 10000 }, async () => {
+        it('GET v1/enviro/chemicals/alias-profiles - Chemical Aliases Profiles', async () => {
             const client = new DatanestClient();
             const companyProfiles = await enviro.getCompanyChemicalProfiles(client);
 

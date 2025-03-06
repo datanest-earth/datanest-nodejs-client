@@ -92,7 +92,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         filesToCleanup.push(file.uuid);
     });
 
-    it.concurrent('Version control', { timeout: 10000 }, async () => {
+    it.concurrent('Version control', async () => {
         const uniqueFileName = 'multiple-versions-' + Math.random().toString(36).substring(7) + '.txt';
         const client = new DatanestClient();
 

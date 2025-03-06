@@ -33,6 +33,11 @@ export default class DatanestClient {
     private clientId: string | null = null;
     private logErrors: boolean = true;
 
+    // Static rate limiter properties (shared across all instances)
+    private static rateLimitMax: number = 60 / 4; // Divide by 4 to allow for shorter delays on average
+    private static rateLimitIntervalMs: number = 60_000 / 4;
+    private static requestTimestamps: number[] = [];
+
     /**
      * Create a new Datanest API client
      * Note: You can use environment variables instead of using
@@ -57,6 +62,27 @@ export default class DatanestClient {
         if (this.apiKey === "" || this.apiSecret === "") {
             throw new Error('API key and secret are required.');
         }
+    }
+
+    /** Datanest accepts up to 60 requests per minute, default limit is less for typical use */
+    public static setRateLimit(maxRequests: number, intervalMs: number = 60_000) {
+        DatanestClient.rateLimitMax = maxRequests;
+        DatanestClient.rateLimitIntervalMs = intervalMs;
+    }
+
+    private static async checkRateLimit(logWarning = false) {
+        while (DatanestClient.requestTimestamps.length >= DatanestClient.rateLimitMax) {
+            const now = Date.now();
+            DatanestClient.requestTimestamps = DatanestClient.requestTimestamps.filter(timestamp => now - timestamp < DatanestClient.rateLimitIntervalMs);
+            // Calculate wait time until the oldest timestamp expires from the window.
+            const waitTime = DatanestClient.rateLimitIntervalMs - (now - DatanestClient.requestTimestamps[0]);
+            if (logWarning) {
+                console.debug('Waiting for rate limit window to expire', waitTime);
+            }
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+        }
+
+        DatanestClient.requestTimestamps.push(Date.now());
     }
 
     public setLogErrors(logErrors: boolean) {
@@ -86,6 +112,10 @@ export default class DatanestClient {
      * @returns Fetch response with readable stream.
      */
     private async sendRequest(method: string, path: string, params?: Record<string, any>, fetchOptions?: DatanestRequestInit) {
+        if (DatanestClient.rateLimitIntervalMs > 0 && DatanestClient.rateLimitMax !== Infinity) {
+            await DatanestClient.checkRateLimit(this.logErrors);
+        }
+
         method = method.toUpperCase();
         // remove leading slash
         path = path.replace(/^\//, '');
