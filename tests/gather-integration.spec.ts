@@ -10,6 +10,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     let projectUuid = '';
     let appUuid: string;
     let itemId: number;
+    let shareGroupProjectUuid = '';
     beforeAll(async () => {
         const client = new DatanestClient();
         const [newProject, sharedAppGroups] = await Promise.all([
@@ -38,9 +39,13 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         });
     }, 30_000);
     afterAll(async () => {
+        const client = new DatanestClient();
         if (projectUuid !== '') {
-            const client = new DatanestClient();
             await projects.archiveProject(client, projectUuid);
+        }
+
+        if (shareGroupProjectUuid !== '') {
+            await projects.archiveProject(client, shareGroupProjectUuid);
         }
     });
 
@@ -168,6 +173,44 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(bboxItems.meta.total).is.lessThan(allProjectItems.meta.total);
         if (bboxItems.data.length === 0) {
             console.warn('Warning: No items found in the bounding box, unable to verify bbox filter worked');
+        }
+    });
+
+    it.concurrent('Ensure Share Groups imported Apps match the share group list', async () => {
+        const client = new DatanestClient();
+        const sharedAppGroups = await gather.listSharedAppGroups(client, 1, 'global');
+
+        expect(sharedAppGroups.data.length).is.greaterThan(0, 'No global share groups found, unable to verify share group list');
+
+        const shareGroup = sharedAppGroups.data[0];
+        expect(shareGroup.share_group).is.a('string');
+        expect(shareGroup.group_title).is.a('string');
+        expect(shareGroup.apps).is.an('array');
+        expect(shareGroup.apps.length).is.greaterThan(0, 'there should always be at least one app in a share group');
+
+        const newProject = await projects.createProject(client, {
+            project_number: 'test-' + Math.random().toString(36).substring(7),
+            project_name: 'My project',
+            project_client: 'My client',
+            address_country: 'GB',
+            project_address: '123 Fake Street',
+        });
+        shareGroupProjectUuid = newProject.project.uuid;
+        const importResult = await gather.importAppGroup(client, newProject.project.uuid, sharedAppGroups.data[0].share_group);
+        expect(importResult.apps).is.an('array');
+        expect(importResult.apps.length).equals(shareGroup.apps.length);
+
+        const importedApps = await gather.listProjectApps(client, newProject.project.uuid);
+        expect(importedApps.apps).is.an('array');
+        expect(importedApps.apps.length).equals(shareGroup.apps.length);
+        for (let app of importedApps.apps) {
+            const matchingApp = shareGroup.apps.find(a => a.uuid === app.cloned_from_uuid);
+            expect(matchingApp).is.not.undefined;
+            if (!matchingApp) {
+                return;
+            }
+            expect(app.title).equals(matchingApp.title);
+            expect(app.system_reference).equals(matchingApp.system_reference);
         }
     });
 
