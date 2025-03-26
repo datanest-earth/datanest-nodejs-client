@@ -186,14 +186,17 @@ export async function getAppSchema(client: DatanestClient, appUuid: string) {
     return data as App;
 }
 
+export type ShareGroupFilter = 'all' | 'company' | 'global';
+
 /**
  * List shared app groups, app groups can include multiple Apps, Data Events and Auto Docs
  * @param client
  * @param page
+ * @param filter Filter by share group type
  * @returns 
  */
-export async function listSharedAppGroups(client: DatanestClient, page = 1) {
-    const response = await client.get('v1/apps/share-groups', { page });
+export async function listSharedAppGroups(client: DatanestClient, page = 1, filter: ShareGroupFilter = 'all') {
+    const response = await client.get('v1/apps/share-groups', { page, filter });
 
     const data = await response.json();
     return data as PaginatedResponse<{
