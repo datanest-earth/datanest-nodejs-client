@@ -17,8 +17,10 @@ export type WebhookRequest = {
 };
 
 export type WebhookEvent = {
+  /** This event is unique to the current Datanest Project */
   id: number;
   history_id: number;
+  /** User identifier */
   label: string;
 };
 
