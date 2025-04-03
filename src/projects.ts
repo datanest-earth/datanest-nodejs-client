@@ -77,6 +77,7 @@ export type Project = {
     measurement_type: MeasurementType | null,
 
     enviro_processed_at: null | Timestamp,
+    last_accessed_at: Timestamp,
     updated_at: null | Timestamp,
     created_at: null | Timestamp,
 };
