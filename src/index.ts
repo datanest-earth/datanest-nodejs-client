@@ -64,6 +64,11 @@ export default class DatanestClient {
         }
     }
 
+    public static disableRateLimit() {
+        DatanestClient.rateLimitMax = 100_000_000;
+        DatanestClient.rateLimitIntervalMs = 0;
+    }
+
     /** Datanest accepts up to 60 requests per minute, default limit is less for typical use */
     public static setRateLimit(maxRequests: number, intervalMs: number = 60_000) {
         DatanestClient.rateLimitMax = maxRequests;
