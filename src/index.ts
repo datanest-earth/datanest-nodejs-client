@@ -32,6 +32,7 @@ export default class DatanestClient {
     private baseUrl: string;
     private clientId: string | null = null;
     private logErrors: boolean = true;
+    private logDebug: boolean = false;
 
     // Static rate limiter properties (shared across all instances)
     private static rateLimitMax: number = 60 / 4; // Divide by 4 to allow for shorter delays on average
@@ -90,8 +91,9 @@ export default class DatanestClient {
         DatanestClient.requestTimestamps.push(Date.now());
     }
 
-    public setLogErrors(logErrors: boolean) {
+    public setLogErrors(logErrors: boolean, logDebug = false) {
         this.logErrors = logErrors;
+        this.logDebug = logDebug;
     }
 
     private signRequest(url: string, requestOptions: DatanestRequestInit) {
@@ -118,7 +120,7 @@ export default class DatanestClient {
      */
     private async sendRequest(method: string, path: string, params?: Record<string, any>, fetchOptions?: DatanestRequestInit) {
         if (DatanestClient.rateLimitIntervalMs > 0 && DatanestClient.rateLimitMax !== Infinity) {
-            await DatanestClient.checkRateLimit(this.logErrors);
+            await DatanestClient.checkRateLimit(this.logDebug);
         }
 
         method = method.toUpperCase();
