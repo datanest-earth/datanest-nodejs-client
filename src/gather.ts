@@ -6,7 +6,11 @@ export type App = {
     project_uuid: UUID;
     cloned_from_uuid: UUID;
     /**
-     * Unique group identifier for imported shared app
+     * Unique identifier for imported shared App Bundle
+     */
+    shared_from_bundle: string | null;
+    /**
+     * @deprecated Use shared_from_bundle instead
      */
     shared_from_group: string | null;
     title: string;
@@ -158,7 +162,6 @@ export async function getProjectItemDetails(client: DatanestClient, projectUuid:
  * @param client Datanest REST API Client
  * @param page Page number
  * @throws DatanestResponseError Request HTTP server or validation error
- * @returns 
  */
 export async function listProjectAppItems(client: DatanestClient, projectUuid: UUID, appUuid: UUID, page = 1, filters?: {
     bbox?: BBox;
@@ -174,10 +177,7 @@ export async function listProjectAppItems(client: DatanestClient, projectUuid: U
 
 /**
  * The app's schema describes the app's form structure of fields and sections.
- * @param client 
- * @param projectUuid 
  * @throws DatanestResponseError Request HTTP server or validation error
- * @returns 
  */
 export async function getAppSchema(client: DatanestClient, appUuid: string) {
     const response = await client.get('v1/apps/' + appUuid + '/schema');
@@ -186,14 +186,54 @@ export async function getAppSchema(client: DatanestClient, appUuid: string) {
     return data as App;
 }
 
-export type ShareGroupFilter = 'all' | 'company' | 'global';
+export type ShareBundleFilter = 'all' | 'company' | 'global';
+/** @deprecated Use ShareBundleFilter instead */
+export type ShareGroupFilter = ShareBundleFilter;
+
+/** The target the bundle is shared to */
+export type ShareBundleTarget = 'company' | 'global' | 'user';
 
 /**
+ * List shared App Bundles, bundles can include multiple Apps, Data Events and Auto Docs
+ * @param filter Filter by share target
+ * @param search Search for bundles by title or by exact match of share_bundle
+ */
+export async function listSharedAppBundles(client: DatanestClient, page = 1, filter: ShareBundleFilter = 'all', search?: string) {
+    const params = { page, filter, search };
+    if (params.search === undefined) {
+        delete params.search;
+    }
+    const response = await client.get('v1/apps/share-bundles', params);
+
+    const data = await response.json();
+    return data as PaginatedResponse<{
+        /**
+         * Unique identifier for shared App Bundle, used for importing the bundle
+        */
+        share_bundle: string;
+        /**
+         * Scope of the shared app group
+        */
+        share_to: ShareBundleTarget;
+        /** Internal Datanest ID of the bundle */
+        bundle_id: number;
+        bundle_title: string;
+        bundle_description: string | null;
+        /**
+         * Bundle icon URL as a temporary S3 download URL
+         */
+        bundle_icon_url: string;
+
+        apps: App[];
+        documents: Document[];
+        data_events: DataEvent[];
+    }>;
+}
+
+/**
+ * @deprecated Use listSharedAppBundles instead
  * List shared app groups, app groups can include multiple Apps, Data Events and Auto Docs
- * @param client
- * @param page
  * @param filter Filter by share group type
- * @returns 
  */
 export async function listSharedAppGroups(client: DatanestClient, page = 1, filter: ShareGroupFilter = 'all') {
     const response = await client.get('v1/apps/share-groups', { page, filter });
@@ -201,7 +241,11 @@ export async function listSharedAppGroups(client: DatanestClient, page = 1, filt
     const data = await response.json();
     return data as PaginatedResponse<{
         /**
-         * Unique group identifier for shared app group, used for importing
+         * Unique bundle identifier for shared App Bundle, used for importing the bundle
+         */
+        share_bundle: string;
+        /**
+         * @deprecated Use share_bundle instead 
          */
         share_group: string;
         group_title: string;
@@ -222,11 +266,23 @@ export async function listSharedAppGroups(client: DatanestClient, page = 1, filt
 }
 
 /**
- * Import shared app group, with its accompanying Apps, Data Events and Auto Docs
- * @param client
- * @param projectUuid
- * @param shareGroup
- * @returns 
+ * Import shared app bundle, with its accompanying Apps, Data Events and Auto Docs
+ */
+export async function importAppBundle(client: DatanestClient, projectUuid: UUID, shareBundle: string) {
+    const response = await client.post('v1/projects/' + projectUuid + '/apps/import-share-bundle', {
+        share_bundle: shareBundle,
+    });
+
+    return await response.json() as {
+        apps: App[];
+        documents: Document[];
+        data_events: DataEvent[];
+    }
+}
+
+/**
+ * @deprecated Use importAppBundle instead
+ * Import shared app bundle, with its accompanying Apps, Data Events and Auto Docs
  */
 export async function importAppGroup(client: DatanestClient, projectUuid: UUID, shareGroup: string) {
     const response = await client.post('v1/projects/' + projectUuid + '/apps/import-share-group', {
