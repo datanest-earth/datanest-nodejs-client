@@ -97,12 +97,42 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(appSchema.title).is.a('string');
     });
 
-    it.concurrent('Can list and import shared app group', async () => {
+    it.concurrent('Can list, search, and import shared app bundle', async () => {
+        const client = new DatanestClient();
+        const sharedAppBundles = await gather.listSharedAppBundles(client);
+
+        expect(sharedAppBundles.data).is.an('array');
+        expect(sharedAppBundles.data[0].share_bundle).is.a('string');
+        expect(sharedAppBundles.data[0].bundle_title).is.a('string');
+        expect(sharedAppBundles.data[0].bundle_description).is.a('string');
+
+        const [searchByName, searchByShareBundle] = await Promise.all([
+            gather.listSharedAppBundles(client, 1, 'all', sharedAppBundles.data[0].bundle_title),
+            gather.listSharedAppBundles(client, 1, 'all', sharedAppBundles.data[0].share_bundle),
+        ]);
+        expect(searchByName.data).is.an('array');
+        expect(searchByName.data[0].share_bundle).equals(sharedAppBundles.data[0].share_bundle);
+        expect(searchByName.data[0].bundle_title).equals(sharedAppBundles.data[0].bundle_title);
+        expect(searchByShareBundle.data).is.an('array');
+        expect(searchByShareBundle.data[0].share_bundle).equals(sharedAppBundles.data[0].share_bundle);
+        expect(searchByShareBundle.data[0].bundle_title).equals(sharedAppBundles.data[0].bundle_title);
+        expect(searchByShareBundle.data.length).equals(1);
+
+        const importedData = await gather.importAppBundle(client, projectUuid, sharedAppBundles.data[0].share_bundle);
+        expect(importedData.apps).is.an('array');
+        expect(importedData.apps[0].uuid).is.a('string');
+        expect(importedData.apps[0].title).is.a('string');
+        expect(importedData.data_events).is.an('array');
+        expect(importedData.documents).is.an('array');
+    });
+
+    it.concurrent('(backwards compatibility) Can list and import shared app group', async () => {
         const client = new DatanestClient();
         const sharedAppGroups = await gather.listSharedAppGroups(client);
 
         expect(sharedAppGroups.data).is.an('array');
-        expect(sharedAppGroups.data[0].share_group).is.a('string');
+        expect(sharedAppGroups.data[0].share_bundle).is.a('string');
+        expect(sharedAppGroups.data[0].share_group).toEqual(sharedAppGroups.data[0].share_bundle);
         expect(sharedAppGroups.data[0].group_title).is.a('string');
 
         const importedData = await gather.importAppGroup(client, projectUuid, sharedAppGroups.data[0].share_group);
@@ -115,9 +145,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
     it.concurrent('Can create, edit and delete Gather Items', async () => {
         const client = new DatanestClient();
-        const sharedAppGroups = await gather.listSharedAppGroups(client);
+        const sharedAppBundles = await gather.listSharedAppBundles(client);
 
-        await gather.importAppGroup(client, projectUuid, sharedAppGroups.data[0].share_group);
+        await gather.importAppBundle(client, projectUuid, sharedAppBundles.data[0].share_bundle);
         // We need to get the imported app's UUID
         // We cannot use a master app UUID, in another project
         const apps = await gather.listProjectApps(client, projectUuid);
