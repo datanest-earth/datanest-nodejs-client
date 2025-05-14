@@ -7,6 +7,7 @@ import * as integrations from './integrations';
 import * as teams from './teams';
 import * as users from './users';
 import * as files from './files';
+import * as webhook from './webhook';
 
 /**
  * @deprecated Use `users` namespace instead
@@ -24,6 +25,7 @@ export {
     user,
     users,
     files,
+    webhook,
 }
 
 export default class DatanestClient {

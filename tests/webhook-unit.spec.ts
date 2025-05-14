@@ -1,9 +1,9 @@
-import { authenticateWebhook } from "../src/webhook";
+import { authenticateWebhook, WebhookAuthorizationStatus } from "../src/webhook";
 import { it, expect } from "vitest";
 import dotenv from "dotenv";
 dotenv.config();
 
-const REQUEST_BODY = {
+const REQUEST_BODY = JSON.stringify({
   event: { id: 5030, history_id: 2367, label: "webhook-2" },
   trigger: {
     id: null,
@@ -69,10 +69,11 @@ const REQUEST_BODY = {
   item: null,
   file: null,
   document: null,
-};
+});
 
 // Only used for unit testing the signature below, not a valid secret.
-const secretKey = '2ccad589-ba74-4a0f-8914-aecb00e05816';
+const apiKey = "b5907626-3b8a-4af7-b39d-15e01b34900f";
+const secretKey = "2ccad589-ba74-4a0f-8914-aecb00e05816";
 
 it("should authenticate webhook", async () => {
   const request = new Request(
@@ -80,15 +81,22 @@ it("should authenticate webhook", async () => {
     {
       method: "POST",
       headers: {
+        "X-Api-Key": apiKey,
         "X-Signature":
-          "075acc1b30a33b753c247d39e0765a7ea107cb5086421ae05460427760464242",
+          "87d34c902c38316c9e8d66c40c6ecd39729359ae65ade69251b75c709ecc6de1",
         "X-Timestamp": "1720756735",
       },
-      body: JSON.stringify(REQUEST_BODY),
+      body: REQUEST_BODY,
     }
   );
-  const result = await authenticateWebhook(request, secretKey, true);
-  expect(result).toBe(true);
+  const result = await authenticateWebhook(
+    request,
+    REQUEST_BODY,
+    apiKey,
+    secretKey,
+    true
+  );
+  expect(result).toBe(WebhookAuthorizationStatus.Success);
 });
 
 it("should not authenticate webhook: bad timestamp", async () => {
@@ -97,15 +105,22 @@ it("should not authenticate webhook: bad timestamp", async () => {
     {
       method: "POST",
       headers: {
+        "X-Api-Key": apiKey,
         "X-Signature":
-          "f653ea2d3aecd628c2484b489abc754faf66b380ad2e68285820bb7fde54976a",
+          "87d34c902c38316c9e8d66c40c6ecd39729359ae65ade69251b75c709ecc6de1",
         "X-Timestamp": "1720756735",
       },
-      body: JSON.stringify(REQUEST_BODY),
+      body: REQUEST_BODY,
     }
   );
-  const result = await authenticateWebhook(request, secretKey, true);
-  expect(result).toBe(false);
+  const result = await authenticateWebhook(
+    request,
+    REQUEST_BODY,
+    apiKey,
+    secretKey,
+    true
+  );
+  expect(result).toBe(WebhookAuthorizationStatus.Success);
 });
 
 it("should not authenticate webhook: bad signature", async () => {
@@ -114,16 +129,23 @@ it("should not authenticate webhook: bad signature", async () => {
     {
       method: "POST",
       headers: {
+        "X-Api-Key": apiKey,
         "X-Signature":
-          "8b9dcd522db8757a5656a4819c269f6634f862f9460629f4d15fb17981dfda4e",
+          "87d34c902c38316c9e8d66c40c6ecd39729359ae65ade69251b75c709ecc6de1", // wrong signature
         "X-Timestamp": "1720756735",
       },
-      body: JSON.stringify(REQUEST_BODY),
+      body: REQUEST_BODY,
     }
   );
   const secretKey = "invalid-secret-key";
-  const result = await authenticateWebhook(request, secretKey, true);
-  expect(result).toBe(false);
+  const result = await authenticateWebhook(
+    request,
+    REQUEST_BODY,
+    apiKey,
+    secretKey,
+    true
+  );
+  expect(result).toBe(WebhookAuthorizationStatus.SignatureError);
 });
 
 it("should not authenticate webhook: old timestamp", async () => {
@@ -132,18 +154,18 @@ it("should not authenticate webhook: old timestamp", async () => {
     {
       method: "POST",
       headers: {
+        "X-Api-Key": apiKey,
         "X-Signature":
-          "075acc1b30a33b753c247d39e0765a7ea107cb5086421ae05460427760464242",
+          "87d34c902c38316c9e8d66c40c6ecd39729359ae65ade69251b75c709ecc6de1",
         "X-Timestamp": "1720756735",
       },
-      body: JSON.stringify(REQUEST_BODY),
+      body: REQUEST_BODY,
     }
   );
   const [valid, invalid] = await Promise.all([
-    authenticateWebhook(request, secretKey, true),
-    authenticateWebhook(request, secretKey),
+    authenticateWebhook(request, REQUEST_BODY, apiKey, secretKey, true),
+    authenticateWebhook(request, REQUEST_BODY, apiKey, secretKey),
   ]);
-  expect(valid).toBe(true);
-  expect(invalid).toBe(false);
+  expect(valid).toBe(WebhookAuthorizationStatus.Success);
+  expect(invalid).toBe(WebhookAuthorizationStatus.TimestampError);
 });
-

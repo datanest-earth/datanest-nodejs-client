@@ -82,32 +82,64 @@ export type Attachment = {
  */
 export type WebhookLog = [string, string, string];
 
+export enum WebhookAuthorizationStatus {
+  Success = 0,
+  TimestampError = 1,
+  SignatureError = 2,
+  MissingTimestamp = 3,
+  MissingSignature = 4,
+  InvalidApiKey = 5,
+  MissingApiKey = 6,
+}
+
+export function formatAuthorizationStatus(status: WebhookAuthorizationStatus): string {
+  return {
+    [WebhookAuthorizationStatus.Success]: "Success",
+    [WebhookAuthorizationStatus.TimestampError]: "Timestamp Error",
+    [WebhookAuthorizationStatus.SignatureError]: "Signature Error",
+    [WebhookAuthorizationStatus.InvalidApiKey]: "Invalid API Key",
+    [WebhookAuthorizationStatus.MissingTimestamp]: "Missing Timestamp",
+    [WebhookAuthorizationStatus.MissingSignature]: "Missing Signature",
+    [WebhookAuthorizationStatus.MissingApiKey]: "Missing API Key",
+  }[status];
+}
+
 /**
  * Verify the authenticity of a webhook request using the signature
  * @param request 
  * @param secretKey 
  * @param disableTimestampCheck for unit testing purposes
- * @returns 
+ * @returns WebhookAuthorizationStatus 0=Success
  */
 export async function authenticateWebhook(
   request: Request,
+  requestBody: string | null,
+  apiKey: string,
   secretKey: string,
   disableTimestampCheck: boolean = false
-): Promise<boolean> {
+): Promise<WebhookAuthorizationStatus> {
   const signature = request.headers.get("X-Signature");
   const timestamp = request.headers.get("X-Timestamp");
+  const apiKeyFromRequest = request.headers.get("X-Api-Key");
+  if (apiKeyFromRequest !== apiKey) {
+    return WebhookAuthorizationStatus.InvalidApiKey;
+  }
   const currentTimestamp = Math.floor(Date.now() / 1000);
+  if (!signature) {
+    return WebhookAuthorizationStatus.MissingSignature;
+  }
+  if (!timestamp) {
+    return WebhookAuthorizationStatus.MissingTimestamp;
+  }
   if (
-    !signature ||
-    !timestamp ||
     (!disableTimestampCheck &&
       Math.abs(currentTimestamp - parseInt(timestamp)) > 60)
   ) {
-    return false;
+    return WebhookAuthorizationStatus.TimestampError;
   }
-  const content = `${request.method}:${request.url}:${request.body ? (await request.text()).replace(/\//g, "\\/") + ":" : ""
+  const content = `${request.method}:${request.url}:${requestBody ? requestBody + ":" : ""
     }${timestamp}`;
   const hmac = createHmac("sha256", secretKey);
   const hash = hmac.update(content).digest("hex");
-  return hash === signature;
+  return hash === signature ? WebhookAuthorizationStatus.Success : WebhookAuthorizationStatus.SignatureError;
 }
