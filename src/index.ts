@@ -36,8 +36,8 @@ export default class DatanestClient {
     private logErrors: boolean = true;
 
     // Static rate limiter properties (shared across all instances)
-    private static rateLimitMax: number = 60 / 4; // Divide by 4 to allow for shorter delays on average
-    private static rateLimitIntervalMs: number = 60_000 / 4;
+    private static rateLimitMax: number = 120 / 8; // Divide by 8 to allow for shorter max delays
+    private static rateLimitIntervalMs: number = 60_000 / 8;
     private static requestTimestamps: number[] = [];
 
     /**
