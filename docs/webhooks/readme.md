@@ -228,6 +228,8 @@ Log is an array of arrays with length 3, with the following format:
         "is_label_underlined": false,
         "is_label_asterisk_appended": false,
         "marker_type": 0,
+        "enviro_location_code": null,
+        "enviro_lab_report_number": null,
         "enviro_start_depth": null,
         "enviro_end_depth": null,
         "enviro_soil_description": null,
