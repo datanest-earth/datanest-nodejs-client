@@ -138,7 +138,7 @@ export type SampleResult = {
     sample_location_code: string | null;
     sample_lab_report_number: string | null;
     sample_soil_description: string | null;
-    sample_lab_sample_type: string | null; // confirm
+    sample_lab_sample_type: string | null;
     sample_sampled_date: string | null;
     sample_analyzed_date: string | null;
     sample_duplicate_of_id: number | null;
