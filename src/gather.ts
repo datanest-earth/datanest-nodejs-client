@@ -36,6 +36,8 @@ export type Item = {
     lab_title?: string | null;
     original_title?: string | null;
     geojson?: GeoJsonFeature | null;
+    enviro_location_code: null | string;
+    enviro_lab_report_number: null | string;
     enviro_start_depth: null | number;
     enviro_end_depth: null | number;
     enviro_soil_description: null | string;
