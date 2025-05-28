@@ -11,6 +11,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     let appUuid: string;
     let itemId: number;
     let shareGroupProjectUuid = '';
+    const pastDate = new Date(Date.now() - 1000 * 60 * 60 * 25).toISOString().split('.')[0] + 'Z';
+
     beforeAll(async () => {
         const client = new DatanestClient();
         const [newProject, sharedAppGroups] = await Promise.all([
@@ -31,12 +33,17 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         // We cannot use a master app UUID, in another project
         const apps = await gather.listProjectApps(client, projectUuid);
 
-        await gather.createGatherItem(client, projectUuid, apps.apps[0].uuid, {
-            title: "Test Gather Item",
+        const newItem = await gather.createGatherItem(client, projectUuid, apps.apps[0].uuid, {
+            title: "Past Item",
             some_nonsense_section: {
                 some_nonsense_field: "Some nonsense value"
+            },
+            _meta: {
+                created_at: pastDate,
+                updated_at: pastDate,
             }
         });
+        expect(newItem.created_at.split('.')[0] + 'Z', 'created_at should be the past date, and format should match').equals(pastDate);
     }, 30_000);
     afterAll(async () => {
         const client = new DatanestClient();
@@ -122,15 +129,17 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         // We cannot use a master app UUID, in another project
         const apps = await gather.listProjectApps(client, projectUuid);
 
+        const currentDate = new Date().toISOString().split('.')[0] + 'Z';
+
         const itemDetails = await gather.createGatherItem(client, projectUuid, apps.apps[0].uuid, {
-            title: "Test Gather Item",
+            title: "New Item",
             some_nonsense_section: {
                 some_nonsense_field: "Some nonsense value"
-            }
+            },
         });
 
         expect(itemDetails.id).is.a('number');
-        expect(itemDetails.title).equals("Test Gather Item");
+        expect(itemDetails.title).equals("New Item");
         expect(itemDetails.skipped_sections[0]).equals("some_nonsense_section");
         expect(itemDetails.skipped_fields).is.an('array');
 
@@ -145,6 +154,28 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(updatedItemDetails.title).equals("Test Gather Item Updated");
         expect(updatedItemDetails.skipped_sections[0]).equals("some_nonsense_section");
         expect(updatedItemDetails.skipped_fields).is.an('array');
+
+        const todaysDateYMD = currentDate.slice(0, 10);
+
+        const [noFilter, pastItems, todaysItems, updatedTodayItems] = await Promise.all([
+            gather.listProjectAppItems(client, projectUuid, appUuid, 1),
+            gather.listProjectAppItems(client, projectUuid, appUuid, 1, {
+                created_from: pastDate,
+                created_to: todaysDateYMD,
+            }),
+            gather.listProjectAppItems(client, projectUuid, appUuid, 1, {
+                created_from: todaysDateYMD,
+                created_to: todaysDateYMD + 'T23:59:59Z',
+            }),
+            gather.listProjectAppItems(client, projectUuid, appUuid, 1, {
+                updated_from: todaysDateYMD,
+            }),
+        ]);
+
+        expect(noFilter.data.length).equals(2);
+        expect(pastItems.data.length).equals(1);
+        expect(todaysItems.data.length).equals(1);
+        expect(updatedTodayItems.data.length).equals(1);
 
         await gather.deleteItem(client, projectUuid, itemDetails.id);
     });

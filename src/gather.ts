@@ -259,7 +259,15 @@ export type ItemUpdateMeta = {
  * @param data 
  * @returns 
  */
-export async function createGatherItem(client: DatanestClient, projectUuid: UUID, appUuid: UUID, data: ItemUpdatableData & Record<string, any>) {
+export async function createGatherItem(client: DatanestClient, projectUuid: UUID, appUuid: UUID, data: ItemUpdatableData & Record<string, any> & {
+    /** @internal */
+    _meta?: {
+        /** @internal for testing purposes */
+        created_at?: Timestamp;
+        /** @internal for testing purposes */
+        updated_at?: Timestamp;
+    };
+}) {
     data.app_uuid = appUuid;
     const response = await client.post('v1/projects/' + projectUuid + '/items', data);
 
