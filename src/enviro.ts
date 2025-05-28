@@ -1,3 +1,4 @@
+import { Item } from "./gather";
 import DatanestClient, { Country2CharCode, DateRangeFilters, PaginatedResponse } from "./index";
 import { BBox } from "./maps";
 
@@ -291,7 +292,7 @@ export async function getProjectSampleLocations(client: DatanestClient, projectU
     page?: number;
     /** Search for samples by title, lab title or original titles */
     search?: string;
-} & DateRangeFilters) {
+} & DateRangeFilters): Promise<PaginatedResponse<Item>> {
     const response = await client.get('v1/projects/' + projectUuid + '/enviro/samples/locations', filters);
     return await response.json();
 }
@@ -304,7 +305,7 @@ export async function getProjectSamples(client: DatanestClient, projectUuid: str
     page?: number;
     /** Search for samples by title, lab title or original titles */
     search?: string;
-} & DateRangeFilters) {
+} & DateRangeFilters): Promise<PaginatedResponse<Item>> {
     const response = await client.get('v1/projects/' + projectUuid + '/enviro/samples', filters);
     return await response.json();
 }

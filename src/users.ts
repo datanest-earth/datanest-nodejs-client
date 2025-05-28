@@ -8,7 +8,16 @@ export type User = {
     initials?: string | null;
 }
 
-export async function getCompanyUsers(client: DatanestClient, params?: { page?: number, query?: string, latest?: boolean } & DateRangeFilters): Promise<PaginatedResponse<User>> {
+type CompanyUserListFilters = {
+    page?: number,
+    search?: string,
+    latest?: boolean,
+
+    /** @deprecated Use `search` instead to be consistent with other APIs */
+    query?: string,
+} & DateRangeFilters;
+
+export async function getCompanyUsers(client: DatanestClient, params?: CompanyUserListFilters): Promise<PaginatedResponse<User>> {
     const response = await client.get('v1/users', params);
 
     const data = await response.json();
