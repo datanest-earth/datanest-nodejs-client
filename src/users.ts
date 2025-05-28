@@ -1,4 +1,4 @@
-import DatanestClient, { PaginatedResponse, UUID } from "./index";
+import DatanestClient, { DateRangeFilters, PaginatedResponse, UUID } from "./index";
 import { Project } from "./projects";
 
 export type User = {
@@ -8,7 +8,7 @@ export type User = {
     initials?: string | null;
 }
 
-export async function getCompanyUsers(client: DatanestClient, params?: { page?: number, query?: string, latest?: boolean }): Promise<PaginatedResponse<User>> {
+export async function getCompanyUsers(client: DatanestClient, params?: { page?: number, query?: string, latest?: boolean } & DateRangeFilters): Promise<PaginatedResponse<User>> {
     const response = await client.get('v1/users', params);
 
     const data = await response.json();
@@ -36,12 +36,12 @@ export async function deleteCompanyUser(client: DatanestClient, userUuid: UUID):
     return data;
 }
 
-export async function getCompanyExternalUsers(client: DatanestClient, params?: { page?: number, latest?: boolean }): Promise<PaginatedResponse<User>> {
+export async function getCompanyExternalUsers(client: DatanestClient, params?: { page?: number, latest?: boolean } & DateRangeFilters): Promise<PaginatedResponse<User>> {
     const response = await client.get('v1/company/external-users', params);
     return await response.json();
 }
 
-export async function getCompanyExternalUserProjects(client: DatanestClient, externalUserUuid: string, params?: { page?: number }): Promise<PaginatedResponse<Project>> {
+export async function getCompanyExternalUserProjects(client: DatanestClient, externalUserUuid: string, params?: { page?: number } & DateRangeFilters): Promise<PaginatedResponse<Project>> {
     const response = await client.get('v1/company/external-users/' + externalUserUuid + '/projects', params);
     return await response.json();
 }

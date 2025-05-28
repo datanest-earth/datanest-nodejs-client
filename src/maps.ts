@@ -1,5 +1,5 @@
 import { Item } from "./gather";
-import DatanestClient, { PaginatedResponse, SoftDelete, Timestamps, UUID } from "./index";
+import DatanestClient, { DateRangeFilters, PaginatedResponse, SoftDelete, Timestamps, UUID } from "./index";
 
 export type GeoJsonFeature = {
     type: "Feature";
@@ -95,19 +95,21 @@ export type FigureLayer = {
     geojson: GeoJsonFeature | null,
 } & Timestamps & SoftDelete;
 
-export async function listProjectFigures(client: DatanestClient, projectUuid: string): Promise<PaginatedResponse<Figure>> {
-    const figures = await client.get(`/v1/projects/${projectUuid}/figures`);
+export async function listProjectFigures(client: DatanestClient, projectUuid: string, filters?: DateRangeFilters): Promise<PaginatedResponse<Figure>> {
+    const figures = await client.get(`/v1/projects/${projectUuid}/figures`, filters);
     return (await figures.json()) as PaginatedResponse<Figure>;
 }
 
-export async function listProjectFigureLayers(client: DatanestClient, projectUuid: string, figureId: number): Promise<PaginatedResponse<FigureLayer>> {
-    const layers = await client.get(`/v1/projects/${projectUuid}/figures/${figureId}/layers`);
+export async function listProjectFigureLayers(client: DatanestClient, projectUuid: string, figureId: number, filters?: DateRangeFilters): Promise<PaginatedResponse<FigureLayer>> {
+    const layers = await client.get(`/v1/projects/${projectUuid}/figures/${figureId}/layers`, filters);
     return (await layers.json()) as PaginatedResponse<FigureLayer>;
 }
 
-export async function listProjectFigureLayerItems(client: DatanestClient, projectUuid: string, figureId: number, layerId: number, options?: { bbox?: BBox }): Promise<PaginatedResponse<Item>> {
-    const items = await client.get(`/v1/projects/${projectUuid}/figures/${figureId}/layers/${layerId}/items`, {
-        ...(options?.bbox ? { bbox: options.bbox.join(",") } : {}),
-    });
+export async function listProjectFigureLayerItems(client: DatanestClient, projectUuid: string, figureId: number, layerId: number, options?: { bbox?: BBox } & DateRangeFilters): Promise<PaginatedResponse<Item>> {
+    const params: any = options || {};
+    if (params.bbox) {
+        params.bbox = params.bbox.join(",");
+    }
+    const items = await client.get(`/v1/projects/${projectUuid}/figures/${figureId}/layers/${layerId}/items`, params);
     return (await items.json()) as PaginatedResponse<Item>;
 }

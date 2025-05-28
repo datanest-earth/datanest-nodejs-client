@@ -1,4 +1,4 @@
-import DatanestClient, { PaginatedResponse, Timestamp, UUID } from "./index";
+import DatanestClient, { DateRangeFilters, PaginatedResponse, Timestamp, UUID } from "./index";
 import { BBox, GeoJsonFeature } from "./maps";
 
 export type App = {
@@ -132,7 +132,7 @@ export async function listProjectItems(client: DatanestClient, projectUuid: UUID
      * This can be the UUID of a master App or a UUID of a shared App.
      */
     template_app_uuid?: UUID;
-} = {}) {
+} & DateRangeFilters = {}) {
     const response = await client.get('v1/projects/' + projectUuid + "/items", { page, ...filters });
 
     const data = await response.json();
@@ -165,7 +165,7 @@ export async function listProjectAppItems(client: DatanestClient, projectUuid: U
     include_geojson?: boolean;
     /** Search for samples by title, lab title or original titles */
     search?: string;
-}) {
+} & DateRangeFilters) {
     const response = await client.get('v1/projects/' + projectUuid + "/apps/" + appUuid + '/items', { page, ...filters });
 
     const data = await response.json();
@@ -195,8 +195,8 @@ export type ShareGroupFilter = 'all' | 'company' | 'global';
  * @param filter Filter by share group type
  * @returns 
  */
-export async function listSharedAppGroups(client: DatanestClient, page = 1, filter: ShareGroupFilter = 'all') {
-    const response = await client.get('v1/apps/share-groups', { page, filter });
+export async function listSharedAppGroups(client: DatanestClient, page = 1, filter: ShareGroupFilter = 'all', filters?: DateRangeFilters) {
+    const response = await client.get('v1/apps/share-groups', { page, filter, ...filters });
 
     const data = await response.json();
     return data as PaginatedResponse<{

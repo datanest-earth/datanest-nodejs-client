@@ -379,3 +379,14 @@ export type PaginatedResponse<T> = {
         total: number;
     },
 };
+
+/**
+ * Filters for date range queries
+ * Supports YYYY-MM-DD or full ISO 8601 timestamps
+ */
+export type DateRangeFilters = {
+    created_from?: Timestamp | null;
+    created_to?: Timestamp | null;
+    updated_from?: Timestamp | null;
+    updated_to?: Timestamp | null;
+}

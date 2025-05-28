@@ -1,4 +1,4 @@
-import DatanestClient, { Country2CharCode, PaginatedResponse } from "./index";
+import DatanestClient, { Country2CharCode, DateRangeFilters, PaginatedResponse } from "./index";
 import { BBox } from "./maps";
 
 export type ProjectAssessed = {
@@ -174,12 +174,13 @@ export async function getAllEnviroMatrices(client: DatanestClient) {
  * @throws DatanestResponseError Request HTTP server or validation error
  */
 export async function getAllEnviroChemicals(client: DatanestClient, page: number = 1, filters?: {
-    profile_id: number | null;
-}): Promise<PaginatedResponse<EnviroChemicalWithAliases[]>> {
+    profile_id?: number | null;
+} & DateRangeFilters): Promise<PaginatedResponse<EnviroChemicalWithAliases[]>> {
     const response = await client.get('v1/enviro/chemicals', {
         page,
+        ...filters,
     });
-    return await response.json()
+    return await response.json();
 }
 
 /**
@@ -253,6 +254,7 @@ export async function getProjectScenarioGuidelines(client: DatanestClient, proje
 
 /**
  * Get sample chemical results from a project
+ * Note the date range filters applies to the sample locations, not when the results were created/updated.
  * @param filters.casno Optionally filter by one or more CAS numbers
  * @param filters.sample_ids Optionally filter by one or more Datanest sample ids
  * @throws DatanestResponseError Request HTTP server or validation error
@@ -260,7 +262,7 @@ export async function getProjectScenarioGuidelines(client: DatanestClient, proje
 export async function getProjectSampleChemicalResults(client: DatanestClient, projectUuid: string, filters?: {
     casno?: string[];
     sample_ids?: number[];
-}): Promise<PaginatedResponse<SampleResult>> {
+} & DateRangeFilters): Promise<PaginatedResponse<SampleResult>> {
     const response = await client.get('v1/projects/' + projectUuid + '/enviro/samples/chemical-results', filters);
     return await response.json();
 }
@@ -275,7 +277,7 @@ export async function getProjectSampleLocations(client: DatanestClient, projectU
     page?: number;
     /** Search for samples by title, lab title or original titles */
     search?: string;
-}) {
+} & DateRangeFilters) {
     const response = await client.get('v1/projects/' + projectUuid + '/enviro/samples/locations', filters);
     return await response.json();
 }
@@ -288,7 +290,7 @@ export async function getProjectSamples(client: DatanestClient, projectUuid: str
     page?: number;
     /** Search for samples by title, lab title or original titles */
     search?: string;
-}) {
+} & DateRangeFilters) {
     const response = await client.get('v1/projects/' + projectUuid + '/enviro/samples', filters);
     return await response.json();
 }

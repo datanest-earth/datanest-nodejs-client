@@ -1,4 +1,4 @@
-import DatanestClient, { PaginatedResponse, UUID } from "./index";
+import DatanestClient, { DateRangeFilters, PaginatedResponse, UUID } from "./index";
 import { Project } from "./projects";
 
 /**
@@ -20,7 +20,7 @@ export type DetailedWorkspace = {
     workspace_link: string;
 };
 
-export async function getWorkspaces(client: DatanestClient, params?: { page?: number }): Promise<PaginatedResponse<Workspace>> {
+export async function getWorkspaces(client: DatanestClient, params?: { page?: number } & DateRangeFilters): Promise<PaginatedResponse<Workspace>> {
     const response = await client.get('v1/workspaces', params);
     const data = await response.json();
     return data;
