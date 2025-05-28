@@ -131,8 +131,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         expect(itemDetails.id).is.a('number');
         expect(itemDetails.title).equals("Test Gather Item");
-        expect(itemDetails.skipped_sections[0]).equals("some_nonsense_section");
-        expect(itemDetails.skipped_fields).is.an('array');
+        expect(itemDetails.warnings.skipped_sections[0]).equals("some_nonsense_section");
+        expect(itemDetails.warnings.skipped_fields).is.an('array');
 
         const updatedItemDetails = await gather.updateGatherItem(client, projectUuid, itemDetails.id, {
             title: "Test Gather Item Updated",
@@ -143,8 +143,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         expect(updatedItemDetails.id).equals(itemDetails.id);
         expect(updatedItemDetails.title).equals("Test Gather Item Updated");
-        expect(updatedItemDetails.skipped_sections[0]).equals("some_nonsense_section");
-        expect(updatedItemDetails.skipped_fields).is.an('array');
+        expect(updatedItemDetails.warnings.skipped_sections[0]).equals("some_nonsense_section");
+        expect(updatedItemDetails.warnings.skipped_fields).is.an('array');
 
         await gather.deleteItem(client, projectUuid, itemDetails.id);
     });
