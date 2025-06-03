@@ -26,6 +26,9 @@ export type App = {
     deleted_at: Timestamp | null;
 };
 
+/** E.g. #000000 */
+export type ColorHexCode = string;
+
 export type Item = {
     id: number;
     project_uuid: UUID;
@@ -47,7 +50,20 @@ export type Item = {
     enviro_duplicate_of_id: null | number;
     enviro_triplicate_of_id: null | number;
     enviro_composite_of: null | string;
+    /** Pixels for size of label font */
     enviro_matrix: null | string;
+    icon_size: null | number;
+    label_size: null | number;
+    label_position: null | {
+        lat: number;
+        lng: number;
+    };
+    label_color: null | ColorHexCode;
+    label_shadow_color: null | ColorHexCode;
+    /** Pixels for size of label font */
+    is_label_hidden: boolean;
+    is_label_underlined: boolean;
+    is_label_asterisk_appended: boolean;
     created_at: Timestamp;
     updated_at: Timestamp;
     deleted_at: Timestamp | null;

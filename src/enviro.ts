@@ -168,6 +168,28 @@ export type SampleResult = {
     comments: string | null;
 };
 
+export type EnviroItemFilters = {
+    verification_type?: string;
+    sample_type?: 'xrf' | 'laboratory' | 'gather' | 'all';
+    lab_sample_type?: string;
+    /** These are the same as Enviro Sample IDs & Gather Item IDs */
+    item_ids?: number[];
+    hide_duplicate_samples?: boolean;
+    hide_triplicate_samples?: boolean;
+    hide_hidden_samples?: boolean;
+    depths?: { start_depth: number, end_depth: number }[];
+    elevations?: { start_elevation: number, end_elevation: number }[];
+    apec?: string[];
+    kit_ids?: number[];
+    /** Provide one or more soil descriptions to exact match at least one of them */
+    soil_descriptions?: string[];
+    lab_report_numbers?: string[];
+    project_figure_layer_id?: number;
+    /** Chemical CAS numbers */
+    casno?: string[];
+    chemical_ids?: number[];
+};
+
 /**
  * Get all Enviro Matrices with their aliases for Datanest
  * @throws DatanestResponseError Request HTTP server or validation error
@@ -305,7 +327,7 @@ export async function getProjectSamples(client: DatanestClient, projectUuid: str
     page?: number;
     /** Search for samples by title, lab title or original titles */
     search?: string;
-} & DateRangeFilters): Promise<PaginatedResponse<Item>> {
+} & EnviroItemFilters & DateRangeFilters): Promise<PaginatedResponse<Item>> {
     const response = await client.get('v1/projects/' + projectUuid + '/enviro/samples', filters);
     return await response.json();
 }
