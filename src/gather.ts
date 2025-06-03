@@ -1,4 +1,4 @@
-import DatanestClient, { PaginatedResponse, Timestamp, UUID } from "./index";
+import DatanestClient, { DateRangeFilters, PaginatedResponse, Timestamp, UUID } from "./index";
 import { BBox, GeoJsonFeature } from "./maps";
 
 export type App = {
@@ -26,6 +26,9 @@ export type App = {
     deleted_at: Timestamp | null;
 };
 
+/** E.g. #000000 */
+export type ColorHexCode = string;
+
 export type Item = {
     id: number;
     project_uuid: UUID;
@@ -36,6 +39,8 @@ export type Item = {
     lab_title?: string | null;
     original_title?: string | null;
     geojson?: GeoJsonFeature | null;
+    enviro_location_code: null | string;
+    enviro_lab_report_number: null | string;
     enviro_start_depth: null | number;
     enviro_end_depth: null | number;
     enviro_soil_description: null | string;
@@ -45,7 +50,20 @@ export type Item = {
     enviro_duplicate_of_id: null | number;
     enviro_triplicate_of_id: null | number;
     enviro_composite_of: null | string;
+    /** Pixels for size of label font */
     enviro_matrix: null | string;
+    icon_size: null | number;
+    label_size: null | number;
+    label_position: null | {
+        lat: number;
+        lng: number;
+    };
+    label_color: null | ColorHexCode;
+    label_shadow_color: null | ColorHexCode;
+    /** Pixels for size of label font */
+    is_label_hidden: boolean;
+    is_label_underlined: boolean;
+    is_label_asterisk_appended: boolean;
     created_at: Timestamp;
     updated_at: Timestamp;
     deleted_at: Timestamp | null;
@@ -132,7 +150,7 @@ export async function listProjectItems(client: DatanestClient, projectUuid: UUID
      * This can be the UUID of a master App or a UUID of a shared App.
      */
     template_app_uuid?: UUID;
-} = {}) {
+} & DateRangeFilters = {}) {
     const response = await client.get('v1/projects/' + projectUuid + "/items", { page, ...filters });
 
     const data = await response.json();
@@ -165,7 +183,7 @@ export async function listProjectAppItems(client: DatanestClient, projectUuid: U
     include_geojson?: boolean;
     /** Search for samples by title, lab title or original titles */
     search?: string;
-}) {
+} & DateRangeFilters) {
     const response = await client.get('v1/projects/' + projectUuid + "/apps/" + appUuid + '/items', { page, ...filters });
 
     const data = await response.json();
@@ -195,8 +213,8 @@ export type ShareGroupFilter = 'all' | 'company' | 'global';
  * @param filter Filter by share group type
  * @returns 
  */
-export async function listSharedAppGroups(client: DatanestClient, page = 1, filter: ShareGroupFilter = 'all') {
-    const response = await client.get('v1/apps/share-groups', { page, filter });
+export async function listSharedAppGroups(client: DatanestClient, page = 1, filter: ShareGroupFilter = 'all', filters?: DateRangeFilters) {
+    const response = await client.get('v1/apps/share-groups', { page, filter, ...filters });
 
     const data = await response.json();
     return data as PaginatedResponse<{
@@ -259,7 +277,15 @@ export type ItemUpdateMeta = {
  * @param data 
  * @returns 
  */
-export async function createGatherItem(client: DatanestClient, projectUuid: UUID, appUuid: UUID, data: ItemUpdatableData & Record<string, any>) {
+export async function createGatherItem(client: DatanestClient, projectUuid: UUID, appUuid: UUID, data: ItemUpdatableData & Record<string, any> & {
+    /** @internal */
+    _meta?: {
+        /** @internal for testing purposes */
+        created_at?: Timestamp;
+        /** @internal for testing purposes */
+        updated_at?: Timestamp;
+    };
+}) {
     data.app_uuid = appUuid;
     const response = await client.post('v1/projects/' + projectUuid + '/items', data);
 

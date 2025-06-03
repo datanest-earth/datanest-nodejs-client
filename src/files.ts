@@ -1,4 +1,4 @@
-import DatanestClient, { PaginatedResponse, Timestamp, UUID } from "./index";
+import DatanestClient, { DateRangeFilters, PaginatedResponse, Timestamp, UUID } from "./index";
 import type { File as NodeFile } from "node:buffer";
 
 export enum VirusStatus {
@@ -76,7 +76,7 @@ export type FileVersion = {
  * @param page Page number
  * @throws DatanestResponseError Request HTTP server or validation error
  */
-export async function getProjectFiles(client: DatanestClient, projectUuid: UUID, page: number = 1, options?: { path?: string, latest?: boolean }) {
+export async function getProjectFiles(client: DatanestClient, projectUuid: UUID, page: number = 1, options?: { path?: string, latest?: boolean } & DateRangeFilters) {
     const response = await client.get('v1/projects/' + projectUuid + '/files', { page, ...options });
 
     const data = await response.json();
@@ -196,8 +196,8 @@ export async function deleteFile(client: DatanestClient, projectUuid: UUID, file
 /**
  * View recent notifications, which include file exports
  */
-export async function getRecentNotifications(client: DatanestClient, projectUuid: UUID, page: number = 1) {
-    const response = await client.get('v1/projects/' + projectUuid + '/notifications', { page });
+export async function getRecentNotifications(client: DatanestClient, projectUuid: UUID, page: number = 1, filters?: DateRangeFilters) {
+    const response = await client.get('v1/projects/' + projectUuid + '/notifications', { page, ...filters });
     const data = await response.json();
     return data as PaginatedResponse<{
         id: number;
