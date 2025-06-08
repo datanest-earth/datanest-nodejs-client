@@ -42,16 +42,17 @@ jobs:
   integration-tests:
     runs-on: ubuntu-latest
     needs: build-and-test
-    if: ${{ matrix.node-version == '20.8' }}
     concurrency:
       group: test-suite.staging
+    env:
+      NODE_VERSION: 20.8
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Set up Node.js ${{ matrix.node-version }}
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         id: pnpm-install
