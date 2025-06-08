@@ -38,7 +38,28 @@ jobs:
         run: pnpm types
       - name: Build
         run: pnpm build
-      - name: Run tests
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: ${{ matrix.node-version == '20.8' }}
+    concurrency:
+      group: test-suite.staging
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 10
+      - name: Run pnpm install
+        run: pnpm install
+      - name: Run integration tests
         env:
           DATANEST_API_BASE_URL: ${{ secrets.DATANEST_API_BASE_URL }}
           DATANEST_API_KEY: ${{ secrets.DATANEST_API_KEY }}
