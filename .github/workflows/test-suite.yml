@@ -1,40 +1,43 @@
-name: Integration Tests
+name: Test Suite
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
     types:
-      - closed
+      - opened
+      - synchronize
   workflow_dispatch:
 
 jobs:
   build-and-test:
-    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [20.8]
+        node-version: [20.8, 22.13]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         id: pnpm-install
         with:
           version: 9
-
       - name: Run pnpm install
         run: pnpm install
-
+      - name: Type Check
+        run: pnpm types
+      - name: Build
+        run: pnpm build
       - name: Run tests
         if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
         env:
