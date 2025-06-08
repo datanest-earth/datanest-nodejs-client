@@ -1,4 +1,4 @@
-import DatanestClient, { Country2CharCode, DatanestResponseError, MeasurementType, PaginatedResponse, Timestamp, UUID } from "./index";
+import DatanestClient, { Country2CharCode, DatanestResponseError, DateRangeFilters, MeasurementType, PaginatedResponse, Timestamp, UUID } from "./index";
 import { CompanyWorkflow } from "./workflows";
 
 export enum ProjectType {
@@ -143,8 +143,9 @@ type ProjectWorkflowAssignments = {
  */
 export async function listProjects(client: DatanestClient, page = 1, archived = false, filters?: {
     project_type?: ProjectType;
-}) {
-    const response = await client.get('v1/projects', { archived, page, project_type: filters?.project_type });
+    workspace_uuid?: UUID;
+} & DateRangeFilters) {
+    const response = await client.get('v1/projects', { archived, page, ...filters });
 
     const data = await response.json();
     return data as PaginatedResponse<Project>;

@@ -26,12 +26,12 @@ If you wish to use this Node package, you will need to have Node installed on yo
 This package should work with both Bun and Deno runtime alternatives (unverified)
 
 We recommend the latest stable version of Node.
-- Tested on Node v20.8.0
+- Tested on Node v20.8 & v22.13
 
 <details>
 <summary>Minimum requirements</summary>
 
-- Fetch API is required, available in Node v18.0+ (unverified)
+- `Fetch API` is required, available in Node v18.0+ (unverified)
 > [node-fetch](https://www.npmjs.com/package/node-fetch) may allow for earlier versions
 
 </details>

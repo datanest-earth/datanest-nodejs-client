@@ -1,4 +1,4 @@
-import DatanestClient, { PaginatedResponse, UUID } from "./index";
+import DatanestClient, { DateRangeFilters, PaginatedResponse, UUID } from "./index";
 import { User } from "./users";
 
 export type CompanyWorkflow = {
@@ -51,8 +51,8 @@ export type CompanyCustomRole = {
  * @param client 
  * @returns 
  */
-export async function getCompanyWorkflows(client: DatanestClient): Promise<PaginatedResponse<CompanyWorkflow>> {
-    const response = await client.get('v1/company-workflows');
+export async function getCompanyWorkflows(client: DatanestClient, filters?: DateRangeFilters): Promise<PaginatedResponse<CompanyWorkflow>> {
+    const response = await client.get('v1/company-workflows', filters);
     return await response.json();
 }
 

@@ -67,7 +67,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(updatedUser.name).equals(newName);
         expect(updatedUser.initials).equals('TU');
 
-        const users = await getCompanyUsers(client, { query: newName });
+        const users = await getCompanyUsers(client, { search: newName });
         expect(users.data).is.an('array');
         expect(users.data[0].name).equals(newName);
 

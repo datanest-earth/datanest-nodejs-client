@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import { assert, beforeAll, expect, it } from 'vitest';
 import DatanestClient from '../src';
 import { listProjects, Project } from '../src/projects';
-import { assignProjectsToWorkspace, createWorkspace, deleteWorkspace, getWorkspaceWithProjects, unassignProjectsFromWorkspace, updateWorkspace, Workspace } from '../src/workspaces';
+import { assignProjectsToWorkspace, createWorkspace, deleteWorkspace, getWorkspaces, getWorkspaceWithProjects, unassignProjectsFromWorkspace, updateWorkspace, Workspace } from '../src/workspaces';
 
 dotenv.config();
 
@@ -17,7 +17,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         assert(allProjects.length >= 2);
     });
 
-    it('Create workspace', async () => {
+    it('Create workspace & list workspaces', async () => {
         let name = 'Test workspace ' + new Date().toISOString();
         const data = await createWorkspace(client, { name });
         workspace = data.workspace;
@@ -25,6 +25,16 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(workspace.uuid).toBeDefined();
         expect(workspace.name).toBe(name);
         expect(workspace.projects_count).toBe(0);
+
+        const workspaces = await getWorkspaces(client);
+        expect(workspaces.data.length).toBeGreaterThan(0);
+        const workspace2 = workspaces.data.find(w => w.uuid === workspace!.uuid);
+        expect(workspace2).toBeDefined();
+        expect(workspace2!.name).toBe(name);
+        expect(workspace2!.projects_count).toBe(0);
+        expect(workspace2!.created_at).toBeDefined();
+        expect(workspace2!.updated_at).toBeDefined();
+        expect(workspace2!.deleted_at).toBeNull();
     });
 
     it('Assign projects to workspace', async () => {

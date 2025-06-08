@@ -1,0 +1,69 @@
+name: Test Suite
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.8, 22.13]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 9
+      - name: Run pnpm install
+        run: pnpm install
+      - name: Type Check
+        run: pnpm types
+      - name: Build
+        run: pnpm build
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    concurrency:
+      group: test-suite.staging
+    env:
+      NODE_VERSION: 20.8
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 10
+      - name: Run pnpm install
+        run: pnpm install
+      - name: Run integration tests
+        env:
+          DATANEST_API_BASE_URL: ${{ secrets.DATANEST_API_BASE_URL }}
+          DATANEST_API_KEY: ${{ secrets.DATANEST_API_KEY }}
+          DATANEST_API_SECRET: ${{ secrets.DATANEST_API_SECRET }}
+          ENVIRO_PROJECT_UUID: ${{ secrets.ENVIRO_PROJECT_UUID }}
+        run: pnpm test

@@ -1,4 +1,5 @@
-import DatanestClient, { Country2CharCode, PaginatedResponse } from "./index";
+import { Item } from "./gather";
+import DatanestClient, { Country2CharCode, DateRangeFilters, PaginatedResponse } from "./index";
 import { BBox } from "./maps";
 
 export type ProjectAssessed = {
@@ -130,22 +131,36 @@ export type SampleResult = {
     sample_id: number;
     linked_sample_id: number | null;
     sample_custom_title: string;
+    sample_latitude: number;
+    sample_longitude: number;
     sample_lab_title: string;
     sample_start_depth: number | null;
     sample_end_depth: number | null;
-    sample_latitude: number;
-    sample_longitude: number;
+    sample_location_code: string | null;
+    sample_lab_report_number: string | null;
+    sample_soil_description: string | null;
+    sample_lab_sample_type: string | null;
+    sample_sampled_date: string | null;
+    sample_analyzed_date: string | null;
+    sample_duplicate_of_id: number | null;
+    sample_triplicate_of_id: number | null;
+
     matrix: EnviroMatrix;
     chemical_id: number;
     chemical_casno: string;
     chemical_title: string;
+    units: string;
+    unit_multiplier: number;
+    eql: number | null;
+    total_or_filtered: 'T' | 'F';
+    is_surrogate: boolean;
+    is_internal_standard: boolean;
     result: number | null;
     lod_result: number | null;
+    prefix: string | null;
     display_result: number | null;
     changed_result_value: number | null;
     changed_result_reason: string | null;
-    units: string;
-    unit_multiplier: number;
     pcb_value: number | null;
     duplicate_rpd: number | null;
     triplicate_rpd: number | null;
@@ -174,12 +189,13 @@ export async function getAllEnviroMatrices(client: DatanestClient) {
  * @throws DatanestResponseError Request HTTP server or validation error
  */
 export async function getAllEnviroChemicals(client: DatanestClient, page: number = 1, filters?: {
-    profile_id: number | null;
-}): Promise<PaginatedResponse<EnviroChemicalWithAliases[]>> {
+    profile_id?: number | null;
+} & DateRangeFilters): Promise<PaginatedResponse<EnviroChemicalWithAliases[]>> {
     const response = await client.get('v1/enviro/chemicals', {
         page,
+        ...filters,
     });
-    return await response.json()
+    return await response.json();
 }
 
 /**
@@ -253,6 +269,7 @@ export async function getProjectScenarioGuidelines(client: DatanestClient, proje
 
 /**
  * Get sample chemical results from a project
+ * Note the date range filters applies to the sample locations, not when the results were created/updated.
  * @param filters.casno Optionally filter by one or more CAS numbers
  * @param filters.sample_ids Optionally filter by one or more Datanest sample ids
  * @throws DatanestResponseError Request HTTP server or validation error
@@ -260,7 +277,7 @@ export async function getProjectScenarioGuidelines(client: DatanestClient, proje
 export async function getProjectSampleChemicalResults(client: DatanestClient, projectUuid: string, filters?: {
     casno?: string[];
     sample_ids?: number[];
-}): Promise<PaginatedResponse<SampleResult>> {
+} & DateRangeFilters): Promise<PaginatedResponse<SampleResult>> {
     const response = await client.get('v1/projects/' + projectUuid + '/enviro/samples/chemical-results', filters);
     return await response.json();
 }
@@ -275,7 +292,7 @@ export async function getProjectSampleLocations(client: DatanestClient, projectU
     page?: number;
     /** Search for samples by title, lab title or original titles */
     search?: string;
-}) {
+} & DateRangeFilters): Promise<PaginatedResponse<Item>> {
     const response = await client.get('v1/projects/' + projectUuid + '/enviro/samples/locations', filters);
     return await response.json();
 }
@@ -288,7 +305,7 @@ export async function getProjectSamples(client: DatanestClient, projectUuid: str
     page?: number;
     /** Search for samples by title, lab title or original titles */
     search?: string;
-}) {
+} & DateRangeFilters): Promise<PaginatedResponse<Item>> {
     const response = await client.get('v1/projects/' + projectUuid + '/enviro/samples', filters);
     return await response.json();
 }
