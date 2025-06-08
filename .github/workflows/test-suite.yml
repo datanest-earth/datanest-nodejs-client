@@ -43,4 +43,5 @@ jobs:
           DATANEST_API_BASE_URL: ${{ secrets.DATANEST_API_BASE_URL }}
           DATANEST_API_KEY: ${{ secrets.DATANEST_API_KEY }}
           DATANEST_API_SECRET: ${{ secrets.DATANEST_API_SECRET }}
+          ENVIRO_PROJECT_UUID: ${{ secrets.ENVIRO_PROJECT_UUID }}
         run: pnpm test
