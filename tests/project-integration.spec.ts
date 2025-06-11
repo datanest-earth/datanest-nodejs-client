@@ -1,12 +1,13 @@
-import { it, expect, afterAll } from 'vitest';
 import dotenv from 'dotenv';
-import DatanestClient, { projects } from '../src';
-import { archiveProject, createProject, listProjects, patchProject, ProjectType } from '../src/projects';
+import { afterAll, expect, it } from 'vitest';
+import DatanestClient from '../src';
+import { listProjects, patchProject, ProjectType } from '../src/projects';
+import { ProjectPurger } from './project-cleanup';
 
 dotenv.config();
 
 if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.env.DATANEST_API_BASE_URL) {
-    const projectsToDelete: string[] = [];
+    const projectPurger = new ProjectPurger();
 
     it('Ordered query params', async () => {
         const client = new DatanestClient();
@@ -41,26 +42,22 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         // Restore, and clean up by archiving again.
 
         const client = new DatanestClient();
-        const response = await client.post('v1/projects', {
-            project_number: 'test-' + Math.random().toString(36).substring(7),
+        const firstProject = await projectPurger.createTestProject(client, {
             project_name: 'First project',
             project_client: 'My client',
             address_country: 'GB',
             project_type: ProjectType.PROJECT_TYPE_STANDARD,
         });
 
-        const enviroCreateResponse = await client.post('v1/projects', {
-            project_number: 'test-' + Math.random().toString(36).substring(7),
+        const enviroProject = await projectPurger.createTestProject(client, {
             project_name: 'Latest project',
             project_client: 'My client',
             address_country: 'GB',
             project_type: ProjectType.PROJECT_TYPE_ENVIRO,
         });
 
-        expect(response.status).equals(201);
-
-        const data = await response.json();
-        const enviroCreateResponseData = await enviroCreateResponse.json();
+        const data = firstProject;
+        const enviroCreateResponseData = enviroProject;
 
         expect(data.project_link).is.a('string');
         expect(data.project.uuid).is.a('string');
@@ -132,14 +129,12 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     it('supports additional fields', async () => {
         const client = new DatanestClient();
         const [createdWithout, createWith] = await Promise.all([
-            createProject(client, {
-                project_number: 'test-' + Math.random().toString(36).substring(7),
+            projectPurger.createTestProject(client, {
                 project_name: 'Project with Additional Fields',
                 project_client: 'My client',
                 address_country: 'NZ',
             }),
-            createProject(client, {
-                project_number: 'test-' + Math.random().toString(36).substring(7),
+            projectPurger.createTestProject(client, {
                 project_name: 'Project with Additional Fields',
                 project_client: 'My client',
                 address_country: 'NZ',
@@ -149,7 +144,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
                 },
             }),
         ]);
-        projectsToDelete.push(createdWithout.project.uuid, createWith.project.uuid);
 
         expect(createdWithout.project.additional).equals(null);
         expect(createWith.project.additional).is.an('object');
@@ -172,8 +166,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     it('can search and filter projects', async () => {
         const hash = Math.random().toString(36).substring(7);
         const client = new DatanestClient();
-        const newProject = await createProject(client, {
-            project_number: 'test-' + hash,
+        const newProject = await projectPurger.createTestProject(client, {
+            project_number: 'test:' + hash,
             project_name: 'Name ' + hash,
             project_client: 'Client ' + hash,
             address_country: 'NZ',
@@ -185,7 +179,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             searchByClient,
             notFound,
         ] = await Promise.all([
-            listProjects(client, 1, false, { search: 'test-' + hash }),
+            listProjects(client, 1, false, { search: 'test:' + hash }),
             listProjects(client, 1, false, { search: newProject.project.uuid }),
             listProjects(client, 1, false, { search: 'Client ' + hash }),
             listProjects(client, 1, false, { search: 'Not Found ABC12345' }),
@@ -198,10 +192,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     });
 
     afterAll(async () => {
-        const client = new DatanestClient();
-        await Promise.all(projectsToDelete.map(uuid => archiveProject(client, uuid)));
+        await projectPurger.cleanup();
     });
-
 } else {
     it('Skipping project integration tests', () => { });
     console.warn('[WARN] Skipping project integration tests because DATANEST_API_KEY, DATANEST_API_SECRET or DATANEST_API_BASE_URL is not set.');
