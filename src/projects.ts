@@ -85,7 +85,7 @@ export type Project = {
 /**
  * Minimal data required to create a project
  */
-type ProjectCreationData = {
+export type ProjectCreationData = {
     project_number: string;
     project_name: string;
     project_client: string;
@@ -237,11 +237,15 @@ export async function patchProject(client: DatanestClient, projectUuid: string, 
  * Archive a project to hide it from users, it will be automatically deleted after some time.
  * @param client 
  * @param projectUuid 
+ * @param forceDelete It is recommended to use forceDelete=true when testing, by default archived projects are force deleted after 6 months.
  * @throws DatanestResponseError Request HTTP server or validation error
  * @returns 
  */
-export async function archiveProject(client: DatanestClient, projectUuid: string) {
-    await client.delete('v1/projects/' + projectUuid + '/archive');
+export async function archiveProject(client: DatanestClient, projectUuid: string, options?: { force_delete?: boolean }) {
+    const response = await client.delete('v1/projects/' + projectUuid + '/archive', options);
+    if (response.status !== 200) {
+        throw new DatanestResponseError(`Failed to archive project: ${response.status}`, response.status, await response.json());
+    }
     return true;
 }
 
