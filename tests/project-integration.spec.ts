@@ -1,7 +1,7 @@
 import { it, expect, afterAll } from 'vitest';
 import dotenv from 'dotenv';
 import DatanestClient, { projects } from '../src';
-import { archiveProject, createProject, patchProject, ProjectType } from '../src/projects';
+import { archiveProject, createProject, listProjects, patchProject, ProjectType } from '../src/projects';
 
 dotenv.config();
 
@@ -167,6 +167,34 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(updatedProject.project.additional?.added_after_creation).equals('yes', 'New field should be added');
         expect(updatedProject.project.additional?.my_additional_field).equals('test', 'Old field should be retained');
         expect(updatedProject.project.additional?.my_reference).equals(undefined, 'Fields are completely removed with null');
+    });
+
+    it('can search and filter projects', async () => {
+        const hash = Math.random().toString(36).substring(7);
+        const client = new DatanestClient();
+        const newProject = await createProject(client, {
+            project_number: 'test-' + hash,
+            project_name: 'Name ' + hash,
+            project_client: 'Client ' + hash,
+            address_country: 'NZ',
+        });
+
+        const [
+            searchByNumber,
+            searchByUuid,
+            searchByClient,
+            notFound,
+        ] = await Promise.all([
+            listProjects(client, 1, false, { search: 'test-' + hash }),
+            listProjects(client, 1, false, { search: newProject.project.uuid }),
+            listProjects(client, 1, false, { search: 'Client ' + hash }),
+            listProjects(client, 1, false, { search: 'Not Found ABC12345' }),
+        ]);
+
+        expect(searchByNumber.data.find(p => p.uuid === newProject.project.uuid)).is.not.undefined;
+        expect(searchByUuid.data.find(p => p.uuid === newProject.project.uuid)).is.not.undefined;
+        expect(searchByClient.data.find(p => p.uuid === newProject.project.uuid)).is.not.undefined;
+        expect(notFound.data.length).equals(0);
     });
 
     afterAll(async () => {

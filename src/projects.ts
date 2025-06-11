@@ -144,6 +144,7 @@ type ProjectWorkflowAssignments = {
 export async function listProjects(client: DatanestClient, page = 1, archived = false, filters?: {
     project_type?: ProjectType;
     workspace_uuid?: UUID;
+    search?: string;
 } & DateRangeFilters) {
     const response = await client.get('v1/projects', { archived, page, ...filters });
 
