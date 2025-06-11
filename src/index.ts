@@ -34,6 +34,7 @@ export default class DatanestClient {
     private baseUrl: string;
     private clientId: string | null = null;
     private logErrors: boolean = true;
+    private logTrace: boolean = false;
 
     // Static rate limiter properties (shared across all instances)
     private static rateLimitMax: number = 120 / 8; // Divide by 8 to allow for shorter max delays
@@ -94,6 +95,10 @@ export default class DatanestClient {
 
     public setLogErrors(logErrors: boolean) {
         this.logErrors = logErrors;
+    }
+
+    public setLogTrace(logTrace: boolean) {
+        this.logTrace = logTrace;
     }
 
     private signRequest(url: string, requestOptions: DatanestRequestInit) {
@@ -170,11 +175,37 @@ export default class DatanestClient {
             const error = new DatanestResponseError(`Datanest API Failed: ${path}: ${response.status}`, response.status, await response.json());
             if (this.logErrors) {
                 console.error(error.message, error.data);
+            } else {
+                this.traceRequest(method, url, params, options, response);
             }
             throw error;
         }
 
+        this.traceRequest(method, url, params, options, response);
+
         return response;
+    }
+
+    private traceRequest(method: string, url: string, params?: Record<string, any>, options?: DatanestRequestInit, response?: Response) {
+        if (!this.logTrace) {
+            return;
+        }
+
+        const sanitizedOptions = options ? structuredClone(options) : undefined;
+        if (sanitizedOptions?.headers) {
+            sanitizedOptions.headers = {
+                ...sanitizedOptions.headers,
+                'X-API-Key': '(REDACTED)',
+                'X-Signature': '(REDACTED)',
+            };
+        }
+
+        if (method === 'GET' || method === 'DELETE') {
+            console.log(method, url, sanitizedOptions, response?.status, response?.statusText);
+            return;
+        }
+
+        console.log(method, url, params, sanitizedOptions, response?.status, response?.statusText);
     }
 
     /**
