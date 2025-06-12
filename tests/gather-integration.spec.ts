@@ -2,6 +2,7 @@ import { it, expect, beforeAll, afterAll } from 'vitest';
 import dotenv from 'dotenv';
 import DatanestClient, { gather, projects } from '../src';
 import { listProjectItems } from '../src/gather';
+import { ProjectPurger } from './project-cleanup';
 
 dotenv.config();
 
@@ -12,12 +13,12 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     let itemId: number;
     let shareGroupProjectUuid = '';
     const pastDate = new Date(Date.now() - 1000 * 60 * 60 * 25).toISOString().split('.')[0] + 'Z';
+    const projectPurger = new ProjectPurger();
 
     beforeAll(async () => {
         const client = new DatanestClient();
         const [newProject, sharedAppGroups] = await Promise.all([
-            projects.createProject(client, {
-                project_number: 'test-' + Math.random().toString(36).substring(7),
+            projectPurger.createTestProject(client, {
                 project_name: 'My project',
                 project_client: 'My client',
                 address_country: 'GB',
@@ -46,14 +47,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(newItem.created_at.split('.')[0] + 'Z', 'created_at should be the past date, and format should match').equals(pastDate);
     }, 30_000);
     afterAll(async () => {
-        const client = new DatanestClient();
-        if (projectUuid !== '') {
-            await projects.archiveProject(client, projectUuid);
-        }
-
-        if (shareGroupProjectUuid !== '') {
-            await projects.archiveProject(client, shareGroupProjectUuid);
-        }
+        await projectPurger.cleanup();
     });
 
     it('GET v1/projects/:project_uuid/apps - List apps', async () => {
@@ -219,8 +213,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(shareGroup.apps).is.an('array');
         expect(shareGroup.apps.length).is.greaterThan(0, 'there should always be at least one app in a share group');
 
-        const newProject = await projects.createProject(client, {
-            project_number: 'test-' + Math.random().toString(36).substring(7),
+        const newProject = await projectPurger.createTestProject(client, {
             project_name: 'My project',
             project_client: 'My client',
             address_country: 'GB',

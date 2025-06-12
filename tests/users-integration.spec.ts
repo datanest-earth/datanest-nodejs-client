@@ -3,8 +3,9 @@ import dotenv from 'dotenv';
 import DatanestClient from '../src';
 import { User, deleteCompanyUser, getCompanyExternalUserProjects, getCompanyExternalUsers, getCompanyUsers, inviteCompanyUser, patchCompanyUser, purgeCompanyExternalUser } from '../src/users';
 import { addExternalUserToProject, getProjectTeam, addProjectTeamMember, removeExternalUserToProject, removeProjectTeamMember, updateProjectMemberRole } from '../src/teams';
-import { Project, ProjectType, archiveProject, createProject, patchProject, waitForProjectWorkflow } from '../src/projects';
+import { Project, ProjectType, patchProject, waitForProjectWorkflow } from '../src/projects';
 import { assignProjectWorkflowAppUser, unassignProjectWorkflowAppUser, getCompanyCustomRoles, getCompanyWorkflows } from '../src/workflows';
+import { ProjectPurger } from './project-cleanup';
 
 dotenv.config();
 
@@ -15,35 +16,27 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     let randomProjectManager: User;
     let companyUsers: User[];
     const client = new DatanestClient();
+    const projectPurger = new ProjectPurger();
+
     beforeAll(async () => {
         companyUsers = (await getCompanyUsers(client)).data;
         randomProjectManager = companyUsers[Math.floor(
             Math.random() * companyUsers.length
         )];
 
-        testProject = (await createProject(client, {
-            project_number: 'test-' + Math.random().toString(36).substring(7),
+        const testProjectResponse = await projectPurger.createTestProject(client, {
             project_name: 'My project',
             project_client: 'My client',
             project_address: '123 Buckingham Palace Road',
             address_country: 'GB',
             project_manager_uuid: randomProjectManager.uuid,
             project_type: ProjectType.PROJECT_TYPE_STANDARD,
-        })).project;
+        });
+        testProject = testProjectResponse.project;
     });
 
     afterAll(async () => {
-        if (testProject) {
-            await archiveProject(client, testProject.uuid);
-        }
-
-        if (workflowProject1) {
-            await archiveProject(client, workflowProject1.uuid);
-        }
-
-        if (workflowProject2) {
-            await archiveProject(client, workflowProject2.uuid);
-        }
+        await projectPurger.cleanup();
     });
 
     it('POST, GET search, PATCH and DELETE /v1/users', async () => {
@@ -151,8 +144,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(customRoles.length).to.be.greaterThan(0, "Prerequisite: There should be at least one custom role (CompanyRoleProfile) in the test company");
         expect(workflows.data.length).to.be.greaterThan(0, "Prerequisite: There should be at least one workflow in the test company");
 
-        workflowProject1 = (await createProject(client, {
-            project_number: 'test-' + Math.random().toString(36).substring(7),
+        const workflowProject1Response = await projectPurger.createTestProject(client, {
             project_name: 'My workflow project',
             project_client: 'My client',
             project_address: '123 Fake Street',
@@ -167,7 +159,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
                     user_uuids: [workflowUser.uuid],
                 }],
             },
-        })).project;
+        });
+        workflowProject1 = workflowProject1Response.project;
 
         workflowProject1 = await waitForProjectWorkflow(client, workflowProject1.uuid);
 
@@ -223,8 +216,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         const newUserName = 'Bob ' + Math.random().toString(36).substring(7);
         const newUserEmail = 'bob-' + Math.random().toString(36).substring(7) + '@user.com';
-        workflowProject2 = (await createProject(client, {
-            project_number: 'test-' + Math.random().toString(36).substring(7),
+        const workflowProject2Response = await projectPurger.createTestProject(client, {
             project_name: 'My external workflow project',
             project_client: 'My client',
             project_address: '123 Fake Street',
@@ -239,7 +231,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
                     user_uuids: [],
                 }],
             },
-        })).project;
+        });
+        workflowProject2 = workflowProject2Response.project;
 
         workflowProject2 = await waitForProjectWorkflow(client, workflowProject2.uuid);
 
@@ -270,15 +263,15 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     it.concurrent('Test company external user management', async () => {
         const newUserName = 'Bob ' + Math.random().toString(36).substring(7);
         const newUserEmail = 'bob-' + Math.random().toString(36).substring(7) + '@user.com';
-        const externalUserProject = (await createProject(client, {
-            project_number: 'test-' + Math.random().toString(36).substring(7),
+        const externalUserProjectResponse = await projectPurger.createTestProject(client, {
             project_name: 'My external workflow project',
             project_client: 'My client',
             project_address: '123 Fake Street',
             address_country: 'GB',
             project_manager_uuid: randomProjectManager.uuid,
             project_type: ProjectType.PROJECT_TYPE_STANDARD,
-        })).project;
+        });
+        const externalUserProject = externalUserProjectResponse.project;
 
         const users = await getProjectTeam(client, externalUserProject.uuid);
         expect(users.members.length).to.be.equal(1, 'Only the project manager should be in the projects team members');
