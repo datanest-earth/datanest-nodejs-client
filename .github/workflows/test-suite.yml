@@ -10,11 +10,13 @@ on:
     types:
       - opened
       - synchronize
+      - ready_for_review
   workflow_dispatch:
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    if: ${{ !github.event.pull_request.draft }}
 
     strategy:
       matrix:
@@ -41,6 +43,7 @@ jobs:
 
   integration-tests:
     runs-on: ubuntu-latest
+    if: ${{ !github.event.pull_request.draft }}
     needs: build-and-test
     concurrency:
       group: test-suite.staging
