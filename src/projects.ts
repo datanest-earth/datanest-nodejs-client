@@ -91,6 +91,11 @@ export type ProjectCreationData = {
     project_client: string;
 
     /**
+     * UUID of the project manager
+     */
+    project_manager_uuid?: UUID;
+
+    /**
      * Full postal address
      */
     project_address?: string;
@@ -220,7 +225,7 @@ export async function waitForProjectWorkflow(client: DatanestClient, projectUuid
  * @throws DatanestResponseError Request HTTP server or validation error
  * @returns 
  */
-export async function patchProject(client: DatanestClient, projectUuid: string, projectData: Partial<ProjectCreationData>) {
+export async function patchProject(client: DatanestClient, projectUuid: string, projectData: Partial<ProjectCreationData> & Partial<Project>) {
     const response = await client.patch('v1/projects/' + projectUuid, projectData);
     if (response.status !== 200) {
         throw new DatanestResponseError(`Failed to create project: ${response.status}`, response.status, await response.json());
