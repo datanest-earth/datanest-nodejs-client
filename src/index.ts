@@ -340,7 +340,11 @@ export class DatanestResponseError extends Error {
     public data: any;
 
     constructor(message: string, status: number, data: any) {
-        super(message);
+        let msg = message;
+        if (typeof data.message === 'string') {
+            msg += `: ${data.message}`;
+        }
+        super(msg);
         this.status = status;
         this.data = data;
     }

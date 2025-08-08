@@ -16,22 +16,23 @@ export async function getProjectTeam(client: DatanestClient, projectUuid: UUID) 
     const response = await client.get('v1/projects/' + projectUuid + '/teams');
     const data = await response.json();
     return data as {
-        project_manager: User,
-        members: TeamUser[],
-        external_users: TeamUser[],
+        project_manager: User;
+        members: TeamUser[];
+        external_users: TeamUser[];
         workflow_assignments: {
-            workflow_id: number,
-            workflow_title: string,
+            workflow_id: number;
+            workflow_title: string;
             workflow_apps: {
                 workflow_app_id: number;
                 workflow_group_id: number;
-                group_title: string,
+                group_title: string;
+                share_group: string;
                 users: {
-                    uuid: UUID,
-                    name: string,
-                    email: string,
-                }[],
-            }[],
+                    uuid: UUID;
+                    name: string;
+                    email: string;
+                }[];
+            }[];
         } | null,
     }
 }
