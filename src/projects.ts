@@ -120,6 +120,30 @@ export type ProjectCreationData = {
     additional?: Record<string, string | number | null>;
 };
 
+type WorkflowAppIdentifier = {
+    /**
+     * Recommended workflow app selector.
+     * This will continue to work in new revisions of the workflow as long as the share_group remains in the workflow for the latest revisions.
+     * 
+     * They typically start with "share-" (legacy prefixes include: "bundle-" or "wf-group")
+     */
+    share_group: string;
+} | {
+    /**
+     * @deprecated For backwards compatibility, please use share_group instead
+     * Caution: New revisions will change the ID of the workflow_app_id
+     * this can be inconvenient as republishing a workflow will cause breaking changes to API calls.
+     */
+    workflow_app_id: number;
+};
+
+export type WorkflowAppUserAssignment = WorkflowAppIdentifier & {
+    /**
+     * Set currently assigned users to the project's app group
+     */
+    user_uuids: UUID[];
+};
+
 /**
  * By assigning a workflow a project can be pre-configured with:
  * Gather Apps, Auto Docs & Map Figures
@@ -129,13 +153,7 @@ export type ProjectCreationData = {
 type ProjectWorkflowAssignments = {
     workflow_id: number;
 
-    workflow_apps?: {
-        workflow_app_id: number;
-        /**
-         * Set currently assigned users to the project's app group
-         */
-        user_uuids: UUID[];
-    }[];
+    workflow_apps?: WorkflowAppUserAssignment[];
 };
 
 /**
