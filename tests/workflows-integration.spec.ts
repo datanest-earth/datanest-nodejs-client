@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
 import { beforeAll, expect, it } from 'vitest';
 import { assignProjectWorkflowAppUser, getCompanyCustomRoles, getCompanyWorkflow, getCompanyWorkflows, getLatestDraftWorkflowFromList, getLatestPublishedWorkflowFromList, unassignProjectWorkflowAppUser } from '../src/workflows';
-import DatanestClient, { DatanestResponseError } from '../src';
-import { patchProject, Project, ProjectType, waitForProjectWorkflow } from '../src/projects';
+import DatanestClient from '../src';
+import { patchProject, ProjectType, waitForProjectWorkflow } from '../src/projects';
 import { addExternalUserToProject, getProjectTeam, removeProjectTeamMember, updateProjectMemberRole } from '../src/teams';
 import { ProjectPurger } from './project-cleanup';
 import { User } from '../src/users';
@@ -85,7 +85,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             workflow_assignments: {
                 workflow_id: draftWorkflow!.workflow_id,
             },
-        })).rejects.toThrow(new DatanestResponseError('Datanest API Failed: v1/projects: 422', 422, {}));
+        })).rejects.toThrow('Datanest API Failed: v1/projects: 422: This workflow is not published.');
     });
 
     it.concurrent('Cannot previous revisions of workflow for project', async () => {
@@ -112,7 +112,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             workflow_assignments: {
                 workflow_id: previousRevisionWorkflow!.workflow_id,
             },
-        })).rejects.toThrow(new DatanestResponseError('Datanest API Failed: v1/projects: 422', 422, {}));
+        })).rejects.toThrow('Datanest API Failed: v1/projects: 422: This workflow is revision 0 but the latest revision is 2.');
     });
 
     it.concurrent('Test Workflow user assignment using share_group, custom role assignment and team member integrity', async () => {
