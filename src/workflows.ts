@@ -145,3 +145,45 @@ export async function unassignProjectWorkflowAppUser(client: DatanestClient, pro
     const response = await client.delete('v1/projects/' + projectUuid + '/teams/workflow-apps/' + workflowAppId + '/' + userUuidOrEmail);
     return await response.json();
 }
+
+export function getLatestWorkflowFromList(workflows: CompanyWorkflow[]) {
+    return workflows.reduce((max, workflow) => {
+        if (workflow.revision > max.revision) {
+            return workflow;
+        }
+        return max;
+    }, workflows[0]);
+}
+
+export function getLatestDraftWorkflowFromList(workflows: CompanyWorkflow[]) {
+    return workflows.reduce((max, workflow) => {
+        if (workflow.published_at !== null) {
+            return max;
+        }
+        if (workflow.revision > max.revision) {
+            return workflow;
+        }
+        return max;
+    }, workflows[0]);
+}
+
+export function getLatestPublishedWorkflowFromList(workflows: CompanyWorkflow[]) {
+    return workflows.reduce((max, workflow) => {
+        if (workflow.published_at === null) {
+            return max;
+        }
+        if (workflow.revision > max.revision) {
+            return workflow;
+        }
+        return max;
+    }, workflows[0]);
+}
+
+export function isDraftWorkflow(workflow: CompanyWorkflow) {
+    return workflow.published_at === null;
+}
+
+/** This does not mean that it is the latest published workflow. Just that it was published at some point. */
+export function isPublishedWorkflow(workflow: CompanyWorkflow) {
+    return workflow.published_at !== null;
+}

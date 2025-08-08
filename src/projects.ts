@@ -131,7 +131,7 @@ type WorkflowAppIdentifier = {
 } | {
     /**
      * @deprecated For backwards compatibility, please use share_group instead
-     * Caution: New revisions will change the ID of the workflow_app_id
+     * Caution: Publishing new revisions will change the ID of the workflow_app_id
      * this can be inconvenient as republishing a workflow will cause breaking changes to API calls.
      */
     workflow_app_id: number;

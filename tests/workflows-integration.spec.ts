@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { beforeAll, expect, it } from 'vitest';
-import { assignProjectWorkflowAppUser, getCompanyCustomRoles, getCompanyWorkflow, getCompanyWorkflows, unassignProjectWorkflowAppUser } from '../src/workflows';
-import DatanestClient from '../src';
+import { assignProjectWorkflowAppUser, getCompanyCustomRoles, getCompanyWorkflow, getCompanyWorkflows, getLatestDraftWorkflowFromList, getLatestPublishedWorkflowFromList, unassignProjectWorkflowAppUser } from '../src/workflows';
+import DatanestClient, { DatanestResponseError } from '../src';
 import { patchProject, Project, ProjectType, waitForProjectWorkflow } from '../src/projects';
 import { addExternalUserToProject, getProjectTeam, removeProjectTeamMember, updateProjectMemberRole } from '../src/teams';
 import { ProjectPurger } from './project-cleanup';
@@ -66,6 +66,53 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             expect(workflow.latest_published_revision).to.be.null;
             expect(workflow.latest_published_id).to.be.null;
         }
+    });
+
+    it.concurrent('Cannot use non-published workflow for project', async () => {
+        const workflows = await getCompanyWorkflows(client, { include_drafts: true });
+        const draftWorkflow = workflows.data.find(w => w.published_at === null);
+
+        expect(draftWorkflow, 'Prerequisite: There should be at least one draft workflow in the test company').to.not.be.undefined;
+
+        // create project with non-published workflow
+        await expect(projectPurger.createTestProject(client, {
+            project_name: 'My workflow project',
+            project_client: 'My client',
+            project_address: '123 Fake Street',
+            address_country: 'GB',
+            project_manager_uuid: randomProjectManager.uuid,
+            project_type: ProjectType.PROJECT_TYPE_STANDARD,
+            workflow_assignments: {
+                workflow_id: draftWorkflow!.workflow_id,
+            },
+        })).rejects.toThrow(new DatanestResponseError('Datanest API Failed: v1/projects: 422', 422, {}));
+    });
+
+    it.concurrent('Cannot previous revisions of workflow for project', async () => {
+        const workflows = await getCompanyWorkflows(client, { include_revisions: true });
+        const latestRevisionWorkflow = getLatestPublishedWorkflowFromList(workflows.data);
+        const previousRevisionWorkflow = workflows.data.find(w =>
+            w.revision < latestRevisionWorkflow.revision && (
+                w.workflow_id === latestRevisionWorkflow.workflow_id ||
+                w.original_workflow_id === latestRevisionWorkflow.original_workflow_id
+            )
+        );
+
+        expect(latestRevisionWorkflow, 'Prerequisite: There should be at least one published revision workflow in the test company').to.not.be.undefined;
+        expect(previousRevisionWorkflow, 'Prerequisite: There should be at least one previous revision workflow in the test company').to.not.be.undefined;
+
+        // create project with non-published workflow
+        await expect(projectPurger.createTestProject(client, {
+            project_name: 'My workflow project',
+            project_client: 'My client',
+            project_address: '123 Fake Street',
+            address_country: 'GB',
+            project_manager_uuid: randomProjectManager.uuid,
+            project_type: ProjectType.PROJECT_TYPE_STANDARD,
+            workflow_assignments: {
+                workflow_id: previousRevisionWorkflow!.workflow_id,
+            },
+        })).rejects.toThrow(new DatanestResponseError('Datanest API Failed: v1/projects: 422', 422, {}));
     });
 
     it.concurrent('Test Workflow user assignment using share_group, custom role assignment and team member integrity', async () => {
