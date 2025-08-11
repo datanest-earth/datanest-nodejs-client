@@ -371,6 +371,8 @@ export type Country2CharCode = 'NZ' | 'GB' | 'US' | 'AU' | 'CA';
 export type MeasurementType = 'metre' | 'feet' | 'inch' | 'mm' | 'cm';
 
 export type UUID = string;
+/** Lowercase is recommended. */
+export type Email = string;
 
 export type PaginatedResponse<T> = {
     data: T[],
