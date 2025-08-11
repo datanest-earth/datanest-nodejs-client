@@ -1,4 +1,4 @@
-import DatanestClient, { Country2CharCode, DatanestResponseError, DateRangeFilters, MeasurementType, PaginatedResponse, Timestamp, UUID } from "./index";
+import DatanestClient, { Country2CharCode, DatanestResponseError, DateRangeFilters, Email, MeasurementType, PaginatedResponse, Timestamp, UUID } from "./index";
 import { CompanyWorkflow } from "./workflows";
 
 export enum ProjectType {
@@ -93,7 +93,6 @@ export type ProjectCreationData = {
     /**
      * UUID of the project manager
      */
-    project_manager_uuid?: UUID;
 
     /**
      * Full postal address
@@ -118,7 +117,7 @@ export type ProjectCreationData = {
      * Provide null to remove the field
      */
     additional?: Record<string, string | number | null>;
-};
+} & ({ project_manager_uuid: UUID | Email; project_manager?: null } | { project_manager: UUID | Email; project_manager_uuid?: null });
 
 type WorkflowAppIdentifier = {
     /**
