@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
-import { beforeAll, expect, it } from 'vitest';
-import { assignProjectWorkflowAppUser, getCompanyCustomRoles, getCompanyWorkflow, getCompanyWorkflows, getLatestDraftWorkflowFromList, getLatestPublishedWorkflowFromList, unassignProjectWorkflowAppUser } from '../src/workflows';
+import { afterAll, beforeAll, expect, it } from 'vitest';
+import { assignProjectWorkflowAppUser, CompanyWorkflow, getCompanyCustomRoles, getCompanyWorkflow, getCompanyWorkflows, getLatestDraftWorkflowFromList, getLatestPublishedWorkflowFromList, unassignProjectWorkflowAppUser } from '../src/workflows';
 import DatanestClient from '../src';
 import { patchProject, ProjectType, waitForProjectWorkflow } from '../src/projects';
 import { addExternalUserToProject, getProjectTeam, removeProjectTeamMember, updateProjectMemberRole } from '../src/teams';
@@ -36,6 +36,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             attempts++;
         }
     });
+
+    afterAll(projectPurger.cleanup);
 
     it.concurrent('getCompanyWorkflow: Check workflow revision', async () => {
         const [publishedWorkflows, withDraftWorkflows, withRevisionWorkflows] = [
@@ -103,10 +105,28 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     });
 
     it.concurrent('Can use previous revisions of workflow for project with share_group assignments', async () => {
-        const workflows = await getCompanyWorkflows(client, { include_revisions: true });
-        const firstWorkflow = workflows.data[0];
-        const relatedWorkflows = workflows.data.filter(w => w.original_workflow_id === firstWorkflow.original_workflow_id);
 
+        // Find a workflow that has multiple revisions
+        let workflowWithMultipleRevisions: CompanyWorkflow | undefined = undefined;
+        let relatedWorkflows: CompanyWorkflow[] = [];
+
+        for (let page = 1; page <= 10; page++) {
+            const workflows = await getCompanyWorkflows(client, { include_revisions: true, page });
+            for (const workflow of workflows.data) {
+                const related = workflows.data.filter(w => w.original_workflow_id === workflow.original_workflow_id && w.workflow_apps.some(a => workflow.workflow_apps.some(l => l.share_group === a.share_group)));
+                console.log('related', related.length, workflow.original_workflow_id, workflow.workflow_id);
+                if (related.length > 1) {
+                    workflowWithMultipleRevisions = workflow;
+                    relatedWorkflows = related;
+                    break;
+                }
+            }
+            if (workflows.meta.last_page >= page) {
+                break;
+            }
+        }
+
+        expect(workflowWithMultipleRevisions).to.not.be.undefined;
         expect(relatedWorkflows.length).to.be.greaterThan(1, 'Prerequisite: There should be at least two workflows in the test company');
 
         const latestRevisionWorkflow = getLatestPublishedWorkflowFromList(relatedWorkflows);
@@ -224,6 +244,16 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users3.workflow_assignments?.workflow_apps[0].share_group).to.be.equal(firstWorkflowAppShareGroup);
         expect(users3.members.find(u => u.email === secondWorkflowUser.email)).to.be.undefined;
         expect(users3.workflow_assignments?.workflow_apps[0].users.find(u => u.email === secondWorkflowUser.email)).to.be.undefined;
+    });
+
+    it.concurrent.only('Workflows can be assigned by unique share_group prefixes', async () => {
+
+        const [customRoles, workflows] = await Promise.all([getCompanyCustomRoles(client), getCompanyWorkflows(client)]);
+        let remainingUsers = companyUsers.filter(cu => cu.uuid !== randomProjectManager.uuid);
+        const workflowUser = remainingUsers[Math.floor(
+            Math.random() * remainingUsers.length
+        )];
+        expect(workflowUser).to.not.be.undefined;
     });
 
     it.concurrent('Test LEGACY Workflow user assignment using workflow_app_id, custom role assignment and team member integrity', async () => {

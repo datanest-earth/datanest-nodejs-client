@@ -1,0 +1,3587 @@
+{
+    "_datanest_type": "gather_schema_v1",
+    "_datanest_version": "7.0.1.409284b8a78fe53032146b48e774147bc0076e8b",
+    "_datanest_env": "staging",
+    "project": {
+        "uuid": "8ead2a3a-e2da-4a66-8fb3-b0a00648e71a",
+        "project_number": "Testing Templates",
+        "project_name": "-",
+        "project_client": "-",
+        "project_type": 1,
+        "project_manager_uuid": "965a2577-a93e-40d4-b51e-cb089eaa31eb",
+        "workflow_id": null,
+        "workflow_importing_at": null,
+        "is_workflow_importing": false,
+        "archived": false,
+        "is_confidential": false,
+        "is_confirmed": true,
+        "latitude": -43.5592767,
+        "longitude": 172.6845183,
+        "storage_needs_calc": false,
+        "storage_usage_mb": 183.85,
+        "has_soil_upload": false,
+        "has_water_upload": false,
+        "has_leachate_upload": false,
+        "has_soilgas_upload": false,
+        "has_sediment_upload": false,
+        "has_xrf_data": false,
+        "has_chemical_misalignment": false,
+        "has_sample_merging_misalignment": false,
+        "has_matrice_misalignment": false,
+        "has_unit_misalignment": false,
+        "has_rpd_misalignment": false,
+        "has_spatial_misalignment": false,
+        "is_gather_non_spatial_view": false,
+        "is_legacy_gather_table": true,
+        "project_address": "15\/14 Broad Street, Woolston, Christchurch, New Zealand",
+        "google_place_id": "ChIJyTS8tH0nMm0R4QynmKEXtoI",
+        "address_street": "14 Broad Street",
+        "address_locality": "Broad Street",
+        "address_city": "Woolston",
+        "address_state": "Canterbury",
+        "address_country": "New Zealand",
+        "address_postcode": "8023",
+        "additional": null,
+        "measurement_type": "metre",
+        "timezone": "Pacific\/Auckland",
+        "enviro_processed_at": null,
+        "last_accessed_at": "2025-08-13T23:31:09.000000Z",
+        "updated_at": "2025-08-13T23:31:19.000000Z",
+        "created_at": "2023-11-09T04:02:48.000000Z"
+    },
+    "workflow": null,
+    "project_link": "https://staging.datanest.earth/p/8ead2a3a-e2da-4a66-8fb3-b0a00648e71a",
+    "collection_link": "https://staging.datanest.earth/p/8ead2a3a-e2da-4a66-8fb3-b0a00648e71a/gather?redirect=collection",
+    "apps": [
+        {
+            "id": 18622,
+            "uuid": "c323e399-f223-4e4a-ac08-52a783f90c32",
+            "cloned_from_id": null,
+            "shared_from_group_id": null,
+            "project_id": 15417,
+            "cusPrice_template_id": null,
+            "is_locked": 0,
+            "public_link": "72e8071c202e2eb35fd0bf8c2ca5782029511f8d8b0df3f1a9c3ec1d44bfadd4",
+            "public_redirect": null,
+            "title": "Gather - Everything Tester App",
+            "prefix": null,
+            "has_read_only_item_titles": 0,
+            "item_title_field_id": null,
+            "drawing_type": "any",
+            "drawing_colour": "#ff0000",
+            "point_icon": 10,
+            "drawing_properties": null,
+            "sub_folders": [],
+            "hs_categories": null,
+            "filters": null,
+            "allow_collection_on_poi": 0,
+            "poi_app_id": null,
+            "item_limit": null,
+            "start_node_field": null,
+            "end_node_field": null,
+            "link_configs": null,
+            "default_figure_ids": [
+                0
+            ],
+            "created_at": "2023-11-09T04:03:14.000000Z",
+            "updated_at": "2025-08-06T15:37:16.000000Z",
+            "deleted_at": null,
+            "app_phase_group_id": 2236,
+            "order": 0,
+            "samples_count": 14,
+            "is_read_only": true,
+            "previous_app_requirement": null,
+            "sections": [
+                {
+                    "id": 58441,
+                    "template_tab_id": 18622,
+                    "system_reference": null,
+                    "cloned_from_id": null,
+                    "label": "Basics",
+                    "is_public_form": true,
+                    "is_shown_on_new_page": false,
+                    "is_repeatable": false,
+                    "is_permanent": false,
+                    "order": 0,
+                    "is_lab_sample": false,
+                    "is_health_safety": false,
+                    "is_soil_log": false,
+                    "is_site_visit": false,
+                    "is_photolog": false,
+                    "is_gps_point_metadata": false,
+                    "is_number_used_as_title": false,
+                    "created_at": "2023-11-09T04:03:27.000000Z",
+                    "updated_at": "2025-03-24T16:21:17.000000Z",
+                    "deleted_at": null,
+                    "primary_field_id": null,
+                    "secondary_field_id": null,
+                    "template_fields": [
+                        {
+                            "id": 949200,
+                            "template_section_id": 58441,
+                            "field_type_id": 20,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Copy Data Link",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 0,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2024-12-12T16:12:06.000000Z",
+                            "updated_at": "2024-12-12T16:12:14.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 317866,
+                            "template_section_id": 58441,
+                            "field_type_id": 1,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Text - name (required)",
+                            "is_required": true,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 1,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-11-09T04:03:29.000000Z",
+                            "updated_at": "2025-08-06T14:42:08.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 338526,
+                            "template_section_id": 58441,
+                            "field_type_id": 2,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Number - Styling Rule (equal or greater then 10 = Green)",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 2,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T23:03:02.000000Z",
+                            "updated_at": "2025-01-29T11:56:27.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 317868,
+                            "template_section_id": 58441,
+                            "field_type_id": 3,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Date \/ Time",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "type": "datetime"
+                            },
+                            "order": 3,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-11-09T04:03:31.000000Z",
+                            "updated_at": "2024-12-12T16:12:14.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1754971,
+                            "template_section_id": 58441,
+                            "field_type_id": 11,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Concat (of above)",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "expression": {
+                                    "tags": [
+                                        {
+                                            "type": "cusPrice_function",
+                                            "value": {
+                                                "id": 1,
+                                                "argGroups": [
+                                                    [
+                                                        {
+                                                            "type": 1,
+                                                            "fieldId": 317866,
+                                                            "action": "CURRENT"
+                                                        },
+                                                        {
+                                                            "type": 1,
+                                                            "fieldId": 338526,
+                                                            "action": "CURRENT"
+                                                        },
+                                                        {
+                                                            "type": 1,
+                                                            "fieldId": 317868,
+                                                            "action": "CURRENT"
+                                                        }
+                                                    ],
+                                                    [
+                                                        {
+                                                            "type": 2,
+                                                            "value": "---"
+                                                        }
+                                                    ]
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    "resultType": 3
+                                }
+                            },
+                            "order": 4,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-08-06T14:31:02.000000Z",
+                            "updated_at": "2025-08-06T14:31:51.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 317870,
+                            "template_section_id": 58441,
+                            "field_type_id": 5,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Do you love Datanest? <3",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false
+                            },
+                            "order": 5,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-11-09T04:03:34.000000Z",
+                            "updated_at": "2025-08-06T14:41:57.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 317877,
+                            "template_section_id": 58441,
+                            "field_type_id": 10,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Caption - yes",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [
+                                    {
+                                        "field_id": 317870,
+                                        "operator": "=",
+                                        "value": "yes"
+                                    }
+                                ],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true,
+                                "content": "<p><span style=\"color:rgb(230,0,0);\">You pressed YES! WOOOOOHOOOOOO<\/span><img src=\"\/api\/images\/value\/15417\/aGGoN8H393Litqak015sWUhesv4aR5tpMcO0erjr.jpg\" alt=\"aGGoN8H393Litqak015sWUhesv4aR5tpMcO0erjr.jpg\"><\/p>",
+                                "status": "success"
+                            },
+                            "order": 6,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-11-09T04:03:55.000000Z",
+                            "updated_at": "2025-08-06T14:41:57.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 317890,
+                            "template_section_id": 58441,
+                            "field_type_id": 10,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Caption - no",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [
+                                    {
+                                        "field_id": 317870,
+                                        "operator": "=",
+                                        "value": "no"
+                                    }
+                                ],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true,
+                                "content": "<p><span style=\"color:rgb(0,102,204);\">You pressed no :(\ufeff\ufeff\ufeff\ufeff<\/span><\/p>",
+                                "status": "danger"
+                            },
+                            "order": 7,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-11-09T04:09:23.000000Z",
+                            "updated_at": "2025-08-06T14:41:57.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 317874,
+                            "template_section_id": 58441,
+                            "field_type_id": 8,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Link another App  (default to last created item)",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "template_tab_title": "Gather - Linked app",
+                                "default_to_last_created": true
+                            },
+                            "order": 8,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-11-09T04:03:46.000000Z",
+                            "updated_at": "2025-08-06T14:41:57.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 317875,
+                            "template_section_id": 58441,
+                            "field_type_id": 1,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Name (linked from above)",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [
+                                    {
+                                        "type": 4,
+                                        "linkedFieldId": 317889,
+                                        "referenceAppFieldId": 317874,
+                                        "referenceAppTitle": "Gather - Linked app"
+                                    }
+                                ],
+                                "all_conditions_match": null,
+                                "is_readonly": false
+                            },
+                            "order": 9,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-11-09T04:03:49.000000Z",
+                            "updated_at": "2025-08-06T14:41:57.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1754977,
+                            "template_section_id": 58441,
+                            "field_type_id": 2,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Number (make -ve)",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": [],
+                            "order": 10,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-08-06T14:49:08.000000Z",
+                            "updated_at": "2025-08-06T14:49:21.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1754976,
+                            "template_section_id": 58441,
+                            "field_type_id": 2,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Number (allow <> prefix)",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "allow_out_of_range_prefix": true
+                            },
+                            "order": 11,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-08-06T14:47:59.000000Z",
+                            "updated_at": "2025-08-06T14:49:08.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 317867,
+                            "template_section_id": 58441,
+                            "field_type_id": 2,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Number (with tolerance 6-\/+ 2",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "unit": "metre",
+                                "tolerance_basis": "of_fixed",
+                                "tolerance_of": "6",
+                                "tolerance": "2"
+                            },
+                            "order": 12,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-11-09T04:03:30.000000Z",
+                            "updated_at": "2025-08-06T14:49:08.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 338329,
+                            "template_section_id": 58441,
+                            "field_type_id": 1,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Auto Assign (text based on number)",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [
+                                    {
+                                        "type": 1,
+                                        "field_id": 317867,
+                                        "operator": ">=",
+                                        "value": "6",
+                                        "default": "Number is >= 6"
+                                    },
+                                    {
+                                        "type": 1,
+                                        "field_id": 317867,
+                                        "operator": "<=",
+                                        "value": "6",
+                                        "default": "Number is <= 6"
+                                    }
+                                ],
+                                "all_conditions_match": null,
+                                "is_readonly": false
+                            },
+                            "order": 13,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T22:07:51.000000Z",
+                            "updated_at": "2025-08-06T14:49:08.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 338358,
+                            "template_section_id": 58441,
+                            "field_type_id": 11,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Expression (above n+10)",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true,
+                                "expression": {
+                                    "tags": [
+                                        {
+                                            "type": "variable",
+                                            "field_id": 317867,
+                                            "action": "CURRENT"
+                                        },
+                                        {
+                                            "type": "operator",
+                                            "value": "+"
+                                        },
+                                        {
+                                            "type": "number",
+                                            "value": "10"
+                                        }
+                                    ],
+                                    "resultType": 1
+                                }
+                            },
+                            "order": 14,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T22:15:34.000000Z",
+                            "updated_at": "2025-08-06T14:49:08.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 338359,
+                            "template_section_id": 58441,
+                            "field_type_id": 1,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Auto Assign (expression binded)",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [
+                                    {
+                                        "type": 3,
+                                        "fieldId": 338358
+                                    }
+                                ],
+                                "all_conditions_match": null,
+                                "is_readonly": false
+                            },
+                            "order": 15,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T22:15:40.000000Z",
+                            "updated_at": "2025-08-06T14:49:08.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 949198,
+                            "template_section_id": 58441,
+                            "field_type_id": 17,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Lookup Address (NZ)",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true,
+                                "restricted_country": "NZ"
+                            },
+                            "order": 16,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2024-12-12T16:11:45.000000Z",
+                            "updated_at": "2025-08-06T14:54:58.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 949199,
+                            "template_section_id": 58441,
+                            "field_type_id": 18,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Datanest User",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 17,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2024-12-12T16:11:48.000000Z",
+                            "updated_at": "2025-08-06T14:54:58.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1754960,
+                            "template_section_id": 58441,
+                            "field_type_id": 10,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Caption - auto assign",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "content": "<h6><strong>Auto Assign Dictionary and Read Only <\/strong><\/h6><p>The following tests all three types of choice\/dropdowns <\/p><ol><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"><\/span>Buttons<\/li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"><\/span>Radio<\/li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"><\/span>Dropdowns<\/li><\/ol>",
+                                "status": "secondary"
+                            },
+                            "order": 18,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-08-06T14:16:01.000000Z",
+                            "updated_at": "2025-08-06T14:54:58.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 338330,
+                            "template_section_id": 58441,
+                            "field_type_id": 4,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Employee - Radio",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "groups": [],
+                                "options": [
+                                    "Myrtle",
+                                    "Ellis",
+                                    "Mona",
+                                    "Price",
+                                    "Angelica",
+                                    "Garey",
+                                    "Emerson",
+                                    "Kent",
+                                    "Aaron",
+                                    "Emerson",
+                                    "Corbin"
+                                ],
+                                "defaults": [],
+                                "conditions": [],
+                                "is_readonly": false,
+                                "option_type": 1,
+                                "groupConditions": [],
+                                "display_as_input": "checkbox",
+                                "all_conditions_match": null,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 19,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T22:09:39.000000Z",
+                            "updated_at": "2025-08-06T14:54:58.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 338331,
+                            "template_section_id": 58441,
+                            "field_type_id": 4,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Role - Radio (Auto Assign from dictionary)",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "groups": [],
+                                "options": [
+                                    "Customer Support",
+                                    "Sales",
+                                    "Developer",
+                                    "Intern"
+                                ],
+                                "defaults": [
+                                    {
+                                        "type": 2,
+                                        "dictionary": [
+                                            [
+                                                "Myrtle",
+                                                "Customer Support"
+                                            ],
+                                            [
+                                                "Ellis",
+                                                "Customer Support"
+                                            ],
+                                            [
+                                                "Mona",
+                                                "Sales"
+                                            ],
+                                            [
+                                                "Price",
+                                                "Sales"
+                                            ],
+                                            [
+                                                "Angelica",
+                                                "Sales"
+                                            ],
+                                            [
+                                                "Garey",
+                                                "Developer"
+                                            ],
+                                            [
+                                                "Emerson",
+                                                "Developer"
+                                            ],
+                                            [
+                                                "Kent",
+                                                "Developer"
+                                            ],
+                                            [
+                                                "Aaron",
+                                                "Intern"
+                                            ],
+                                            [
+                                                "Emerson",
+                                                "Developer"
+                                            ],
+                                            [
+                                                "Corbin",
+                                                "Developer"
+                                            ]
+                                        ],
+                                        "sourceFieldIds": [
+                                            338330
+                                        ]
+                                    }
+                                ],
+                                "conditions": [],
+                                "is_readonly": false,
+                                "option_type": 1,
+                                "groupConditions": [],
+                                "display_as_input": "checkbox",
+                                "all_conditions_match": null,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 20,
+                            "width": 6,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T22:09:42.000000Z",
+                            "updated_at": "2025-08-06T14:54:58.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 949201,
+                            "template_section_id": 58441,
+                            "field_type_id": 4,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Role - Radio (Auto assign, read only)",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [
+                                    "Customer Support",
+                                    "Sales",
+                                    "Developer",
+                                    "Intern"
+                                ],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [
+                                    {
+                                        "type": 2,
+                                        "sourceFieldIds": [
+                                            338330
+                                        ],
+                                        "dictionary": [
+                                            [
+                                                "Myrtle",
+                                                "Customer Support"
+                                            ],
+                                            [
+                                                "Ellis",
+                                                "Customer Support"
+                                            ],
+                                            [
+                                                "Mona",
+                                                "Sales"
+                                            ],
+                                            [
+                                                "Price",
+                                                "Sales"
+                                            ],
+                                            [
+                                                "Angelica",
+                                                "Sales"
+                                            ],
+                                            [
+                                                "Garey",
+                                                "Developer"
+                                            ],
+                                            [
+                                                "Emerson",
+                                                "Developer"
+                                            ],
+                                            [
+                                                "Kent",
+                                                "Developer"
+                                            ],
+                                            [
+                                                "Aaron",
+                                                "Intern"
+                                            ],
+                                            [
+                                                "Emerson",
+                                                "Developer"
+                                            ],
+                                            [
+                                                "Corbin",
+                                                "Developer"
+                                            ]
+                                        ]
+                                    }
+                                ],
+                                "all_conditions_match": null,
+                                "is_readonly": true,
+                                "isInvolvedInDataCopy": true,
+                                "option_type": 1
+                            },
+                            "order": 21,
+                            "width": 6,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2024-12-12T16:12:30.000000Z",
+                            "updated_at": "2025-08-06T14:54:58.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1754961,
+                            "template_section_id": 58441,
+                            "field_type_id": 4,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Employee - Dropdown",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "option_type": 1,
+                                "options": [
+                                    "Myrtle",
+                                    "Ellis",
+                                    "Mona",
+                                    "Price",
+                                    "Angelica",
+                                    "Garey",
+                                    "Emerson",
+                                    "Kent",
+                                    "Aaron",
+                                    "Emerson",
+                                    "Corbin"
+                                ],
+                                "default": [],
+                                "display_as_input": "dropdown",
+                                "conditions": [],
+                                "defaults": []
+                            },
+                            "order": 22,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-08-06T14:16:49.000000Z",
+                            "updated_at": "2025-08-06T14:54:58.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1754962,
+                            "template_section_id": 58441,
+                            "field_type_id": 4,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Role - Dropdown(Auto Assign from dictionary)",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "option_type": 1,
+                                "options": [
+                                    "Customer Support",
+                                    "Sales",
+                                    "Developer",
+                                    "Intern"
+                                ],
+                                "default": [],
+                                "display_as_input": "dropdown",
+                                "defaults": [
+                                    {
+                                        "type": 2,
+                                        "sourceFieldIds": [
+                                            1754961
+                                        ],
+                                        "dictionary": [
+                                            [
+                                                "Myrtle",
+                                                "Customer Support"
+                                            ],
+                                            [
+                                                "Ellis",
+                                                "Customer Support"
+                                            ],
+                                            [
+                                                "Mona",
+                                                "Sales"
+                                            ],
+                                            [
+                                                "Price",
+                                                "Sales"
+                                            ],
+                                            [
+                                                "Angelica",
+                                                "Sales"
+                                            ],
+                                            [
+                                                "Garey",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Emerson",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Kent",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Emerson",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Corbin",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Pato",
+                                                "Customer Support"
+                                            ]
+                                        ]
+                                    }
+                                ],
+                                "conditions": []
+                            },
+                            "order": 23,
+                            "width": 6,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-08-06T14:16:51.000000Z",
+                            "updated_at": "2025-08-06T14:54:58.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1754963,
+                            "template_section_id": 58441,
+                            "field_type_id": 4,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Role - Dropdown(Auto assign, read only)",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "option_type": 1,
+                                "options": [
+                                    "Customer Support",
+                                    "Sales",
+                                    "Developer",
+                                    "Intern"
+                                ],
+                                "default": [],
+                                "is_readonly": true,
+                                "display_as_input": "dropdown",
+                                "defaults": [
+                                    {
+                                        "type": 2,
+                                        "sourceFieldIds": [
+                                            1754961
+                                        ],
+                                        "dictionary": [
+                                            [
+                                                "Myrtle",
+                                                "Customer Support"
+                                            ],
+                                            [
+                                                "Ellis",
+                                                "Customer Support"
+                                            ],
+                                            [
+                                                "Mona",
+                                                "Sales"
+                                            ],
+                                            [
+                                                "Price",
+                                                "Sales"
+                                            ],
+                                            [
+                                                "Angelica",
+                                                "Sales"
+                                            ],
+                                            [
+                                                "Garey",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Emerson",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Kent",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Emerson",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Corbin",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Pato",
+                                                "Customer Support"
+                                            ]
+                                        ]
+                                    }
+                                ],
+                                "conditions": []
+                            },
+                            "order": 24,
+                            "width": 6,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-08-06T14:16:52.000000Z",
+                            "updated_at": "2025-08-06T14:54:58.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1754964,
+                            "template_section_id": 58441,
+                            "field_type_id": 4,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Employee - Button",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "option_type": 1,
+                                "options": [
+                                    "Myrtle",
+                                    "Ellis",
+                                    "Mona",
+                                    "Price",
+                                    "Angelica",
+                                    "Garey",
+                                    "Emerson",
+                                    "Kent",
+                                    "Emerson",
+                                    "Corbin"
+                                ],
+                                "default": [],
+                                "display_as_input": "button",
+                                "conditions": [],
+                                "defaults": []
+                            },
+                            "order": 25,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-08-06T14:16:58.000000Z",
+                            "updated_at": "2025-08-06T15:34:23.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1754965,
+                            "template_section_id": 58441,
+                            "field_type_id": 4,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Role - Button(Auto Assign from dictionary)",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "option_type": 1,
+                                "options": [
+                                    "Customer Support",
+                                    "Sales",
+                                    "Developer",
+                                    "Intern"
+                                ],
+                                "default": [],
+                                "display_as_input": "button",
+                                "defaults": [
+                                    {
+                                        "type": 2,
+                                        "sourceFieldIds": [
+                                            1754964
+                                        ],
+                                        "dictionary": [
+                                            [
+                                                "Myrtle",
+                                                "Customer Support"
+                                            ],
+                                            [
+                                                "Ellis",
+                                                "Customer Support"
+                                            ],
+                                            [
+                                                "Mona",
+                                                "Sales"
+                                            ],
+                                            [
+                                                "Price",
+                                                "Sales"
+                                            ],
+                                            [
+                                                "Angelica",
+                                                "Sales"
+                                            ],
+                                            [
+                                                "Garey",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Emerson",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Kent",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Aaron",
+                                                "Intern"
+                                            ],
+                                            [
+                                                "Emerson",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Corbin",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Pato",
+                                                "Customer Support"
+                                            ]
+                                        ]
+                                    }
+                                ],
+                                "conditions": []
+                            },
+                            "order": 26,
+                            "width": 6,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-08-06T14:16:59.000000Z",
+                            "updated_at": "2025-08-06T15:29:45.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1754966,
+                            "template_section_id": 58441,
+                            "field_type_id": 4,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Role - Button (Auto assign, read only)",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "option_type": 1,
+                                "is_readonly": true,
+                                "options": [
+                                    "Customer Support",
+                                    "Sales",
+                                    "Developer",
+                                    "Intern"
+                                ],
+                                "default": [],
+                                "display_as_input": "button",
+                                "defaults": [
+                                    {
+                                        "type": 2,
+                                        "sourceFieldIds": [
+                                            1754964
+                                        ],
+                                        "dictionary": [
+                                            [
+                                                "Myrtle",
+                                                "Customer Support"
+                                            ],
+                                            [
+                                                "Ellis",
+                                                "Customer Support"
+                                            ],
+                                            [
+                                                "Mona",
+                                                "Sales"
+                                            ],
+                                            [
+                                                "Price",
+                                                "Sales"
+                                            ],
+                                            [
+                                                "Angelica",
+                                                "Sales"
+                                            ],
+                                            [
+                                                "Garey",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Emerson",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Kent",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Aaron",
+                                                "Intern"
+                                            ],
+                                            [
+                                                "Emerson",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Corbin",
+                                                "Software Engineer"
+                                            ],
+                                            [
+                                                "Pato",
+                                                "Customer Support"
+                                            ]
+                                        ]
+                                    }
+                                ],
+                                "conditions": []
+                            },
+                            "order": 27,
+                            "width": 6,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-08-06T14:17:01.000000Z",
+                            "updated_at": "2025-08-06T15:30:02.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1754968,
+                            "template_section_id": 58441,
+                            "field_type_id": 10,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Caption - default Multi choice",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "content": "<h6><strong>Default Multi-Choice Tests<\/strong><\/h6><p>How happy are you with Datanest? = Very<\/p><p>What words describe datanest? = So cool &amp; The best software ever <\/p>",
+                                "status": "secondary"
+                            },
+                            "order": 28,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-08-06T14:22:03.000000Z",
+                            "updated_at": "2025-08-06T14:54:58.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1754970,
+                            "template_section_id": 58441,
+                            "field_type_id": 4,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "How happy are you with Datanest?",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "option_type": 1,
+                                "options": [
+                                    "Not at all",
+                                    "Somewhat",
+                                    "Very!!"
+                                ],
+                                "default": "Very!!",
+                                "display_as_input": "dropdown"
+                            },
+                            "order": 29,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-08-06T14:22:40.000000Z",
+                            "updated_at": "2025-08-06T14:54:58.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1754969,
+                            "template_section_id": 58441,
+                            "field_type_id": 4,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "What words describe datanest?",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "option_type": 1,
+                                "options": [
+                                    "So cool",
+                                    "The best software ever",
+                                    "Lame software"
+                                ],
+                                "default": [
+                                    "So cool",
+                                    "The best software ever"
+                                ],
+                                "has_multiple": true,
+                                "defaults": [],
+                                "display_as_input": "button"
+                            },
+                            "order": 30,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-08-06T14:22:38.000000Z",
+                            "updated_at": "2025-08-06T14:54:58.000000Z",
+                            "deleted_at": null
+                        }
+                    ]
+                },
+                {
+                    "id": 58442,
+                    "template_tab_id": 18622,
+                    "system_reference": null,
+                    "cloned_from_id": null,
+                    "label": "Media",
+                    "is_public_form": true,
+                    "is_shown_on_new_page": false,
+                    "is_repeatable": false,
+                    "is_permanent": false,
+                    "order": 1,
+                    "is_lab_sample": false,
+                    "is_health_safety": false,
+                    "is_soil_log": false,
+                    "is_site_visit": false,
+                    "is_photolog": false,
+                    "is_gps_point_metadata": false,
+                    "is_number_used_as_title": false,
+                    "created_at": "2023-11-09T04:04:16.000000Z",
+                    "updated_at": "2025-03-24T16:21:20.000000Z",
+                    "deleted_at": null,
+                    "primary_field_id": null,
+                    "secondary_field_id": null,
+                    "template_fields": [
+                        {
+                            "id": 1038944,
+                            "template_section_id": 58442,
+                            "field_type_id": 20,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Copy Data Link",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 0,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T14:31:46.000000Z",
+                            "updated_at": "2025-01-29T14:31:46.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 317880,
+                            "template_section_id": 58442,
+                            "field_type_id": 6,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Media - image",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false
+                            },
+                            "order": 1,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-11-09T04:04:25.000000Z",
+                            "updated_at": "2025-08-06T14:34:50.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 338326,
+                            "template_section_id": 58442,
+                            "field_type_id": 6,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Media - image multiple",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "type": "image",
+                                "has_multiple": true,
+                                "track_direction": false
+                            },
+                            "order": 2,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T22:01:49.000000Z",
+                            "updated_at": "2025-08-06T14:34:50.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 338321,
+                            "template_section_id": 58442,
+                            "field_type_id": 6,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Media - audio",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "type": "audio",
+                                "has_multiple": false,
+                                "track_direction": false
+                            },
+                            "order": 3,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T22:00:16.000000Z",
+                            "updated_at": "2025-08-06T14:34:50.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 338322,
+                            "template_section_id": 58442,
+                            "field_type_id": 6,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Media - video",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "type": "video",
+                                "has_multiple": false,
+                                "track_direction": false
+                            },
+                            "order": 4,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T22:00:40.000000Z",
+                            "updated_at": "2025-08-06T14:34:50.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 317885,
+                            "template_section_id": 58442,
+                            "field_type_id": 12,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Document",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false
+                            },
+                            "order": 5,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-11-09T04:04:37.000000Z",
+                            "updated_at": "2025-08-06T14:34:50.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 317886,
+                            "template_section_id": 58442,
+                            "field_type_id": 15,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Drawing",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false
+                            },
+                            "order": 6,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-11-09T04:04:39.000000Z",
+                            "updated_at": "2025-08-06T14:34:50.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1259487,
+                            "template_section_id": 58442,
+                            "field_type_id": 9,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Signature",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 7,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-03-24T16:22:08.000000Z",
+                            "updated_at": "2025-08-06T14:34:50.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1754972,
+                            "template_section_id": 58442,
+                            "field_type_id": 10,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Caption - image renaming",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "content": "<h6>Image Renaming Tests<\/h6><ol><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"><\/span>Renaming by expression<\/li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"><\/span>Manually renaming<\/li><\/ol>",
+                                "status": "secondary"
+                            },
+                            "order": 8,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-08-06T14:34:26.000000Z",
+                            "updated_at": "2025-08-06T14:41:35.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 338328,
+                            "template_section_id": 58442,
+                            "field_type_id": 11,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Expression between sections (n+5)",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "expression": {
+                                    "tags": [
+                                        {
+                                            "type": "variable",
+                                            "field_id": 338526,
+                                            "action": "CURRENT"
+                                        },
+                                        {
+                                            "type": "operator",
+                                            "value": "+"
+                                        },
+                                        {
+                                            "type": "number",
+                                            "value": "10"
+                                        }
+                                    ],
+                                    "resultType": 1
+                                }
+                            },
+                            "order": 9,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T22:04:14.000000Z",
+                            "updated_at": "2025-08-06T14:34:50.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1754973,
+                            "template_section_id": 58442,
+                            "field_type_id": 6,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Media named by expression above",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "type": "image",
+                                "image_filename_field_id": 338328
+                            },
+                            "order": 10,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-08-06T14:35:32.000000Z",
+                            "updated_at": "2025-08-06T14:35:51.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 338324,
+                            "template_section_id": 58442,
+                            "field_type_id": 6,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "media - direction + renaming",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "type": "image",
+                                "track_direction": true,
+                                "allow_renaming": true
+                            },
+                            "order": 11,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T22:01:07.000000Z",
+                            "updated_at": "2025-08-06T14:35:32.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1038941,
+                            "template_section_id": 58442,
+                            "field_type_id": 10,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Caption - Pre uploaded",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true,
+                                "content": "<h6>Pre-uploaded Media Tests<\/h6><p>These will be removed on staging, add them again in app editor. <\/p>",
+                                "status": "secondary"
+                            },
+                            "order": 12,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T14:20:10.000000Z",
+                            "updated_at": "2025-08-06T14:35:32.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1038943,
+                            "template_section_id": 58442,
+                            "field_type_id": 6,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Media",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": true,
+                                "isInvolvedInDataCopy": true,
+                                "type": "video",
+                                "track_direction": false
+                            },
+                            "order": 14,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T14:20:52.000000Z",
+                            "updated_at": "2025-08-06T14:35:32.000000Z",
+                            "deleted_at": null
+                        }
+                    ]
+                },
+                {
+                    "id": 58443,
+                    "template_tab_id": 18622,
+                    "system_reference": null,
+                    "cloned_from_id": null,
+                    "label": "Repeating Sections",
+                    "is_public_form": true,
+                    "is_shown_on_new_page": false,
+                    "is_repeatable": true,
+                    "is_permanent": false,
+                    "order": 2,
+                    "is_lab_sample": false,
+                    "is_health_safety": false,
+                    "is_soil_log": false,
+                    "is_site_visit": false,
+                    "is_photolog": false,
+                    "is_gps_point_metadata": false,
+                    "is_number_used_as_title": false,
+                    "created_at": "2023-11-09T04:04:48.000000Z",
+                    "updated_at": "2025-03-24T16:21:26.000000Z",
+                    "deleted_at": null,
+                    "primary_field_id": null,
+                    "secondary_field_id": null,
+                    "template_fields": [
+                        {
+                            "id": 338518,
+                            "template_section_id": 58443,
+                            "field_type_id": 7,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Depth",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true,
+                                "unit": "m",
+                                "is_range": true
+                            },
+                            "order": 0,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T22:37:02.000000Z",
+                            "updated_at": "2025-01-29T11:55:34.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 949197,
+                            "template_section_id": 58443,
+                            "field_type_id": 19,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Lab ID",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true,
+                                "use_preset_format": true,
+                                "selected_lab_title_format_id": "wi3o6zt"
+                            },
+                            "order": 1,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2024-12-12T16:10:44.000000Z",
+                            "updated_at": "2025-02-06T15:59:12.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 317888,
+                            "template_section_id": 58443,
+                            "field_type_id": 16,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Lithology",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "groups": [],
+                                "options": [
+                                    "Clay",
+                                    "Silt",
+                                    "Mud"
+                                ],
+                                "defaults": [],
+                                "conditions": [],
+                                "is_readonly": false,
+                                "groupConditions": [],
+                                "display_as_input": "dropdown",
+                                "optionExtensions": {
+                                    "Mud": {
+                                        "color": "#098149",
+                                        "fillPattern": 3
+                                    },
+                                    "Clay": {
+                                        "color": "#d25687",
+                                        "fillPattern": 3
+                                    },
+                                    "Silt": {
+                                        "color": "#008efa",
+                                        "fillPattern": 5
+                                    }
+                                },
+                                "all_conditions_match": null,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 2,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-11-09T04:05:04.000000Z",
+                            "updated_at": "2025-08-06T14:23:35.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 338406,
+                            "template_section_id": 58443,
+                            "field_type_id": 2,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Number",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false
+                            },
+                            "order": 3,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T22:21:54.000000Z",
+                            "updated_at": "2025-01-29T11:57:46.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 317887,
+                            "template_section_id": 58443,
+                            "field_type_id": 6,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Media - repeatable",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 4,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-11-09T04:04:53.000000Z",
+                            "updated_at": "2025-01-29T11:57:46.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 338407,
+                            "template_section_id": 58443,
+                            "field_type_id": 11,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Min Number",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "expression": {
+                                    "tags": [
+                                        {
+                                            "type": "variable",
+                                            "field_id": 338406,
+                                            "action": "MIN"
+                                        }
+                                    ],
+                                    "resultType": 1
+                                }
+                            },
+                            "order": 5,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T22:21:59.000000Z",
+                            "updated_at": "2025-08-06T14:28:25.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 338408,
+                            "template_section_id": 58443,
+                            "field_type_id": 11,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Max Number",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "expression": {
+                                    "tags": [
+                                        {
+                                            "type": "variable",
+                                            "field_id": 338406,
+                                            "action": "MAX"
+                                        }
+                                    ],
+                                    "resultType": 1
+                                }
+                            },
+                            "order": 6,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T22:22:02.000000Z",
+                            "updated_at": "2025-08-06T14:28:32.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 338409,
+                            "template_section_id": 58443,
+                            "field_type_id": 11,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Average Number",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "expression": {
+                                    "tags": [
+                                        {
+                                            "type": "variable",
+                                            "field_id": 338406,
+                                            "action": "AVG"
+                                        }
+                                    ],
+                                    "resultType": 1
+                                }
+                            },
+                            "order": 7,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T22:22:05.000000Z",
+                            "updated_at": "2025-08-06T14:28:35.000000Z",
+                            "deleted_at": null
+                        }
+                    ]
+                },
+                {
+                    "id": 286771,
+                    "template_tab_id": 18622,
+                    "system_reference": null,
+                    "cloned_from_id": null,
+                    "label": "Feild Splitter DCP\/Scala",
+                    "is_public_form": false,
+                    "is_shown_on_new_page": false,
+                    "is_repeatable": false,
+                    "is_permanent": false,
+                    "order": 3,
+                    "is_lab_sample": false,
+                    "is_health_safety": false,
+                    "is_soil_log": false,
+                    "is_site_visit": false,
+                    "is_photolog": false,
+                    "is_gps_point_metadata": false,
+                    "is_number_used_as_title": false,
+                    "created_at": "2025-08-06T14:36:38.000000Z",
+                    "updated_at": "2025-08-06T14:36:58.000000Z",
+                    "deleted_at": null,
+                    "primary_field_id": null,
+                    "secondary_field_id": null,
+                    "template_fields": [
+                        {
+                            "id": 1754975,
+                            "template_section_id": 286771,
+                            "field_type_id": 22,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Field Splitter",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "field_id_to_repeat_value_in": 1754974
+                            },
+                            "order": 0,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-08-06T14:37:42.000000Z",
+                            "updated_at": "2025-08-06T14:37:53.000000Z",
+                            "deleted_at": null
+                        }
+                    ]
+                },
+                {
+                    "id": 286770,
+                    "template_tab_id": 18622,
+                    "system_reference": null,
+                    "cloned_from_id": null,
+                    "label": "Field Splitter DCP/Scala Destination",
+                    "is_public_form": false,
+                    "is_shown_on_new_page": false,
+                    "is_repeatable": true,
+                    "is_permanent": false,
+                    "order": 4,
+                    "is_lab_sample": false,
+                    "is_health_safety": false,
+                    "is_soil_log": false,
+                    "is_site_visit": false,
+                    "is_photolog": false,
+                    "is_gps_point_metadata": false,
+                    "is_number_used_as_title": false,
+                    "created_at": "2025-08-06T14:36:35.000000Z",
+                    "updated_at": "2025-08-06T14:37:50.000000Z",
+                    "deleted_at": null,
+                    "primary_field_id": null,
+                    "secondary_field_id": null,
+                    "template_fields": [
+                        {
+                            "id": 1754974,
+                            "template_section_id": 286770,
+                            "field_type_id": 1,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Blow Count",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": [],
+                            "order": 0,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-08-06T14:36:45.000000Z",
+                            "updated_at": "2025-08-06T14:37:27.000000Z",
+                            "deleted_at": null
+                        }
+                    ]
+                },
+                {
+                    "id": 64588,
+                    "template_tab_id": 18622,
+                    "system_reference": null,
+                    "cloned_from_id": null,
+                    "label": "Review (Data Events/Workflows)",
+                    "is_public_form": false,
+                    "is_shown_on_new_page": false,
+                    "is_repeatable": false,
+                    "is_permanent": false,
+                    "order": 5,
+                    "is_lab_sample": false,
+                    "is_health_safety": false,
+                    "is_soil_log": false,
+                    "is_site_visit": false,
+                    "is_photolog": false,
+                    "is_gps_point_metadata": false,
+                    "is_number_used_as_title": false,
+                    "created_at": "2024-01-12T02:54:39.000000Z",
+                    "updated_at": "2025-08-06T14:36:38.000000Z",
+                    "deleted_at": null,
+                    "primary_field_id": null,
+                    "secondary_field_id": null,
+                    "template_fields": [
+                        {
+                            "id": 1754978,
+                            "template_section_id": 64588,
+                            "field_type_id": 10,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Caption",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "content": "<p>Change to send email, and the following should happen:<\/p><ol><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"><\/span>pre auto doc figure gen<\/li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"><\/span>auto doc gen<\/li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"><\/span>email to user <\/li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"><\/span>send webhook -<a href=\"https:\/\/play.svix.com\/in\/e_rnA2bGy6yh6ZGCH3r70nDCfCeZS\/\" rel=\"noopener noreferrer\" target=\"_blank\"> to here<\/a><\/li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"><\/span>set gather value to \"email sent\" <\/li><\/ol>",
+                                "status": "secondary"
+                            },
+                            "order": 0,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-08-06T15:37:16.000000Z",
+                            "updated_at": "2025-08-06T15:38:33.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 361060,
+                            "template_section_id": 64588,
+                            "field_type_id": 4,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Stage",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "groups": [],
+                                "options": [
+                                    "In Progress",
+                                    "Send Email",
+                                    "Email Sent"
+                                ],
+                                "defaults": [],
+                                "conditions": [],
+                                "is_readonly": false,
+                                "option_type": 1,
+                                "groupConditions": [],
+                                "display_as_input": "dropdown",
+                                "all_conditions_match": null,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 1,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2024-01-12T02:55:16.000000Z",
+                            "updated_at": "2025-08-06T15:37:16.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1087765,
+                            "template_section_id": 64588,
+                            "field_type_id": 1,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Email (validation required)",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true,
+                                "validation": "email"
+                            },
+                            "order": 2,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-02-06T15:47:54.000000Z",
+                            "updated_at": "2025-08-06T15:37:16.000000Z",
+                            "deleted_at": null
+                        }
+                    ]
+                }
+            ],
+            "styling_rules": [
+                {
+                    "id": 644,
+                    "name": "'Number' >= 10 = Green",
+                    "target": {
+                        "id": 18622,
+                        "type": 1,
+                        "collectionType": "point",
+                        "sectionId": 58441
+                    },
+                    "condition": {
+                        "fieldId": 338526,
+                        "operand": {
+                            "value": "10",
+                            "value2": null
+                        },
+                        "operator": ">="
+                    },
+                    "style": {
+                        "icon": 9,
+                        "color": "#27AF60",
+                        "iconSize": 22,
+                        "labelSize": 16,
+                        "labelColor": "#000000",
+                        "isLabelHidden": false,
+                        "labelShadowColor": "#FFFFFF",
+                        "isLabelUnderlined": false,
+                        "isLabelAsteriskAppended": false
+                    }
+                },
+                {
+                    "id": 645,
+                    "name": "'Number' >= 10 = Green",
+                    "target": {
+                        "id": 18622,
+                        "type": 1,
+                        "collectionType": "polygon",
+                        "sectionId": 58441
+                    },
+                    "condition": {
+                        "fieldId": 338526,
+                        "operand": {
+                            "value": "10",
+                            "value2": null
+                        },
+                        "operator": ">="
+                    },
+                    "style": {
+                        "color": "#009419",
+                        "weight": 3,
+                        "opacity": 1,
+                        "fillStyle": 0,
+                        "labelSize": null,
+                        "fillOpacity": 0.2,
+                        "outlineStyle": 0,
+                        "areaMeasurement": false,
+                        "shouldShowLabel": false,
+                        "outlineMeasurement": false
+                    }
+                },
+                {
+                    "id": 646,
+                    "name": "'Number' >= 10 = Green",
+                    "target": {
+                        "id": 18622,
+                        "type": 1,
+                        "collectionType": "polyline",
+                        "sectionId": 58441
+                    },
+                    "condition": {
+                        "fieldId": 338526,
+                        "operand": {
+                            "value": "10",
+                            "value2": null
+                        },
+                        "operator": ">="
+                    },
+                    "style": {
+                        "color": "#009419",
+                        "weight": 3,
+                        "opacity": 1,
+                        "labelSize": null,
+                        "arrowHeads": [],
+                        "outlineStyle": 0,
+                        "arrowHeadSize": 10,
+                        "shouldShowLabel": false,
+                        "outlineMeasurement": false,
+                        "isArrowHeadBackward": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": 18623,
+            "uuid": "c22a102e-2c9a-4759-9334-743136f288d7",
+            "cloned_from_id": null,
+            "shared_from_group_id": null,
+            "project_id": 15417,
+            "cusPrice_template_id": null,
+            "is_locked": 0,
+            "public_link": null,
+            "public_redirect": null,
+            "title": "Gather - Linked app",
+            "prefix": null,
+            "has_read_only_item_titles": 0,
+            "item_title_field_id": null,
+            "drawing_type": "non-spatial",
+            "drawing_colour": "#000000",
+            "point_icon": 0,
+            "drawing_properties": null,
+            "sub_folders": [],
+            "hs_categories": null,
+            "filters": null,
+            "allow_collection_on_poi": 0,
+            "poi_app_id": null,
+            "item_limit": null,
+            "start_node_field": null,
+            "end_node_field": null,
+            "link_configs": [
+                {
+                    "icon": 0,
+                    "color": "#99F3BF",
+                    "isEmbedded": false,
+                    "linkFieldId": 317874,
+                    "maxNumberOfItems": null
+                }
+            ],
+            "default_figure_ids": [
+                0
+            ],
+            "created_at": "2023-11-09T04:05:32.000000Z",
+            "updated_at": "2025-08-06T14:30:53.000000Z",
+            "deleted_at": null,
+            "app_phase_group_id": 2236,
+            "order": 1,
+            "samples_count": 2,
+            "is_read_only": true,
+            "previous_app_requirement": null,
+            "sections": [
+                {
+                    "id": 58444,
+                    "template_tab_id": 18623,
+                    "system_reference": null,
+                    "cloned_from_id": null,
+                    "label": "Link me",
+                    "is_public_form": false,
+                    "is_shown_on_new_page": false,
+                    "is_repeatable": false,
+                    "is_permanent": false,
+                    "order": 0,
+                    "is_lab_sample": false,
+                    "is_health_safety": false,
+                    "is_soil_log": false,
+                    "is_site_visit": false,
+                    "is_photolog": false,
+                    "is_gps_point_metadata": false,
+                    "is_number_used_as_title": false,
+                    "created_at": "2023-11-09T04:05:54.000000Z",
+                    "updated_at": "2023-11-09T04:06:00.000000Z",
+                    "deleted_at": null,
+                    "primary_field_id": null,
+                    "secondary_field_id": null,
+                    "template_fields": [
+                        {
+                            "id": 317889,
+                            "template_section_id": 58444,
+                            "field_type_id": 1,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Name",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false
+                            },
+                            "order": 0,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-11-09T04:06:02.000000Z",
+                            "updated_at": "2023-11-09T04:06:05.000000Z",
+                            "deleted_at": null
+                        }
+                    ]
+                }
+            ],
+            "styling_rules": []
+        },
+        {
+            "id": 19270,
+            "uuid": "0db663f5-535a-4862-9714-cea9384b38f4",
+            "cloned_from_id": null,
+            "shared_from_group_id": null,
+            "project_id": 15417,
+            "cusPrice_template_id": null,
+            "is_locked": 0,
+            "public_link": null,
+            "public_redirect": null,
+            "title": "Insights - Testing App",
+            "prefix": "INS-",
+            "has_read_only_item_titles": 0,
+            "item_title_field_id": null,
+            "drawing_type": "point",
+            "drawing_colour": "#ff0f0f",
+            "point_icon": 10,
+            "drawing_properties": null,
+            "sub_folders": [],
+            "hs_categories": null,
+            "filters": null,
+            "allow_collection_on_poi": 0,
+            "poi_app_id": null,
+            "item_limit": null,
+            "start_node_field": null,
+            "end_node_field": null,
+            "link_configs": null,
+            "default_figure_ids": [
+                0
+            ],
+            "created_at": "2023-12-04T22:40:07.000000Z",
+            "updated_at": "2025-08-06T14:30:53.000000Z",
+            "deleted_at": null,
+            "app_phase_group_id": 2237,
+            "order": 0,
+            "samples_count": 5,
+            "is_read_only": true,
+            "previous_app_requirement": null,
+            "sections": [
+                {
+                    "id": 61296,
+                    "template_tab_id": 19270,
+                    "system_reference": null,
+                    "cloned_from_id": null,
+                    "label": "Pie graph, Bar Graph and Word Cloud",
+                    "is_public_form": false,
+                    "is_shown_on_new_page": false,
+                    "is_repeatable": false,
+                    "is_permanent": false,
+                    "order": 0,
+                    "is_lab_sample": false,
+                    "is_health_safety": false,
+                    "is_soil_log": false,
+                    "is_site_visit": false,
+                    "is_photolog": false,
+                    "is_gps_point_metadata": false,
+                    "is_number_used_as_title": false,
+                    "created_at": "2023-12-04T22:40:31.000000Z",
+                    "updated_at": "2023-12-04T22:50:18.000000Z",
+                    "deleted_at": null,
+                    "primary_field_id": null,
+                    "secondary_field_id": null,
+                    "template_fields": [
+                        {
+                            "id": 338519,
+                            "template_section_id": 61296,
+                            "field_type_id": 4,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Who is the best Datanest employee ever?",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "groups": [],
+                                "options": [
+                                    "Myrtle",
+                                    "Ellis",
+                                    "Mona",
+                                    "Price",
+                                    "Angelica",
+                                    "Garey",
+                                    "Emerson",
+                                    "Kent",
+                                    "Aaron",
+                                    "Emerson",
+                                    "Corbin"
+                                ],
+                                "defaults": [],
+                                "conditions": [],
+                                "is_readonly": false,
+                                "option_type": 1,
+                                "has_multiple": false,
+                                "is_add_enabled": false,
+                                "groupConditions": [],
+                                "display_as_input": "dropdown",
+                                "all_conditions_match": null
+                            },
+                            "order": 0,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T22:41:11.000000Z",
+                            "updated_at": "2025-08-06T14:30:53.000000Z",
+                            "deleted_at": null
+                        }
+                    ]
+                },
+                {
+                    "id": 61297,
+                    "template_tab_id": 19270,
+                    "system_reference": null,
+                    "cloned_from_id": null,
+                    "label": "Line and Scatter Graph",
+                    "is_public_form": false,
+                    "is_shown_on_new_page": false,
+                    "is_repeatable": true,
+                    "is_permanent": false,
+                    "order": 1,
+                    "is_lab_sample": false,
+                    "is_health_safety": false,
+                    "is_soil_log": false,
+                    "is_site_visit": false,
+                    "is_photolog": false,
+                    "is_gps_point_metadata": false,
+                    "is_number_used_as_title": false,
+                    "created_at": "2023-12-04T22:50:37.000000Z",
+                    "updated_at": "2023-12-04T22:56:15.000000Z",
+                    "deleted_at": null,
+                    "primary_field_id": null,
+                    "secondary_field_id": null,
+                    "template_fields": [
+                        {
+                            "id": 338520,
+                            "template_section_id": 61297,
+                            "field_type_id": 3,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Date \/ Time",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "type": "datetime"
+                            },
+                            "order": 0,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T22:50:50.000000Z",
+                            "updated_at": "2023-12-04T22:50:51.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 338521,
+                            "template_section_id": 61297,
+                            "field_type_id": 2,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Water Level",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "unit": "metre"
+                            },
+                            "order": 1,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T22:50:55.000000Z",
+                            "updated_at": "2023-12-04T22:51:05.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 338524,
+                            "template_section_id": 61297,
+                            "field_type_id": 2,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Height",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false
+                            },
+                            "order": 2,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2023-12-04T22:54:27.000000Z",
+                            "updated_at": "2023-12-04T22:54:45.000000Z",
+                            "deleted_at": null
+                        }
+                    ]
+                }
+            ],
+            "styling_rules": []
+        },
+        {
+            "id": 47707,
+            "uuid": "ea88cf0c-6da1-4641-b17a-d7d08c1f3ec0",
+            "cloned_from_id": null,
+            "shared_from_group_id": null,
+            "project_id": 15417,
+            "cusPrice_template_id": null,
+            "is_locked": 0,
+            "public_link": null,
+            "public_redirect": null,
+            "title": "Area",
+            "prefix": null,
+            "has_read_only_item_titles": 0,
+            "item_title_field_id": null,
+            "drawing_type": "polygon",
+            "drawing_colour": "#000000",
+            "point_icon": 0,
+            "drawing_properties": null,
+            "sub_folders": [],
+            "hs_categories": null,
+            "filters": null,
+            "allow_collection_on_poi": 1,
+            "poi_app_id": 47710,
+            "item_limit": null,
+            "start_node_field": null,
+            "end_node_field": null,
+            "link_configs": null,
+            "default_figure_ids": [
+                0
+            ],
+            "created_at": "2025-01-29T11:24:22.000000Z",
+            "updated_at": "2025-08-06T14:30:53.000000Z",
+            "deleted_at": null,
+            "app_phase_group_id": 2238,
+            "order": 0,
+            "samples_count": 0,
+            "is_read_only": true,
+            "previous_app_requirement": null,
+            "sections": [
+                {
+                    "id": 182227,
+                    "template_tab_id": 47707,
+                    "system_reference": null,
+                    "cloned_from_id": null,
+                    "label": "Info",
+                    "is_public_form": false,
+                    "is_shown_on_new_page": false,
+                    "is_repeatable": false,
+                    "is_permanent": false,
+                    "order": 0,
+                    "is_lab_sample": false,
+                    "is_health_safety": false,
+                    "is_soil_log": false,
+                    "is_site_visit": false,
+                    "is_photolog": false,
+                    "is_gps_point_metadata": false,
+                    "is_number_used_as_title": false,
+                    "created_at": "2025-01-29T11:25:03.000000Z",
+                    "updated_at": "2025-01-29T11:30:44.000000Z",
+                    "deleted_at": null,
+                    "primary_field_id": null,
+                    "secondary_field_id": null,
+                    "template_fields": [
+                        {
+                            "id": 1038925,
+                            "template_section_id": 182227,
+                            "field_type_id": 4,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Building Type",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [
+                                    "House",
+                                    "Commercial Building",
+                                    "Apartment"
+                                ],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true,
+                                "option_type": 1
+                            },
+                            "order": 0,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T11:25:39.000000Z",
+                            "updated_at": "2025-01-29T11:30:44.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1038924,
+                            "template_section_id": 182227,
+                            "field_type_id": 1,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Description",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 1,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T11:25:34.000000Z",
+                            "updated_at": "2025-01-29T11:30:44.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1038923,
+                            "template_section_id": 182227,
+                            "field_type_id": 17,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Lookup Address",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 2,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T11:25:32.000000Z",
+                            "updated_at": "2025-01-29T11:30:44.000000Z",
+                            "deleted_at": null
+                        }
+                    ]
+                },
+                {
+                    "id": 182232,
+                    "template_tab_id": 47707,
+                    "system_reference": "point_of_interest",
+                    "cloned_from_id": null,
+                    "label": "Data Point",
+                    "is_public_form": false,
+                    "is_shown_on_new_page": false,
+                    "is_repeatable": true,
+                    "is_permanent": false,
+                    "order": 1,
+                    "is_lab_sample": false,
+                    "is_health_safety": false,
+                    "is_soil_log": false,
+                    "is_site_visit": false,
+                    "is_photolog": false,
+                    "is_gps_point_metadata": false,
+                    "is_number_used_as_title": true,
+                    "created_at": "2025-01-29T11:33:25.000000Z",
+                    "updated_at": "2025-01-29T11:33:48.000000Z",
+                    "deleted_at": null,
+                    "primary_field_id": null,
+                    "secondary_field_id": null,
+                    "template_fields": [
+                        {
+                            "id": 1038938,
+                            "template_section_id": 182232,
+                            "field_type_id": 8,
+                            "system_reference": "data_form",
+                            "cloned_from_id": null,
+                            "label": "Data Form",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true,
+                                "template_tab_title": "POI"
+                            },
+                            "order": 0,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T11:33:26.000000Z",
+                            "updated_at": "2025-01-29T11:33:49.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1038939,
+                            "template_section_id": 182232,
+                            "field_type_id": 2,
+                            "system_reference": "longitude",
+                            "cloned_from_id": null,
+                            "label": "Longitude",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 1,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T11:33:26.000000Z",
+                            "updated_at": "2025-01-29T11:33:48.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1038940,
+                            "template_section_id": 182232,
+                            "field_type_id": 2,
+                            "system_reference": "latitude",
+                            "cloned_from_id": null,
+                            "label": "Latitude",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 2,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T11:33:27.000000Z",
+                            "updated_at": "2025-01-29T11:33:48.000000Z",
+                            "deleted_at": null
+                        }
+                    ]
+                }
+            ],
+            "styling_rules": []
+        },
+        {
+            "id": 47708,
+            "uuid": "c9fa90e4-e442-4865-b37f-1c10267c62aa",
+            "cloned_from_id": null,
+            "shared_from_group_id": null,
+            "project_id": 15417,
+            "cusPrice_template_id": null,
+            "is_locked": 0,
+            "public_link": null,
+            "public_redirect": null,
+            "title": "Location App",
+            "prefix": null,
+            "has_read_only_item_titles": 0,
+            "item_title_field_id": null,
+            "drawing_type": "point",
+            "drawing_colour": "#000000",
+            "point_icon": 2,
+            "drawing_properties": null,
+            "sub_folders": [],
+            "hs_categories": null,
+            "filters": null,
+            "allow_collection_on_poi": 0,
+            "poi_app_id": null,
+            "item_limit": null,
+            "start_node_field": null,
+            "end_node_field": null,
+            "link_configs": [
+                {
+                    "icon": 5,
+                    "color": "#f50000",
+                    "isEmbedded": true,
+                    "linkFieldId": 1038933,
+                    "maxNumberOfItems": 1
+                },
+                {
+                    "icon": 29,
+                    "color": "#006eff",
+                    "isEmbedded": true,
+                    "linkFieldId": 1038937,
+                    "maxNumberOfItems": 100
+                }
+            ],
+            "default_figure_ids": [
+                0
+            ],
+            "created_at": "2025-01-29T11:24:26.000000Z",
+            "updated_at": "2025-08-06T14:30:53.000000Z",
+            "deleted_at": null,
+            "app_phase_group_id": 2239,
+            "order": 0,
+            "samples_count": 0,
+            "is_read_only": true,
+            "previous_app_requirement": null,
+            "sections": [
+                {
+                    "id": 182229,
+                    "template_tab_id": 47708,
+                    "system_reference": null,
+                    "cloned_from_id": null,
+                    "label": "Section 1",
+                    "is_public_form": false,
+                    "is_shown_on_new_page": false,
+                    "is_repeatable": false,
+                    "is_permanent": false,
+                    "order": 0,
+                    "is_lab_sample": false,
+                    "is_health_safety": false,
+                    "is_soil_log": false,
+                    "is_site_visit": false,
+                    "is_photolog": false,
+                    "is_gps_point_metadata": false,
+                    "is_number_used_as_title": false,
+                    "created_at": "2025-01-29T11:27:44.000000Z",
+                    "updated_at": "2025-01-29T11:27:54.000000Z",
+                    "deleted_at": null,
+                    "primary_field_id": null,
+                    "secondary_field_id": null,
+                    "template_fields": [
+                        {
+                            "id": 1038929,
+                            "template_section_id": 182229,
+                            "field_type_id": 4,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Type",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [
+                                    "Borehole",
+                                    "Test pit",
+                                    "Hand auger"
+                                ],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true,
+                                "option_type": 1
+                            },
+                            "order": 0,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T11:28:03.000000Z",
+                            "updated_at": "2025-01-29T11:30:44.000000Z",
+                            "deleted_at": null
+                        }
+                    ]
+                }
+            ],
+            "styling_rules": []
+        },
+        {
+            "id": 47709,
+            "uuid": "0d405481-cdca-48d5-b319-26e89ee43c79",
+            "cloned_from_id": null,
+            "shared_from_group_id": null,
+            "project_id": 15417,
+            "cusPrice_template_id": null,
+            "is_locked": 0,
+            "public_link": null,
+            "public_redirect": null,
+            "title": "Logging App",
+            "prefix": null,
+            "has_read_only_item_titles": 0,
+            "item_title_field_id": null,
+            "drawing_type": "non-spatial",
+            "drawing_colour": "#ff0000",
+            "point_icon": 0,
+            "drawing_properties": null,
+            "sub_folders": [],
+            "hs_categories": null,
+            "filters": null,
+            "allow_collection_on_poi": 0,
+            "poi_app_id": null,
+            "item_limit": null,
+            "start_node_field": null,
+            "end_node_field": null,
+            "link_configs": null,
+            "default_figure_ids": [
+                0
+            ],
+            "created_at": "2025-01-29T11:24:33.000000Z",
+            "updated_at": "2025-08-06T14:30:53.000000Z",
+            "deleted_at": null,
+            "app_phase_group_id": 2239,
+            "order": 1,
+            "samples_count": 0,
+            "is_read_only": true,
+            "previous_app_requirement": null,
+            "sections": [
+                {
+                    "id": 182230,
+                    "template_tab_id": 47709,
+                    "system_reference": null,
+                    "cloned_from_id": null,
+                    "label": "Logging Example",
+                    "is_public_form": false,
+                    "is_shown_on_new_page": false,
+                    "is_repeatable": false,
+                    "is_permanent": false,
+                    "order": 0,
+                    "is_lab_sample": false,
+                    "is_health_safety": false,
+                    "is_soil_log": false,
+                    "is_site_visit": false,
+                    "is_photolog": false,
+                    "is_gps_point_metadata": false,
+                    "is_number_used_as_title": false,
+                    "created_at": "2025-01-29T11:28:33.000000Z",
+                    "updated_at": "2025-01-29T11:28:48.000000Z",
+                    "deleted_at": null,
+                    "primary_field_id": null,
+                    "secondary_field_id": null,
+                    "template_fields": [
+                        {
+                            "id": 1038933,
+                            "template_section_id": 182230,
+                            "field_type_id": 8,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Link to Location",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true,
+                                "template_tab_title": "Location App"
+                            },
+                            "order": 0,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T11:29:49.000000Z",
+                            "updated_at": "2025-01-29T11:30:44.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1038930,
+                            "template_section_id": 182230,
+                            "field_type_id": 7,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Depth",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true,
+                                "unit": "m"
+                            },
+                            "order": 1,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T11:28:55.000000Z",
+                            "updated_at": "2025-01-29T11:29:49.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1038931,
+                            "template_section_id": 182230,
+                            "field_type_id": 19,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Lab ID",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true,
+                                "selected_lab_title_format_id": "9gyoty6"
+                            },
+                            "order": 2,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T11:28:58.000000Z",
+                            "updated_at": "2025-01-29T11:29:49.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1038932,
+                            "template_section_id": 182230,
+                            "field_type_id": 1,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Description",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 3,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T11:29:10.000000Z",
+                            "updated_at": "2025-01-29T11:29:49.000000Z",
+                            "deleted_at": null
+                        }
+                    ]
+                }
+            ],
+            "styling_rules": []
+        },
+        {
+            "id": 47710,
+            "uuid": "7ce10640-a0e9-4246-84ef-425eb49ecadb",
+            "cloned_from_id": null,
+            "shared_from_group_id": null,
+            "project_id": 15417,
+            "cusPrice_template_id": null,
+            "is_locked": 0,
+            "public_link": null,
+            "public_redirect": null,
+            "title": "POI",
+            "prefix": null,
+            "has_read_only_item_titles": 0,
+            "item_title_field_id": null,
+            "drawing_type": "non-spatial",
+            "drawing_colour": "#000000",
+            "point_icon": 0,
+            "drawing_properties": null,
+            "sub_folders": [],
+            "hs_categories": null,
+            "filters": null,
+            "allow_collection_on_poi": 0,
+            "poi_app_id": null,
+            "item_limit": null,
+            "start_node_field": null,
+            "end_node_field": null,
+            "link_configs": null,
+            "default_figure_ids": [
+                0
+            ],
+            "created_at": "2025-01-29T11:24:40.000000Z",
+            "updated_at": "2025-08-06T14:30:53.000000Z",
+            "deleted_at": null,
+            "app_phase_group_id": 2238,
+            "order": 1,
+            "samples_count": 0,
+            "is_read_only": true,
+            "previous_app_requirement": null,
+            "sections": [
+                {
+                    "id": 182228,
+                    "template_tab_id": 47710,
+                    "system_reference": null,
+                    "cloned_from_id": null,
+                    "label": "POI Info",
+                    "is_public_form": false,
+                    "is_shown_on_new_page": false,
+                    "is_repeatable": false,
+                    "is_permanent": false,
+                    "order": 0,
+                    "is_lab_sample": false,
+                    "is_health_safety": false,
+                    "is_soil_log": false,
+                    "is_site_visit": false,
+                    "is_photolog": false,
+                    "is_gps_point_metadata": false,
+                    "is_number_used_as_title": false,
+                    "created_at": "2025-01-29T11:27:13.000000Z",
+                    "updated_at": "2025-01-29T11:30:44.000000Z",
+                    "deleted_at": null,
+                    "primary_field_id": null,
+                    "secondary_field_id": null,
+                    "template_fields": [
+                        {
+                            "id": 1038926,
+                            "template_section_id": 182228,
+                            "field_type_id": 6,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Photo",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 0,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T11:27:21.000000Z",
+                            "updated_at": "2025-01-29T11:30:44.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1038927,
+                            "template_section_id": 182228,
+                            "field_type_id": 1,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Descripton",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 1,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T11:27:29.000000Z",
+                            "updated_at": "2025-01-29T11:30:44.000000Z",
+                            "deleted_at": null
+                        }
+                    ]
+                }
+            ],
+            "styling_rules": []
+        },
+        {
+            "id": 47711,
+            "uuid": "4dde0a6a-a02d-43c7-86a2-e92d36b15d8a",
+            "cloned_from_id": null,
+            "shared_from_group_id": null,
+            "project_id": 15417,
+            "cusPrice_template_id": null,
+            "is_locked": 0,
+            "public_link": null,
+            "public_redirect": null,
+            "title": "Monitoring App",
+            "prefix": null,
+            "has_read_only_item_titles": 0,
+            "item_title_field_id": null,
+            "drawing_type": "non-spatial",
+            "drawing_colour": "#002aff",
+            "point_icon": 0,
+            "drawing_properties": null,
+            "sub_folders": [],
+            "hs_categories": null,
+            "filters": null,
+            "allow_collection_on_poi": 0,
+            "poi_app_id": null,
+            "item_limit": null,
+            "start_node_field": null,
+            "end_node_field": null,
+            "link_configs": null,
+            "default_figure_ids": [
+                0
+            ],
+            "created_at": "2025-01-29T11:30:50.000000Z",
+            "updated_at": "2025-08-06T14:30:53.000000Z",
+            "deleted_at": null,
+            "app_phase_group_id": 2239,
+            "order": 2,
+            "samples_count": 0,
+            "is_read_only": true,
+            "previous_app_requirement": null,
+            "sections": [
+                {
+                    "id": 182231,
+                    "template_tab_id": 47711,
+                    "system_reference": null,
+                    "cloned_from_id": null,
+                    "label": "Monitoring Details",
+                    "is_public_form": false,
+                    "is_shown_on_new_page": false,
+                    "is_repeatable": false,
+                    "is_permanent": false,
+                    "order": 0,
+                    "is_lab_sample": false,
+                    "is_health_safety": false,
+                    "is_soil_log": false,
+                    "is_site_visit": false,
+                    "is_photolog": false,
+                    "is_gps_point_metadata": false,
+                    "is_number_used_as_title": false,
+                    "created_at": "2025-01-29T11:31:11.000000Z",
+                    "updated_at": "2025-01-29T11:31:51.000000Z",
+                    "deleted_at": null,
+                    "primary_field_id": null,
+                    "secondary_field_id": null,
+                    "template_fields": [
+                        {
+                            "id": 1038937,
+                            "template_section_id": 182231,
+                            "field_type_id": 8,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Link to Location",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true,
+                                "template_tab_title": "Location App"
+                            },
+                            "order": 0,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T11:31:54.000000Z",
+                            "updated_at": "2025-01-29T11:33:48.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1038934,
+                            "template_section_id": 182231,
+                            "field_type_id": 3,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Date \/ Time",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true,
+                                "type": "datetime"
+                            },
+                            "order": 1,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T11:31:13.000000Z",
+                            "updated_at": "2025-01-29T11:31:54.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1038935,
+                            "template_section_id": 182231,
+                            "field_type_id": 2,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Depth",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 2,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T11:31:16.000000Z",
+                            "updated_at": "2025-01-29T11:31:54.000000Z",
+                            "deleted_at": null
+                        },
+                        {
+                            "id": 1038936,
+                            "template_section_id": 182231,
+                            "field_type_id": 2,
+                            "system_reference": null,
+                            "cloned_from_id": null,
+                            "label": "Height",
+                            "is_required": false,
+                            "is_permanent": 0,
+                            "options": {
+                                "conditions": [],
+                                "options": [],
+                                "groups": [],
+                                "groupConditions": [],
+                                "defaults": [],
+                                "all_conditions_match": null,
+                                "is_readonly": false,
+                                "isInvolvedInDataCopy": true
+                            },
+                            "order": 3,
+                            "width": 12,
+                            "c_template_field_id": null,
+                            "c_input_value": null,
+                            "created_at": "2025-01-29T11:31:17.000000Z",
+                            "updated_at": "2025-01-29T11:31:54.000000Z",
+                            "deleted_at": null
+                        }
+                    ]
+                }
+            ],
+            "styling_rules": []
+        }
+    ],
+    "exported_at": "2025-08-13T23:31:19.836966Z"
+}
