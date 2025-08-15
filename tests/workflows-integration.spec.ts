@@ -85,8 +85,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     });
 
     it.concurrent('Cannot use non-published workflow for project', async () => {
-        const workflows = await getCompanyWorkflows(client, { include_drafts: true, include_revisions: true, });
-        const draftWorkflow = workflows.data.find(w => w.published_at === null && !workflows.data.some(w2 => w2.published_at && w2.original_workflow_id === w.original_workflow_id));
+        const workflows = await getCompanyWorkflows(client, { include_drafts: true, });
+        const draftWorkflow = workflows.data.find(w => w.published_at === null && !workflows.data.some(w2 => w2.published_at && w2.original_workflow_id === w.original_workflow_id && w2.workflow_id !== w.workflow_id));
 
         expect(draftWorkflow, 'Prerequisite: There should be at least one draft workflow in the test company').to.not.be.undefined;
 
@@ -121,7 +121,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             const workflows = await getCompanyWorkflows(client, { include_revisions: true, page });
             for (const workflow of workflows.data) {
                 const related = workflows.data.filter(w => w.original_workflow_id === workflow.original_workflow_id && w.workflow_apps.some(a => workflow.workflow_apps.some(l => l.share_group === a.share_group)));
-                console.log('related', related.length, workflow.original_workflow_id, workflow.workflow_id);
                 if (related.length > 1) {
                     workflowWithMultipleRevisions = workflow;
                     relatedWorkflows = related;
@@ -188,6 +187,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(customRoles.length).to.be.greaterThan(0, "Prerequisite: There should be at least one custom role (CompanyRoleProfile) in the test company");
         expect(workflows.data.length).to.be.greaterThan(0, "Prerequisite: There should be at least one workflow in the test company");
 
+        // Simulate a version prefix. E.g. removing .v1 off the end of the share_group
+        const prefix = workflows.data[0].workflow_apps[0].share_group.slice(0, -3);
+
         const workflowProject1Response = await projectPurger.createTestProject(client, {
             project_name: 'My workflow project',
             project_client: 'My client',
@@ -199,7 +201,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
                 workflow_id: workflows.data[0].workflow_id,
 
                 workflow_apps: [{
-                    share_group: workflows.data[0].workflow_apps[0].share_group,
+                    share_group: prefix,
                     user_uuids: [workflowUser.uuid],
                 }],
             },
