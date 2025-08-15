@@ -120,7 +120,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         for (let page = 1; page <= 10; page++) {
             const workflows = await getCompanyWorkflows(client, { include_revisions: true, page });
             for (const workflow of workflows.data) {
-                const related = workflows.data.filter(w => w.original_workflow_id === workflow.original_workflow_id && w.workflow_apps.some(a => workflow.workflow_apps.some(l => l.share_group === a.share_group)));
+                const related = workflows.data.filter(w => w.published_at !== null && w.original_workflow_id === workflow.original_workflow_id && w.workflow_apps.some(a => workflow.workflow_apps.some(l => l.share_group === a.share_group)));
                 if (related.length > 1) {
                     workflowWithMultipleRevisions = workflow;
                     relatedWorkflows = related;
