@@ -58,6 +58,8 @@ export type WorkflowFilters = {
      * These cannot be used to create or assign to new projects.
      */
     include_revisions?: boolean;
+
+    page?: number;
 }
 
 /**
