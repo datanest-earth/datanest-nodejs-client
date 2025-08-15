@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { assignProjectWorkflowAppUser, CompanyWorkflow, getCompanyCustomRoles, getCompanyWorkflow, getCompanyWorkflows, getLatestDraftWorkflowFromList, getLatestPublishedWorkflowFromList, unassignProjectWorkflowAppUser } from '../src/workflows';
-import DatanestClient from '../src';
+import DatanestClient, { DatanestResponseError } from '../src';
 import { patchProject, ProjectType, waitForProjectWorkflow } from '../src/projects';
 import { addExternalUserToProject, getProjectTeam, removeProjectTeamMember, updateProjectMemberRole } from '../src/teams';
 import { ProjectPurger } from './project-cleanup';
@@ -37,12 +37,12 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         }
     });
 
-    afterAll(projectPurger.cleanup);
+    afterAll(async () => await projectPurger.cleanup());
 
     it.concurrent('getCompanyWorkflow: Check workflow revision', async () => {
         const [publishedWorkflows, withDraftWorkflows, withRevisionWorkflows] = [
             await getCompanyWorkflows(client),
-            await getCompanyWorkflows(client, { include_drafts: true }),
+            await getCompanyWorkflows(client, { include_drafts: true, include_revisions: true }),
             await getCompanyWorkflows(client, { include_revisions: true }),
         ];
 
@@ -85,23 +85,30 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     });
 
     it.concurrent('Cannot use non-published workflow for project', async () => {
-        const workflows = await getCompanyWorkflows(client, { include_drafts: true });
-        const draftWorkflow = workflows.data.find(w => w.published_at === null);
+        const workflows = await getCompanyWorkflows(client, { include_drafts: true, include_revisions: true, });
+        const draftWorkflow = workflows.data.find(w => w.published_at === null && !workflows.data.some(w2 => w2.published_at && w2.original_workflow_id === w.original_workflow_id));
 
         expect(draftWorkflow, 'Prerequisite: There should be at least one draft workflow in the test company').to.not.be.undefined;
 
         // create project with non-published workflow
-        await expect(projectPurger.createTestProject(client, {
-            project_name: 'My workflow project',
-            project_client: 'My client',
-            project_address: '123 Fake Street',
-            address_country: 'GB',
-            project_manager_uuid: randomProjectManager.uuid,
-            project_type: ProjectType.PROJECT_TYPE_STANDARD,
-            workflow_assignments: {
-                workflow_id: draftWorkflow!.workflow_id,
-            },
-        })).rejects.toThrow('Datanest API Failed: v1/projects: 422: This workflow is not published.');
+        try {
+            await projectPurger.createTestProject(client, {
+                project_name: 'My workflow project',
+                project_client: 'My client',
+                project_address: '123 Fake Street',
+                address_country: 'GB',
+                project_manager_uuid: randomProjectManager.uuid,
+                project_type: ProjectType.PROJECT_TYPE_STANDARD,
+                workflow_assignments: {
+                    workflow_id: draftWorkflow!.workflow_id,
+                },
+            });
+            expect.fail('Expected function to throw DatanestResponseError');
+        } catch (dnError) {
+            expect(dnError instanceof DatanestResponseError).to.be.true;
+            expect(dnError.status).to.be.equal(422);
+            expect(dnError.message).to.contain('Datanest API Failed: v1/projects: 422');
+        }
     });
 
     it.concurrent('Can use previous revisions of workflow for project with share_group assignments', async () => {
@@ -244,16 +251,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users3.workflow_assignments?.workflow_apps[0].share_group).to.be.equal(firstWorkflowAppShareGroup);
         expect(users3.members.find(u => u.email === secondWorkflowUser.email)).to.be.undefined;
         expect(users3.workflow_assignments?.workflow_apps[0].users.find(u => u.email === secondWorkflowUser.email)).to.be.undefined;
-    });
-
-    it.concurrent.only('Workflows can be assigned by unique share_group prefixes', async () => {
-
-        const [customRoles, workflows] = await Promise.all([getCompanyCustomRoles(client), getCompanyWorkflows(client)]);
-        let remainingUsers = companyUsers.filter(cu => cu.uuid !== randomProjectManager.uuid);
-        const workflowUser = remainingUsers[Math.floor(
-            Math.random() * remainingUsers.length
-        )];
-        expect(workflowUser).to.not.be.undefined;
     });
 
     it.concurrent('Test LEGACY Workflow user assignment using workflow_app_id, custom role assignment and team member integrity', async () => {

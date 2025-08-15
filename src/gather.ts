@@ -310,7 +310,9 @@ export async function getAppSchema(client: DatanestClient, appUuid: string) {
 
 export async function deleteApp(client: DatanestClient, projectUuid: UUID, appUuid: UUID) {
     const response = await client.delete('v1/projects/' + projectUuid + '/apps/' + appUuid);
-    return response;
+    if (response.status !== 204) {
+        throw new Error('Failed to delete app, unexpected status: ' + response.status);
+    }
 }
 
 export type AppSchemaExportJson = {
@@ -433,9 +435,23 @@ export async function importAppGroup(client: DatanestClient, projectUuid: UUID, 
 export async function shareAppsFromProject(client: DatanestClient, projectUuid: UUID, shareGroupDetails: {
     app_uuids: UUID[];
     group_title: string;
-    group_description: string;
+    group_description?: string | null;
+    share_group?: string | null;
 }) {
     const response = await client.post(`v1/projects/${projectUuid}/share-groups`, shareGroupDetails);
+    return await response.json() as {
+        share_group: ShareGroup;
+    }
+}
+
+/** This will REPLACE the shared apps, documents & data events with any specified */
+export async function updateShareGroup(client: DatanestClient, projectUuid: UUID, shareGroup: string, shareGroupDetails: {
+    app_uuids: UUID[];
+    group_title: string;
+    group_description?: string | null;
+    share_group?: string | null;
+}) {
+    const response = await client.post(`v1/projects/${projectUuid}/share-groups/${shareGroup}`, shareGroupDetails);
     return await response.json() as {
         share_group: ShareGroup;
     }
