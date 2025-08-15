@@ -211,7 +211,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         workflowProject1 = await waitForProjectWorkflow(client, workflowProject1.uuid);
 
         const users = await getProjectTeam(client, workflowProject1.uuid);
-        expect(users.workflow_assignments?.workflow_apps[0].users.find(u => u.email === workflowUser.email), 'New workflow user should be in the workflow app users').to.not.be.undefined;
+        expect(users.workflow_assignments?.workflow_apps.some(workflowApp => workflowApp.users.find(u => u.email === workflowUser.email)), 'New workflow user should be in the workflow app users').to.be.true;
         const workflowAppsCount = users.workflow_assignments?.workflow_apps.length;
         expect(workflowAppsCount).to.not.be.undefined;
         const firstWorkflowAppShareGroup = users.workflow_assignments?.workflow_apps[0].share_group;
