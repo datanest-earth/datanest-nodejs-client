@@ -1,14 +1,12 @@
 import dotenv from 'dotenv';
-import { afterAll, expect, it } from 'vitest';
-import DatanestClient from '../src';
-import { listProjects, patchProject, ProjectType } from '../src/projects';
-import { ProjectPurger } from './project-cleanup';
+import { expect, it } from 'vitest';
+import DatanestClient, { PaginatedResponse } from '../src';
+import { listProjects, patchProject, Project, ProjectType } from '../src/projects';
+import { projectPurger } from './project-cleanup';
 
 dotenv.config();
 
 if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.env.DATANEST_API_BASE_URL) {
-    const projectPurger = new ProjectPurger();
-
     it('Ordered query params', async () => {
         const client = new DatanestClient();
         const responses = await Promise.all([client.get('v1/projects', { order: 'test', page: '1' }), client.get('v1/projects', { page: '1', order: 'test' })]);
@@ -107,7 +105,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(responseDelete.status).equals(200);
 
         const latestWithoutArchive = await client.get('v1/projects', { latest: true });
-        const latestWithoutArchiveData = await latestWithoutArchive.json();
+        const latestWithoutArchiveData = await latestWithoutArchive.json() as PaginatedResponse<Project>;
 
         // Archived project 2 should not be found.
         expect(latestWithoutArchiveData.data.splice(-2).some(d => d.project_name === 'My project 2')).toBe(false);
@@ -115,7 +113,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         try {
             await client.get('v1/projects/' + data.project.uuid);
             expect.fail('Should have thrown 404');
-        } catch (e) {
+        } catch (e: any) {
             expect(e.status).equals(404);
         }
         await client.get('v1/projects/' + data.project.uuid, { 'allow-archived': true });
@@ -189,10 +187,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(searchByUuid.data.find(p => p.uuid === newProject.project.uuid)).is.not.undefined;
         expect(searchByClient.data.find(p => p.uuid === newProject.project.uuid)).is.not.undefined;
         expect(notFound.data.length).equals(0);
-    });
-
-    afterAll(async () => {
-        await projectPurger.cleanup();
     });
 } else {
     it('Skipping project integration tests', () => { });

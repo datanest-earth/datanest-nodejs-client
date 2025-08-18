@@ -91,7 +91,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         try {
             await getWorkspaceWithProjects(client, workspace.uuid);
             assert(false);
-        } catch (error) {
+        } catch (error: any) {
             expect(error.status).toBe(404);
         }
     });

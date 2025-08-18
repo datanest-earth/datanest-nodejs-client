@@ -1,11 +1,11 @@
 import dotenv from 'dotenv';
-import { afterAll, assert, beforeAll, expect, it } from 'vitest';
+import { assert, beforeAll, expect, it } from 'vitest';
 import DatanestClient from '../src';
 import { AppSchemaExportJson, deleteApp, importAppGroup, importAppSchemaFromJson, listProjectApps, listSharedAppGroups, shareAppsFromProject, unshareAppGroup, updateShareGroup } from '../src/gather';
 import { Project, ProjectType } from '../src/projects';
 import { getCompanyUsers, User } from '../src/users';
 import { getTestFixtureJson } from './lib/test-utils';
-import { ProjectPurger } from './project-cleanup';
+import { projectPurger } from './project-cleanup';
 
 dotenv.config();
 
@@ -26,7 +26,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     let randomUser: User;
     let companyUsers: User[];
     const client = new DatanestClient();
-    const projectPurger = new ProjectPurger();
     let masterProject: Project;
     const appsSchema = getTestFixtureJson('datanest-test-apps-v1.apps.json');
     let importedAppSchema: AppSchemaExportJson | null = null;
@@ -60,8 +59,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         importedAppSchema = await importAppSchemaFromJson(client, masterProject.uuid, appsSchema);
         expect(importedAppSchema.apps).to.have.lengthOf(appsSchema.apps.length);
     });
-
-    afterAll(async () => await projectPurger.cleanup());
 
     it('Share Everything App V1, import into a new project, delete an imported app, and unshare', async () => {
         assert(importedAppSchema, 'Imported app schema is not defined');

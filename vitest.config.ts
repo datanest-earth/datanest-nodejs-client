@@ -6,7 +6,7 @@ export default defineConfig({
     test: {
         hookTimeout: 30_000,
         testTimeout: 90_000,
-        setupFiles: ['./tests/vitest-before-all.ts'],
+        setupFiles: ['./tests/vitest-before-all.ts', './tests/vitest-after-all.ts'],
         ...(isProduction ? {
             maxConcurrency: 1,
             maxWorkers: 1,

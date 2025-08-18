@@ -67,7 +67,7 @@ export type Project = {
      * Additional fields can be configured in Company Settings -> Workflow Settings
      * Record null values are removed and will be undefined.
      */
-    additional: null | Record<string, string | number>,
+    additional: null | Record<string, string | number | null>,
 
     /**
      * Supported ISO 3166-1 alpha-2 country codes

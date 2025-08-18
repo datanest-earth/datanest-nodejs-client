@@ -23,7 +23,7 @@ it('Can make a DELETE request', async () => {
     await testMockRequest('DELETE', 'v1/projects/123/archive', {}, 200);
 });
 
-async function testMockRequest(method, endpoint, mockData, mockStatus = 200) {
+async function testMockRequest(method: string, endpoint: string, mockData: any, mockStatus = 200) {
     const expectedResponse: any = {
         status: mockStatus,
         json: async () => (mockData),
@@ -49,7 +49,7 @@ async function testMockRequest(method, endpoint, mockData, mockStatus = 200) {
         .mockImplementation(async () => expectedResponse);
 
     const client = new DatanestClient("aaa-bbb-ccc-ddd", 'dddd-ccc-bbb-aaa');
-    const response = await client[method.toLowerCase()](endpoint);
+    const response = await client[method.toLowerCase() as 'get' | 'post' | 'put' | 'patch' | 'delete'](endpoint);
 
     expect(response).toEqual(expectedResponse);
 

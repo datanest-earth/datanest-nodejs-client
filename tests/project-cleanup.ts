@@ -5,7 +5,7 @@ export function makeTestProjectNumber() {
     return 'test:' + Math.random().toString(36).substring(7);
 }
 
-export class ProjectPurger {
+class ProjectPurger {
     private projectUUIDsToCleanUp: string[] = [];
 
     async createTestProject(client: DatanestClient, projectData: Omit<ProjectCreationData, 'project_number'> & Partial<Project>) {
@@ -25,3 +25,5 @@ export class ProjectPurger {
         await Promise.all(promises);
     }
 }
+
+export const projectPurger = new ProjectPurger();

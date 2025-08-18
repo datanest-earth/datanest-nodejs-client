@@ -1,10 +1,10 @@
 import dotenv from 'dotenv';
-import { afterAll, beforeAll, expect, it } from 'vitest';
+import { beforeAll, expect, it } from 'vitest';
 import DatanestClient from '../src';
 import { Project, ProjectType } from '../src/projects';
 import { addExternalUserToProject, addProjectTeamMember, getProjectTeam, removeExternalUserToProject, removeProjectTeamMember } from '../src/teams';
 import { User, deleteCompanyUser, getCompanyExternalUserProjects, getCompanyExternalUsers, getCompanyUsers, inviteCompanyUser, patchCompanyUser, purgeCompanyExternalUser } from '../src/users';
-import { ProjectPurger } from './project-cleanup';
+import { projectPurger } from './project-cleanup';
 
 dotenv.config();
 
@@ -13,7 +13,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     let randomProjectManager: User;
     let companyUsers: User[];
     const client = new DatanestClient();
-    const projectPurger = new ProjectPurger();
 
     beforeAll(async () => {
         companyUsers = (await getCompanyUsers(client)).data;
@@ -30,10 +29,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             project_type: ProjectType.PROJECT_TYPE_STANDARD,
         });
         testProject = testProjectResponse.project;
-    });
-
-    afterAll(async () => {
-        await projectPurger.cleanup();
     });
 
     it('POST, GET search, PATCH and DELETE /v1/users', async () => {

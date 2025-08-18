@@ -2,7 +2,7 @@ import { it, expect } from 'vitest';
 import dotenv from 'dotenv';
 import DatanestClient from '../src';
 import { deleteFile, getProjectFile, getProjectFileHistory, getProjectFiles, getProjectFileVersionUrl, getRecentNotifications, uploadFile } from '../src/files';
-import { readFileSync, unlink, unlinkSync, writeFileSync } from 'fs';
+import { readFileSync, unlinkSync, writeFileSync } from 'fs';
 
 dotenv.config();
 

@@ -1,43 +1,36 @@
 import dotenv from 'dotenv';
-import { afterAll, beforeAll, expect, it } from 'vitest';
-import { assignProjectWorkflowAppUser, CompanyWorkflow, getCompanyCustomRoles, getCompanyWorkflow, getCompanyWorkflows, getLatestDraftWorkflowFromList, getLatestPublishedWorkflowFromList, unassignProjectWorkflowAppUser } from '../src/workflows';
+import { beforeAll, expect, it } from 'vitest';
+import { assignProjectWorkflowAppUser, CompanyWorkflow, getCompanyCustomRoles, getCompanyWorkflow, getCompanyWorkflows, getLatestPublishedWorkflowFromList, unassignProjectWorkflowAppUser } from '../src/workflows';
 import DatanestClient, { DatanestResponseError } from '../src';
 import { patchProject, ProjectType, waitForProjectWorkflow } from '../src/projects';
 import { addExternalUserToProject, getProjectTeam, removeProjectTeamMember, updateProjectMemberRole } from '../src/teams';
-import { ProjectPurger } from './project-cleanup';
 import { User } from '../src/users';
 import { getCompanyUsers } from '../src/users';
+import { projectPurger } from './project-cleanup';
 
 dotenv.config();
 
 if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.env.DATANEST_API_BASE_URL) {
-    let randomProjectManager: User;
-    let randomUser: User;
+    let firstProjectManager: User;
+    let otherUser: User;
     let companyUsers: User[];
     const client = new DatanestClient();
-    const projectPurger = new ProjectPurger();
 
     beforeAll(async () => {
         companyUsers = (await getCompanyUsers(client)).data;
-        randomProjectManager = companyUsers[Math.floor(
-            Math.random() * companyUsers.length
-        )];
+        firstProjectManager = companyUsers[0];
         let attempts = 0;
         while (true) {
-            randomUser = companyUsers[Math.floor(
-                Math.random() * companyUsers.length
-            )];
-            if (randomUser.email !== randomProjectManager.email) {
+            otherUser = companyUsers[attempts];
+            if (otherUser.email !== firstProjectManager.email) {
                 break;
             }
-            if (attempts > 10) {
+            attempts++;
+            if (attempts >= companyUsers.length) {
                 throw new Error('Failed to find a random user that is not the project manager');
             }
-            attempts++;
         }
     });
-
-    afterAll(async () => await projectPurger.cleanup());
 
     it.concurrent('getCompanyWorkflow: Check workflow revision', async () => {
         const [publishedWorkflows, withDraftWorkflows, withRevisionWorkflows] = [
@@ -97,14 +90,14 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
                 project_client: 'My client',
                 project_address: '123 Fake Street',
                 address_country: 'GB',
-                project_manager_uuid: randomProjectManager.uuid,
+                project_manager_uuid: firstProjectManager.uuid,
                 project_type: ProjectType.PROJECT_TYPE_STANDARD,
                 workflow_assignments: {
                     workflow_id: draftWorkflow!.workflow_id,
                 },
             });
             expect.fail('Expected function to throw DatanestResponseError');
-        } catch (dnError) {
+        } catch (dnError: DatanestResponseError | any) {
             expect(dnError instanceof DatanestResponseError).to.be.true;
             expect(dnError.status).to.be.equal(422);
             expect(dnError.message).to.contain('Datanest API Failed: v1/projects: 422');
@@ -157,13 +150,13 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             project_client: 'My client',
             project_address: '123 Fake Street',
             address_country: 'GB',
-            project_manager_uuid: randomProjectManager.uuid,
+            project_manager_uuid: firstProjectManager.uuid,
             project_type: ProjectType.PROJECT_TYPE_STANDARD,
             workflow_assignments: {
                 workflow_id: previousRevisionWorkflow!.workflow_id,
                 workflow_apps: [{
                     share_group: commonShareGroup!.share_group,
-                    user_uuids: [randomUser.uuid],
+                    user_uuids: [otherUser.uuid],
                 }],
             },
         });
@@ -173,21 +166,19 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const projectTeam = await getProjectTeam(client, project.project.uuid);
         console.log('projectWorkflowAssignments', projectTeam.workflow_assignments?.workflow_apps);
 
-        expect(projectTeam.workflow_assignments?.workflow_apps[0].users.find(u => u.email === randomUser.email)).to.not.be.undefined;
+        expect(projectTeam.workflow_assignments?.workflow_apps[0].users.find(u => u.email === otherUser.email)).to.not.be.undefined;
     });
 
     it.concurrent('Test Workflow user assignment using share_group, custom role assignment and team member integrity', async () => {
         const [customRoles, workflows] = await Promise.all([getCompanyCustomRoles(client), getCompanyWorkflows(client)]);
-        let remainingUsers = companyUsers.filter(cu => cu.uuid !== randomProjectManager.uuid);
-        const workflowUser = remainingUsers[Math.floor(
-            Math.random() * remainingUsers.length
-        )];
+        let remainingUsers = companyUsers.filter(cu => cu.uuid !== firstProjectManager.uuid);
+        const workflowUser = remainingUsers[0];
         expect(workflowUser).to.not.be.undefined;
 
         expect(customRoles.length).to.be.greaterThan(0, "Prerequisite: There should be at least one custom role (CompanyRoleProfile) in the test company");
         expect(workflows.data.length).to.be.greaterThan(0, "Prerequisite: There should be at least one workflow in the test company");
 
-        // Simulate a version prefix. E.g. removing .v1 off the end of the share_group
+        // Simulate a version-reuseable prefix. E.g. removing .v1 off the end of the share_group
         const prefix = workflows.data[0].workflow_apps[0].share_group.slice(0, -3);
 
         const workflowProject1Response = await projectPurger.createTestProject(client, {
@@ -195,7 +186,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             project_client: 'My client',
             project_address: '123 Fake Street',
             address_country: 'GB',
-            project_manager_uuid: randomProjectManager.uuid,
+            project_manager_uuid: firstProjectManager.uuid,
             project_type: ProjectType.PROJECT_TYPE_STANDARD,
             workflow_assignments: {
                 workflow_id: workflows.data[0].workflow_id,
@@ -211,6 +202,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         workflowProject1 = await waitForProjectWorkflow(client, workflowProject1.uuid);
 
         const users = await getProjectTeam(client, workflowProject1.uuid);
+        console.log('users.workflow_assignments?.workflow_apps', users.workflow_assignments?.workflow_apps.map(w => w.users), users.members.map(m => m.email), workflowUser.email);
         expect(users.workflow_assignments?.workflow_apps.some(workflowApp => workflowApp.users.find(u => u.email === workflowUser.email)), 'New workflow user should be in the workflow app users').to.be.true;
         const workflowAppsCount = users.workflow_assignments?.workflow_apps.length;
         expect(workflowAppsCount).to.not.be.undefined;
@@ -220,7 +212,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const workflowUserFromTeam = users.members.find(u => u.email === workflowUser.email);
         expect(workflowUserFromTeam, 'Workflow user must be automatically made a team member').to.not.be.undefined;
         expect(workflowUserFromTeam?.custom_role_id).to.be.null;
-        expect(users.members.find(u => u.email === randomProjectManager.email), 'Project manager should still be a team member too').to.not.be.undefined;
+        expect(users.members.find(u => u.email === firstProjectManager.email), 'Project manager should still be a team member too').to.not.be.undefined;
         expect(users.members.length, 'no one else was invited').to.equal(2);
         expect(users.external_users.length).to.equal(0);
 
@@ -228,9 +220,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(updatedWorkflowUser.custom_role_id).to.be.equal(customRoles[0].custom_role_id);
 
         remainingUsers = remainingUsers.filter(cu => cu.uuid !== workflowUser.uuid);
-        const secondWorkflowUser = remainingUsers[Math.floor(
-            Math.random() * remainingUsers.length
-        )];
+        const secondWorkflowUser = remainingUsers[0];
 
         await assignProjectWorkflowAppUser(client, workflowProject1.uuid, secondWorkflowUser.uuid, workflows.data[0].workflow_apps[0].share_group, customRoles[0].custom_role_id);
         // Update project shouldn't remove any users
@@ -257,10 +247,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
     it.concurrent('Test LEGACY Workflow user assignment using workflow_app_id, custom role assignment and team member integrity', async () => {
         const [customRoles, workflows] = await Promise.all([getCompanyCustomRoles(client), getCompanyWorkflows(client)]);
-        let remainingUsers = companyUsers.filter(cu => cu.uuid !== randomProjectManager.uuid);
-        const workflowUser = remainingUsers[Math.floor(
-            Math.random() * remainingUsers.length
-        )];
+        let remainingUsers = companyUsers.filter(cu => cu.uuid !== firstProjectManager.uuid);
+        const workflowUser = remainingUsers[0];
         expect(workflowUser).to.not.be.undefined;
 
         expect(customRoles.length).to.be.greaterThan(0, "Prerequisite: There should be at least one custom role (CompanyRoleProfile) in the test company");
@@ -271,7 +259,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             project_client: 'My client',
             project_address: '123 Fake Street',
             address_country: 'GB',
-            project_manager_uuid: randomProjectManager.uuid,
+            project_manager_uuid: firstProjectManager.uuid,
             project_type: ProjectType.PROJECT_TYPE_STANDARD,
             workflow_assignments: {
                 workflow_id: workflows.data[0].workflow_id,
@@ -287,6 +275,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         workflowProject1 = await waitForProjectWorkflow(client, workflowProject1.uuid);
 
         const users = await getProjectTeam(client, workflowProject1.uuid);
+        console.log('users.workflow_assignments', users.workflow_assignments);
         expect(users.workflow_assignments?.workflow_apps.some(workflowApp => workflowApp.users.find(u => u.email === workflowUser.email)), 'New workflow user should be in the workflow app users').to.be.true;
         const workflowAppsCount = users.workflow_assignments?.workflow_apps.length;
         expect(workflowAppsCount).to.not.be.undefined;
@@ -296,7 +285,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const workflowUserFromTeam = users.members.find(u => u.email === workflowUser.email);
         expect(workflowUserFromTeam, 'Workflow user must be automatically made a team member').to.not.be.undefined;
         expect(workflowUserFromTeam?.custom_role_id).to.be.null;
-        expect(users.members.find(u => u.email === randomProjectManager.email), 'Project manager should still be a team member too').to.not.be.undefined;
+        expect(users.members.find(u => u.email === firstProjectManager.email), 'Project manager should still be a team member too').to.not.be.undefined;
         expect(users.members.length, 'no one else was invited').to.equal(2);
         expect(users.external_users.length).to.equal(0);
 
@@ -304,9 +293,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(updatedWorkflowUser.custom_role_id).to.be.equal(customRoles[0].custom_role_id);
 
         remainingUsers = remainingUsers.filter(cu => cu.uuid !== workflowUser.uuid);
-        const secondWorkflowUser = remainingUsers[Math.floor(
-            Math.random() * remainingUsers.length
-        )];
+        const secondWorkflowUser = remainingUsers[0];
 
         await assignProjectWorkflowAppUser(client, workflowProject1.uuid, secondWorkflowUser.uuid, workflows.data[0].workflow_apps[0].workflow_app_id, customRoles[0].custom_role_id);
         // Update project shouldn't remove any users
@@ -343,7 +330,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             project_client: 'My client',
             project_address: '123 Fake Street',
             address_country: 'GB',
-            project_manager_uuid: randomProjectManager.uuid,
+            project_manager_uuid: firstProjectManager.uuid,
             project_type: ProjectType.PROJECT_TYPE_STANDARD,
             workflow_assignments: {
                 workflow_id: workflows.data[0].workflow_id,
