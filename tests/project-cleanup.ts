@@ -18,6 +18,11 @@ class ProjectPurger {
         return project;
     }
 
+    preserveProject(projectUuid: string) {
+        console.warn('Preserving project', projectUuid);
+        this.projectUUIDsToCleanUp = this.projectUUIDsToCleanUp.filter(uuid => uuid !== projectUuid);
+    }
+
     async cleanup() {
         const client = new DatanestClient();
         const promises = this.projectUUIDsToCleanUp.map(uuid => archiveProject(client, uuid, { force_delete: true }));
