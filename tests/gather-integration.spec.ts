@@ -1,8 +1,8 @@
-import { it, expect, beforeAll, afterAll } from 'vitest';
+import { it, expect, beforeAll, } from 'vitest';
 import dotenv from 'dotenv';
 import DatanestClient, { gather, projects } from '../src';
 import { listProjectItems } from '../src/gather';
-import { ProjectPurger } from './project-cleanup';
+import { projectPurger } from './project-cleanup';
 
 dotenv.config();
 
@@ -11,9 +11,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     let projectUuid = '';
     let appUuid: string;
     let itemId: number;
-    let shareGroupProjectUuid = '';
     const pastDate = new Date(Date.now() - 1000 * 60 * 60 * 25).toISOString().split('.')[0] + 'Z';
-    const projectPurger = new ProjectPurger();
 
     beforeAll(async () => {
         const client = new DatanestClient();
@@ -34,7 +32,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         // We cannot use a master app UUID, in another project
         const apps = await gather.listProjectApps(client, projectUuid);
 
-        const newItem = await gather.createGatherItem(client, projectUuid, apps.apps[0].uuid, {
+        const newItem = await gather.createGatherItem(client, projectUuid, apps.apps[0].uuid!, {
             title: "Past Item",
             some_nonsense_section: {
                 some_nonsense_field: "Some nonsense value"
@@ -46,9 +44,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         });
         expect(newItem.created_at.split('.')[0] + 'Z', 'created_at should be the past date, and format should match').equals(pastDate);
     }, 30_000);
-    afterAll(async () => {
-        await projectPurger.cleanup();
-    });
 
     it('GET v1/projects/:project_uuid/apps - List apps', async () => {
         const client = new DatanestClient();
@@ -57,7 +52,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(projectAppList.apps).is.an('array');
 
         if (projectAppList.apps.length) {
-            appUuid = projectAppList.apps[0].uuid;
+            appUuid = projectAppList.apps[0].uuid!;
             expect(projectAppList.apps[0].uuid).is.a('string');
             expect(projectAppList.apps[0].title).is.a('string');
             expect(projectAppList.apps[0].system_reference).is.a('string');
@@ -125,7 +120,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         const currentDate = new Date().toISOString().split('.')[0] + 'Z';
 
-        const itemDetails = await gather.createGatherItem(client, projectUuid, apps.apps[0].uuid, {
+        const itemDetails = await gather.createGatherItem(client, projectUuid, apps.apps[0].uuid!, {
             title: "New Item",
             some_nonsense_section: {
                 some_nonsense_field: "Some nonsense value"
@@ -219,12 +214,12 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             address_country: 'GB',
             project_address: '123 Fake Street',
         });
-        shareGroupProjectUuid = newProject.project.uuid;
-        const importResult = await gather.importAppGroup(client, newProject.project.uuid, sharedAppGroups.data[0].share_group);
+        const shareGroupProjectUuid = newProject.project.uuid!;
+        const importResult = await gather.importAppGroup(client, shareGroupProjectUuid, sharedAppGroups.data[0].share_group);
         expect(importResult.apps).is.an('array');
         expect(importResult.apps.length).equals(shareGroup.apps.length);
 
-        const importedApps = await gather.listProjectApps(client, newProject.project.uuid);
+        const importedApps = await gather.listProjectApps(client, shareGroupProjectUuid);
         expect(importedApps.apps).is.an('array');
         expect(importedApps.apps.length).equals(shareGroup.apps.length);
         for (let app of importedApps.apps) {

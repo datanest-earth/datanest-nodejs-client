@@ -67,7 +67,7 @@ export type Project = {
      * Additional fields can be configured in Company Settings -> Workflow Settings
      * Record null values are removed and will be undefined.
      */
-    additional: null | Record<string, string | number>,
+    additional: null | Record<string, string | number | null>,
 
     /**
      * Supported ISO 3166-1 alpha-2 country codes
@@ -123,16 +123,16 @@ export type ProjectCreationData = {
 type WorkflowAppIdentifier = {
     /**
      * Recommended workflow app selector.
-     * This will continue to work in new revisions of the workflow as long as the share_group remains in the workflow for the latest revisions.
-     * 
-     * They typically start with "share-" (legacy prefixes include: "bundle-" or "wf-group")
+     * The recommended convention is `share.company.app-identifier-version`
+     * To handle version control, only provide the prefix and the project's version will be automatically resolved.
+     * E.g. use "share.my-company.app-identifier" and the corresponding "share.my-company.app-identifier.v3" will be automatically resolved.
      */
     share_group: string;
 } | {
     /**
-     * @deprecated For backwards compatibility, please use share_group instead
      * Caution: Publishing new revisions will change the ID of the workflow_app_id
      * this can be inconvenient as republishing a workflow will cause breaking changes to API calls.
+     * @deprecated Please use share_group instead
      */
     workflow_app_id: number;
 };
@@ -168,6 +168,7 @@ export async function listProjects(client: DatanestClient, page = 1, archived = 
     project_type?: ProjectType;
     workspace_uuid?: UUID;
     search?: string;
+    latest?: boolean;
 } & DateRangeFilters) {
     const response = await client.get('v1/projects', { archived, page, ...filters });
 
