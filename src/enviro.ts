@@ -141,7 +141,6 @@ export type SampleResult = {
     sample_soil_description: string | null;
     sample_lab_sample_type: string | null;
     sample_sampled_date: string | null;
-    sample_analyzed_date: string | null;
     sample_duplicate_of_id: number | null;
     sample_triplicate_of_id: number | null;
 
@@ -151,16 +150,37 @@ export type SampleResult = {
     chemical_title: string;
     units: string;
     unit_multiplier: number;
-    eql: number | null;
     total_or_filtered: 'T' | 'F';
     is_surrogate: boolean;
     is_internal_standard: boolean;
+    ucl: number | null;
+    lcl: number | null;
+    extraction_method: string | null;
+
     result: number | null;
     lod_result: number | null;
     prefix: string | null;
     display_result: number | null;
     changed_result_value: number | null;
     changed_result_reason: string | null;
+    eql: number | null;
+    detection_limit_units: string | null;
+    result_type: string | null;
+    extraction_date: string | null;
+    analyzed_date: string | null;
+    lab_analysis_id: number | null;
+    lab_preperation_batch_id: number | null;
+    lab_analysis_batch_id: number | null;
+    rdl: number | null;
+    mdl: number | null;
+    odl: number | null;
+    lab_comments: string | null;
+    lab_qualifier: string | null;
+    dilution_factor: number | null;
+    spike_concentration: number | null;
+    spike_measurement: number | null;
+    spike_units: string | null;
+
     pcb_value: number | null;
     duplicate_rpd: number | null;
     triplicate_rpd: number | null;
