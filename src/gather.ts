@@ -163,7 +163,6 @@ export type Item = {
     enviro_soil_description: null | string;
     enviro_lab_sample_type: null | string;
     enviro_sampled_date: null | string;
-    enviro_analyzed_date: null | string;
     enviro_duplicate_of_id: null | number;
     enviro_triplicate_of_id: null | number;
     enviro_composite_of: null | string;
