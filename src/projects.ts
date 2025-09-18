@@ -90,10 +90,6 @@ export type ProjectCreationData = {
     project_name: string;
     project_client: string;
 
-    /**
-     * UUID of the project manager
-     */
-    project_manager_uuid?: UUID;
 
     /**
      * Full postal address
@@ -118,7 +114,13 @@ export type ProjectCreationData = {
      * Provide null to remove the field
      */
     additional?: Record<string, string | number | null>;
-};
+} & ({
+    /** UUID of the project manager */
+    project_manager_uuid?: UUID;
+} | {
+    /** Email or UUID of the project manager */
+    project_manager: string;
+});
 
 type WorkflowAppIdentifier = {
     /**
