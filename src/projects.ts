@@ -1,4 +1,4 @@
-import DatanestClient, { Country2CharCode, DatanestResponseError, DateRangeFilters, MeasurementType, PaginatedResponse, Timestamp, TimezoneIdentifier, UUID } from "./index";
+import DatanestClient, { Country2CharCode, DatanestResponseError, DateRangeFilters, Email, MeasurementType, PaginatedResponse, Timestamp, TimezoneIdentifier, UUID } from "./index";
 import { CompanyWorkflow } from "./workflows";
 
 export enum ProjectType {
@@ -111,8 +111,8 @@ export type ProjectCreationData = {
 
     /** UUID of the project manager */
     project_manager_uuid?: UUID;
-    /** Email or UUID of the project manager */
-    project_manager?: string;
+    /** Email of the project manager */
+    project_manager?: Email;
 
     workflow_assignments?: ProjectWorkflowAssignments;
 
@@ -140,12 +140,19 @@ type WorkflowAppIdentifier = {
     workflow_app_id: number;
 };
 
-export type WorkflowAppUserAssignment = WorkflowAppIdentifier & {
+export type WorkflowAppUserAssignment = WorkflowAppIdentifier & ({
     /**
-     * Set currently assigned users to the project's app group
+     * Set currently assigned users to the project's app group by UUID
+     * Omitted users will be removed from the project's app group
      */
     user_uuids: UUID[];
-};
+} | {
+    /**
+     * Set currently assigned users to the project's app group by email
+     * Omitted users will be removed from the project's app group
+     */
+    users: Email[];
+});
 
 /**
  * By assigning a workflow a project can be pre-configured with:

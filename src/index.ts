@@ -380,6 +380,8 @@ export type TimezoneIdentifier = string
     | 'America/Los_Angeles' | 'America/New_York' | 'America/Chicago' | 'America/Denver' | 'America/Anchorage' | 'America/Phoenix' | 'Pacific/Honolulu';
 
 export type UUID = string;
+/** email address, lowercase is recommended */
+export type Email = string;
 
 export type PaginatedResponse<T> = {
     data: T[],

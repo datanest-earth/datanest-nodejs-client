@@ -195,7 +195,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
                 workflow_apps: [{
                     share_group: prefix,
-                    user_uuids: [workflowUser.uuid],
+                    users: [workflowUser.email],
                 }],
             },
         });
@@ -268,7 +268,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
             workflow_apps: [{
                 workflow_app_id: workflows.data[0].workflow_apps[0].workflow_app_id,
-                user_uuids: [workflowUser.uuid],
+                users: [workflowUser.email],
             }],
         };
         const workflowProject1Response = await projectPurger.createTestProject(client, {
