@@ -1,4 +1,4 @@
-import DatanestClient, { Country2CharCode, DatanestResponseError, DateRangeFilters, MeasurementType, PaginatedResponse, Timestamp, UUID } from "./index";
+import DatanestClient, { Country2CharCode, DatanestResponseError, DateRangeFilters, MeasurementType, PaginatedResponse, Timestamp, TimezoneIdentifier, UUID } from "./index";
 import { CompanyWorkflow } from "./workflows";
 
 export enum ProjectType {
@@ -75,6 +75,8 @@ export type Project = {
     address_country: Country2CharCode,
     address_postcode: null | string,
     measurement_type: MeasurementType | null,
+    /** IANA Timezone identifier e.g. Australia/Sydney or Pacific/Auckland */
+    timezone: null | 'UTC' | TimezoneIdentifier,
 
     enviro_processed_at: null | Timestamp,
     last_accessed_at: null | Timestamp,
@@ -107,6 +109,11 @@ export type ProjectCreationData = {
      */
     address_country: Country2CharCode;
 
+    /** UUID of the project manager */
+    project_manager_uuid?: UUID;
+    /** Email or UUID of the project manager */
+    project_manager?: string;
+
     workflow_assignments?: ProjectWorkflowAssignments;
 
     /**
@@ -114,13 +121,7 @@ export type ProjectCreationData = {
      * Provide null to remove the field
      */
     additional?: Record<string, string | number | null>;
-} & ({
-    /** UUID of the project manager */
-    project_manager_uuid?: UUID;
-} | {
-    /** Email or UUID of the project manager */
-    project_manager: string;
-});
+};
 
 type WorkflowAppIdentifier = {
     /**

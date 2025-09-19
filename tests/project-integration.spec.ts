@@ -1,13 +1,14 @@
 import dotenv from 'dotenv';
-import { expect, it } from 'vitest';
+import { assert, expect, it } from 'vitest';
 import DatanestClient, { PaginatedResponse } from '../src';
 import { listProjects, patchProject, Project, ProjectType } from '../src/projects';
 import { projectPurger } from './project-cleanup';
+import { getCompanyUsers } from '../src/users';
 
 dotenv.config();
 
 if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.env.DATANEST_API_BASE_URL) {
-    it('Ordered query params', async () => {
+    it.concurrent('Ordered query params', async () => {
         const client = new DatanestClient();
         const responses = await Promise.all([client.get('v1/projects', { order: 'test', page: '1' }), client.get('v1/projects', { page: '1', order: 'test' })]);
 
@@ -15,7 +16,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(responses[1].status).equals(200);
     });
 
-    it('GET v1/projects - List projects', async () => {
+    it.concurrent('GET v1/projects - List projects', async () => {
         const client = new DatanestClient();
         const responses = await Promise.all([client.get('v1/projects'), client.get('v1/projects?page=2')]);
 
@@ -32,7 +33,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(dataPage2.meta.current_page).equals(2);
     });
 
-    it('Create, get, patch and archive, restore and re-archive', async () => {
+    it.concurrent('Create, get, patch and archive, restore and re-archive', async () => {
         // Create 2 projects of each type
         // Check the GET and GET list endpoints
         // Patch the first project's name
@@ -124,7 +125,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         await client.delete('v1/projects/' + data.project.uuid + "/archive");
     });
 
-    it('supports additional fields', async () => {
+    it.concurrent('supports additional fields', async () => {
         const client = new DatanestClient();
         const [createdWithout, createWith] = await Promise.all([
             projectPurger.createTestProject(client, {
@@ -161,7 +162,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(updatedProject.project.additional?.my_reference).equals(undefined, 'Fields are completely removed with null');
     });
 
-    it('can search and filter projects', async () => {
+    it.concurrent('can search and filter projects', async () => {
         const hash = Math.random().toString(36).substring(7);
         const client = new DatanestClient();
         const newProject = await projectPurger.createTestProject(client, {
@@ -187,6 +188,61 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(searchByUuid.data.find(p => p.uuid === newProject.project.uuid)).is.not.undefined;
         expect(searchByClient.data.find(p => p.uuid === newProject.project.uuid)).is.not.undefined;
         expect(notFound.data.length).equals(0);
+    });
+
+    it.concurrent('can set timezone on creation', async () => {
+        const client = new DatanestClient();
+
+        // Default based on country
+        const project = await Promise.all([
+            projectPurger.createTestProject(client, {
+                project_name: 'Project with Timezone',
+                project_client: 'My client',
+                address_country: 'NZ',
+            }),
+            projectPurger.createTestProject(client, {
+                project_name: 'Project with Timezone',
+                project_client: 'My client',
+                address_country: 'GB',
+            }),
+        ]);
+
+        expect(project[0].project.timezone).equals('Pacific/Auckland');
+        expect(project[1].project.timezone).equals('Europe/London');
+
+        const updatedProject = await patchProject(client, project[0].project.uuid, {
+            timezone: 'Europe/Paris',
+        });
+        expect(updatedProject.project.timezone).equals('Europe/Paris');
+
+        const createdWithCustomTimezone = await projectPurger.createTestProject(client, {
+            project_name: 'Project with Timezone',
+            project_client: 'My client',
+            address_country: 'NZ',
+            timezone: 'Europe/Paris',
+        });
+        expect(createdWithCustomTimezone.project.timezone).equals('Europe/Paris');
+    });
+
+    it.concurrent('can set project manager by email', async () => {
+        const client = new DatanestClient();
+        const companyUsers = await getCompanyUsers(client);
+        const projectManager = companyUsers.data[Math.floor(Math.random() * companyUsers.data.length - 2) + 1];
+        const secondUser = companyUsers.data[0];
+        assert(projectManager.uuid !== secondUser.uuid);
+        const project = await projectPurger.createTestProject(client, {
+            project_name: 'Project with Timezone',
+            project_client: 'My client',
+            address_country: 'NZ',
+            project_manager: projectManager.email,
+        });
+
+        expect(project.project.project_manager_uuid).equals(projectManager.uuid);
+
+        const updatedProject = await patchProject(client, project.project.uuid, {
+            project_manager: secondUser.email,
+        });
+        expect(updatedProject.project.project_manager_uuid).equals(secondUser.uuid);
     });
 } else {
     it('Skipping project integration tests', () => { });

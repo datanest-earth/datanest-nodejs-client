@@ -370,6 +370,15 @@ export type Country2CharCode = 'NZ' | 'GB' | 'US' | 'AU' | 'CA';
 
 export type MeasurementType = 'metre' | 'feet' | 'inch' | 'mm' | 'cm';
 
+/** IANA Timezone identifier e.g. Australia/Sydney or Pacific/Auckland */
+export type TimezoneIdentifier = string
+    | 'UTC'
+    | 'Pacific/Auckland'
+    | 'Australia/Sydney' | 'Australia/Brisbane' | 'Australia/Melbourne' | 'Australia/Perth' | 'Australia/Adelaide' | 'Australia/Hobart' | 'Australia/Darwin' | 'Australia/Canberra' | 'Australia/Lord_Howe' | 'Australia/Sydney' | 'Australia/Melbourne' | 'Australia/Perth' | 'Australia/Adelaide' | 'Australia/Hobart' | 'Australia/Darwin' | 'Australia/Canberra' | 'Australia/Lord_Howe'
+    | 'Europe/London' | 'Europe/Paris' | 'Europe/Berlin' | 'Europe/Rome' | 'Europe/Madrid' | 'Europe/Amsterdam' | 'Europe/Athens' | 'Europe/Lisbon' | 'Europe/Brussels' | 'Europe/Budapest' | 'Europe/Dublin' | 'Europe/Helsinki' | 'Europe/Istanbul' | 'Europe/Prague' | 'Europe/Stockholm' | 'Europe/Vienna' | 'Europe/Warsaw' | 'Europe/Zurich'
+    | 'America/Toronto' | 'America/Montreal' | 'America/Vancouver' | 'America/Winnipeg' | 'America/Edmonton' | 'America/Calgary' | 'America/Saskatchewan' | 'America/Regina' | 'America/Halifax' | 'America/St_Johns' | 'America/Winnipeg' | 'America/Edmonton' | 'America/Calgary' | 'America/Saskatchewan' | 'America/Regina' | 'America/Halifax' | 'America/St_Johns'
+    | 'America/Los_Angeles' | 'America/New_York' | 'America/Chicago' | 'America/Denver' | 'America/Anchorage' | 'America/Phoenix' | 'Pacific/Honolulu';
+
 export type UUID = string;
 
 export type PaginatedResponse<T> = {
