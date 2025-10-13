@@ -56,6 +56,8 @@ We recommend using `Accept` and `Content-Type` headers with `application/json` v
 
 [See Postman Collection](./postman/)
 
+Note: The Postman collection has a Pre-Request Script that adds the X-Timestamp, X-Signature dynamic headers.
+
 ## Model Type Definitions
 
 See Typescript type definitions:
