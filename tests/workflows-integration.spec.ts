@@ -113,7 +113,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         for (let page = 1; page <= 10; page++) {
             const workflows = await getCompanyWorkflows(client, { include_revisions: true, page });
             for (const workflow of workflows.data) {
-                const related = workflows.data.filter(w => w.published_at !== null && w.original_workflow_id === workflow.original_workflow_id && w.workflow_apps.some(a => workflow.workflow_apps.some(l => l.share_group === a.share_group)));
+                const related = workflows.data.filter(w => w.published_at !== null && w.original_workflow_id === workflow.original_workflow_id && w.workflow_apps.some(a => workflow.workflow_apps.some(l => l.share_group && a.share_group && l.share_group === a.share_group)));
                 if (related.length > 1) {
                     workflowWithMultipleRevisions = workflow;
                     relatedWorkflows = related;
@@ -124,7 +124,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
                 break;
             }
         }
-
         expect(workflowWithMultipleRevisions).to.not.be.undefined;
         expect(relatedWorkflows.length).to.be.greaterThan(1, 'Prerequisite: There should be at least two workflows in the test company');
 
@@ -132,7 +131,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(latestRevisionWorkflow.revision).to.be.greaterThan(0, 'Prerequisite: There should be at least one published revision workflow in the test company');
 
         const previousRevisionWorkflow = relatedWorkflows.find(w =>
-            w.revision < latestRevisionWorkflow.revision && w.workflow_apps.some(a => latestRevisionWorkflow.workflow_apps.some(l => l.share_group === a.share_group))
+            w.revision < latestRevisionWorkflow.revision && w.workflow_apps.some(a => latestRevisionWorkflow.workflow_apps.some(l => l.share_group && a.share_group && l.share_group === a.share_group))
         );
 
         expect(latestRevisionWorkflow, 'Prerequisite: There should be at least one published revision workflow in the test company').to.not.be.undefined;
@@ -140,7 +139,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         // find a common share_group between the two workflows
         const commonShareGroup = previousRevisionWorkflow!.workflow_apps.find(w =>
-            latestRevisionWorkflow!.workflow_apps.some(l => l.share_group === w.share_group)
+            latestRevisionWorkflow!.workflow_apps.some(l => l.share_group && w.share_group && l.share_group === w.share_group)
         );
         expect(commonShareGroup, 'Prerequisite: There should be at least one common share_group between the two workflows').to.not.be.undefined;
 
