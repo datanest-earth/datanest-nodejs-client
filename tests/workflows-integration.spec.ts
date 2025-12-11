@@ -203,7 +203,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         workflowProject1 = await waitForProjectWorkflow(client, workflowProject1.uuid);
 
         const users = await getProjectTeam(client, workflowProject1.uuid);
-        console.log('users.workflow_assignments?.workflow_apps', users.workflow_assignments?.workflow_apps.map(w => w.users), users.members.map(m => m.email), workflowUser.email);
         const matchedUser = users.workflow_assignments?.workflow_apps.some(workflowApp => workflowApp.users.find(u => u.email === workflowUser.email))
         if (!matchedUser) {
             projectPurger.preserveProject(workflowProject1.uuid);
