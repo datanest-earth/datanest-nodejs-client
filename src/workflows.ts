@@ -143,8 +143,8 @@ export async function assignProjectWorkflowAppUser(client: DatanestClient, proje
  * @param userUuidOrEmail 
  * @returns 
  */
-export async function unassignProjectWorkflowAppUser(client: DatanestClient, projectUuid: UUID, userUuidOrEmail: UUID, workflowAppId: number): Promise<User> {
-    const response = await client.delete('v1/projects/' + projectUuid + '/teams/workflow-apps/' + workflowAppId + '/' + userUuidOrEmail);
+export async function unassignProjectWorkflowAppUser(client: DatanestClient, projectUuid: UUID, userUuidOrEmail: UUID, shareGroupOrWorkflowAppId: string | number): Promise<User> {
+    const response = await client.delete('v1/projects/' + projectUuid + '/teams/workflow-apps/' + shareGroupOrWorkflowAppId + '/' + userUuidOrEmail);
     return await response.json();
 }
 
