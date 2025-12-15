@@ -179,11 +179,11 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const firstWorkflowWithAppShareGroup = workflows.data.find(w => w.workflow_apps.some(a => a.share_group));
         assert(firstWorkflowWithAppShareGroup, 'Prerequisite: There should be at least one workflow with at least one workflow app share group in the test company');
 
-        const firstWorkflowAppShareGroup = firstWorkflowWithAppShareGroup!.workflow_apps.find(a => a.share_group);
-        assert(firstWorkflowAppShareGroup, 'Prerequisite: There should be at least one workflow app share group in the first workflow');
+        const firstWorkflowApp = firstWorkflowWithAppShareGroup!.workflow_apps.find(a => a.share_group);
+        assert(firstWorkflowApp, 'Prerequisite: There should be at least one workflow app share group in the first workflow');
 
         // Simulate a version-reuseable prefix. E.g. removing .v1 off the end of the share_group
-        const prefix = firstWorkflowAppShareGroup!.share_group.slice(0, -3);
+        const prefix = firstWorkflowApp!.share_group.slice(0, -3);
 
         expect(workflowUser.uuid).toBeDefined();
 
@@ -230,7 +230,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const secondWorkflowUser = remainingUsers[0];
         expect(secondWorkflowUser.uuid).toBeDefined();
 
-        await assignProjectWorkflowAppUser(client, workflowProject1.uuid, secondWorkflowUser.uuid, firstWorkflowAppShareGroup.share_group, customRoles[0].custom_role_id);
+        await assignProjectWorkflowAppUser(client, workflowProject1.uuid, secondWorkflowUser.uuid, firstWorkflowApp.share_group, customRoles[0].custom_role_id);
         // Update project shouldn't remove any users
         await patchProject(client, workflowProject1.uuid, {
             project_name: 'My workflow project updated',
@@ -240,7 +240,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         const users2 = await getProjectTeam(client, workflowProject1.uuid);
         expect(users2.workflow_assignments?.workflow_apps.length).to.be.equal(workflowAppsCount);
-        expect(users2.workflow_assignments?.workflow_apps[0].share_group).to.be.equal(firstWorkflowAppShareGroup.share_group);
+        expect(users2.workflow_assignments?.workflow_apps[0].share_group).to.be.equal(firstWorkflowApp.share_group);
         expect(users2.members.find(u => u.email === secondWorkflowUser.email)?.custom_role_id).to.be.equal(customRoles[0].custom_role_id);
         expect(users2.workflow_assignments?.workflow_apps[0].users.find(u => u.email === secondWorkflowUser.email)).to.not.be.undefined;
         const originalWorkflowUser = users2.members.find(u => u.email === workflowUser.email);
@@ -250,7 +250,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         const users3 = await getProjectTeam(client, workflowProject1.uuid);
         expect(users3.workflow_assignments?.workflow_apps.length).to.be.equal(workflowAppsCount);
-        expect(users3.workflow_assignments?.workflow_apps[0].share_group).to.be.equal(firstWorkflowAppShareGroup.share_group);
+        expect(users3.workflow_assignments?.workflow_apps[0].share_group).to.be.equal(firstWorkflowApp.share_group);
         expect(users3.members.find(u => u.email === secondWorkflowUser.email)).to.be.undefined;
         expect(users3.workflow_assignments?.workflow_apps[0].users.find(u => u.email === secondWorkflowUser.email)).to.be.undefined;
     });
