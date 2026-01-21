@@ -81,8 +81,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
     it('Can update name and delete workspace', async () => {
         assert(workspace);
-        workspace = (await updateWorkspace(client, workspace.uuid, { name: 'Updated name' })).workspace;
-        expect(workspace.name).toBe('Updated name');
+        const updatedName = 'Updated name ' + new Date().toISOString();
+        workspace = (await updateWorkspace(client, workspace.uuid, { name: updatedName })).workspace;
+        expect(workspace.name).toBe(updatedName);
         expect(workspace.projects_count).toBe(1);
 
         await deleteWorkspace(client, workspace.uuid);
