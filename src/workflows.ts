@@ -1,4 +1,4 @@
-import DatanestClient, { DateRangeFilters, PaginatedResponse, UUID } from "./index";
+import DatanestClient, { DateRangeFilters, Email, PaginatedResponse, UUID } from "./index";
 import { User } from "./users";
 
 export type CompanyWorkflow = {
@@ -127,8 +127,8 @@ export async function getCompanyCustomRoles(client: DatanestClient): Promise<Com
  * @param customRoleId optional custom role id
  * @returns 
  */
-export async function assignProjectWorkflowAppUser(client: DatanestClient, projectUuid: UUID, userUuidOrEmail: UUID, shareGroupOrWorkflowAppId: string | number, customRoleId?: number | null): Promise<User> {
-    const response = await client.post('v1/projects/' + projectUuid + '/teams/workflow-apps/' + shareGroupOrWorkflowAppId + '/' + userUuidOrEmail, {
+export async function assignProjectWorkflowAppUser(client: DatanestClient, projectUuid: UUID, userUuidOrEmail: UUID | Email, shareGroupOrWorkflowAppId: string | number, customRoleId?: number | null): Promise<User> {
+    const response = await client.post('v1/projects/' + projectUuid + '/teams/workflow-apps/' + shareGroupOrWorkflowAppId + '/' + encodeURIComponent(userUuidOrEmail), {
         custom_role_id: customRoleId,
     });
     return await response.json();
@@ -143,8 +143,8 @@ export async function assignProjectWorkflowAppUser(client: DatanestClient, proje
  * @param userUuidOrEmail 
  * @returns 
  */
-export async function unassignProjectWorkflowAppUser(client: DatanestClient, projectUuid: UUID, userUuidOrEmail: UUID, shareGroupOrWorkflowAppId: string | number): Promise<User> {
-    const response = await client.delete('v1/projects/' + projectUuid + '/teams/workflow-apps/' + shareGroupOrWorkflowAppId + '/' + userUuidOrEmail);
+export async function unassignProjectWorkflowAppUser(client: DatanestClient, projectUuid: UUID, userUuidOrEmail: UUID | Email, shareGroupOrWorkflowAppId: string | number): Promise<User> {
+    const response = await client.delete('v1/projects/' + projectUuid + '/teams/workflow-apps/' + shareGroupOrWorkflowAppId + '/' + encodeURIComponent(userUuidOrEmail));
     return await response.json();
 }
 
