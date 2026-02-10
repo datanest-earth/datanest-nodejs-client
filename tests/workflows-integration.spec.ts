@@ -167,7 +167,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(projectTeam.workflow_assignments?.workflow_apps[0].users.find(u => u.email === otherUser.email)).to.not.be.undefined;
     });
 
-    it.only('Test Workflow user assignment using share_group, custom role assignment and team member integrity', async () => {
+    it('Test Workflow user assignment using share_group, custom role assignment and team member integrity', async () => {
         const [customRoles, workflows] = await Promise.all([getCompanyCustomRoles(client), getCompanyWorkflows(client)]);
         let remainingUsers = companyUsers.filter(cu => cu.uuid !== firstProjectManager.uuid);
         const workflowUser = remainingUsers[0];
