@@ -1,4 +1,4 @@
-import DatanestClient, { UUID } from "./index";
+import DatanestClient, { Email, UUID } from "./index";
 import { User } from "./users";
 
 export type TeamUser = User & {
@@ -57,8 +57,8 @@ export async function addExternalUserToProject(client: DatanestClient, projectUu
     return data.user;
 }
 
-export async function removeExternalUserToProject(client: DatanestClient, projectUuid: UUID, userUuidOrEmail: UUID | string): Promise<User> {
-    const response = await client.delete('v1/projects/' + projectUuid + '/teams/external-users/' + userUuidOrEmail);
+export async function removeExternalUserToProject(client: DatanestClient, projectUuid: UUID, userUuidOrEmail: UUID | Email): Promise<User> {
+    const response = await client.delete('v1/projects/' + projectUuid + '/teams/external-users/' + encodeURIComponent(userUuidOrEmail));
     const data = await response.json();
     return data.user;
 }

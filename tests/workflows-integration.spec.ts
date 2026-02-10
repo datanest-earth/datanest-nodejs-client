@@ -240,9 +240,11 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         const users2 = await getProjectTeam(client, workflowProject1.uuid);
         expect(users2.workflow_assignments?.workflow_apps.length).to.be.equal(workflowAppsCount);
-        expect(users2.workflow_assignments?.workflow_apps[0].share_group).to.be.equal(firstWorkflowApp.share_group);
+        const matchingUpdatedWorkflowApp2 = users2.workflow_assignments?.workflow_apps.find(w => w.workflow_app_id === firstWorkflowApp.workflow_app_id);
+        assert(matchingUpdatedWorkflowApp2, 'The updated workflow app should still be in the workflow assignments');
+        expect(matchingUpdatedWorkflowApp2.share_group).to.be.equal(firstWorkflowApp.share_group);
         expect(users2.members.find(u => u.email === secondWorkflowUser.email)?.custom_role_id).to.be.equal(customRoles[0].custom_role_id);
-        expect(users2.workflow_assignments?.workflow_apps[0].users.find(u => u.email === secondWorkflowUser.email)).to.not.be.undefined;
+        expect(matchingUpdatedWorkflowApp2.users.find(u => u.email === secondWorkflowUser.email)).to.not.be.undefined;
         const originalWorkflowUser = users2.members.find(u => u.email === workflowUser.email);
         expect(originalWorkflowUser?.custom_role_id).to.be.equal(customRoles[0].custom_role_id);
 
@@ -250,9 +252,11 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         const users3 = await getProjectTeam(client, workflowProject1.uuid);
         expect(users3.workflow_assignments?.workflow_apps.length).to.be.equal(workflowAppsCount);
-        expect(users3.workflow_assignments?.workflow_apps[0].share_group).to.be.equal(firstWorkflowApp.share_group);
+        const matchingUpdatedWorkflowApp3 = users3.workflow_assignments?.workflow_apps.find(w => w.workflow_app_id === firstWorkflowApp.workflow_app_id);
+        assert(matchingUpdatedWorkflowApp3, 'The updated workflow app should still be in the workflow assignments');
+        expect(matchingUpdatedWorkflowApp3.share_group).to.be.equal(firstWorkflowApp.share_group);
         expect(users3.members.find(u => u.email === secondWorkflowUser.email)).to.be.undefined;
-        expect(users3.workflow_assignments?.workflow_apps[0].users.find(u => u.email === secondWorkflowUser.email)).to.be.undefined;
+        expect(matchingUpdatedWorkflowApp3.users.find(u => u.email === secondWorkflowUser.email)).to.be.undefined;
     });
 
     it('Test LEGACY Workflow user assignment using workflow_app_id, custom role assignment and team member integrity', async () => {
@@ -389,7 +393,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const users2 = await getProjectTeam(client, workflowProject2.uuid);
         expect(users2.members.find(u => u.email === newExternalUser.email)).to.be.undefined;
         expect(users2.external_users.find(u => u.email === newExternalUser.email)).to.not.be.undefined;
-        expect(users2.workflow_assignments?.workflow_apps[0].users.find(u => u.email === newExternalUser.email)).to.not.be.undefined;
+        const matchingUpdatedWorkflowApp = users2.workflow_assignments?.workflow_apps.find(w => w.workflow_app_id === firstAppShareGroup.workflow_app_id);
+        expect(matchingUpdatedWorkflowApp).to.not.be.undefined;
+        expect(matchingUpdatedWorkflowApp?.users.find(u => u.email === newExternalUser.email)).to.not.be.undefined;
 
         await unassignProjectWorkflowAppUser(client, workflowProject2.uuid, newExternalUser.email, firstAppShareGroup.workflow_app_id);
 
