@@ -233,7 +233,7 @@ export async function createProject(client: DatanestClient, projectData: Project
  * @throw Error Timeout waiting for project workflow to complete
  * @throw DatanestResponseError Request HTTP server or validation error
  */
-export async function waitForProjectWorkflow(client: DatanestClient, projectUuid: string, timeout = 45000): Promise<Project> {
+export async function waitForProjectWorkflow(client: DatanestClient, projectUuid: string, timeout = 90000): Promise<Project> {
     let projectData: Project | undefined = undefined;
     const start = Date.now();
     while (projectData?.workflow_importing_at !== null) {
