@@ -29,7 +29,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             project_type: ProjectType.PROJECT_TYPE_STANDARD,
         });
         testProject = testProjectResponse.project;
-    });
+    }, 45000);
 
     it('POST, GET search, PATCH and DELETE /v1/users', async () => {
         const client = new DatanestClient();
