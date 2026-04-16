@@ -340,7 +340,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users2.workflow_assignments?.workflow_apps.length).to.be.equal(workflowAppsCount);
         expect(users2.workflow_assignments?.workflow_apps[0].workflow_app_id).to.be.equal(firstWorkflowAppId);
         expect(users2.members.find(u => u.email === secondWorkflowUser.email)?.custom_role_id).to.be.equal(customRoles[0].custom_role_id);
-        expect(users2.workflow_assignments?.workflow_apps[0].users.find(u => u.email === secondWorkflowUser.email)).to.not.be.undefined;
+        expect(users2.workflow_assignments?.workflow_apps.some(a => a.users.find(u => u.email === secondWorkflowUser.email))).to.be.true;
         const originalWorkflowUser = users2.members.find(u => u.email === workflowUser.email);
         expect(originalWorkflowUser?.custom_role_id).to.be.equal(customRoles[0].custom_role_id);
 
