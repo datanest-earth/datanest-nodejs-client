@@ -10,7 +10,13 @@ class ProjectPurger {
 
     async createTestProject(client: DatanestClient, projectData: Omit<ProjectCreationData, 'project_number'> & Partial<Project>) {
         const project = await createProject(client, {
-            project_address: '15/14 Broad Street, Christchurch',
+            project_address: '123 Fake Street',
+            address_locality: 'Sydenham',
+            address_city: 'Christchurch',
+            address_state: 'Canterbury',
+            address_postcode: '8023',
+            latitude: -43.5592767,
+            longitude: 172.6845183,
             ...projectData,
             project_number: projectData.project_number || makeTestProjectNumber(),
         });
