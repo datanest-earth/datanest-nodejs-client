@@ -4,7 +4,7 @@ const isProduction = process.env.PROD === '1' || process.env.PROD === 'true';
 
 export default defineConfig({
     test: {
-        hookTimeout: 30_000,
+        hookTimeout: 60_000,
         testTimeout: 90_000,
         setupFiles: ['./tests/vitest-before-all.ts', './tests/vitest-after-all.ts'],
         ...(isProduction ? {

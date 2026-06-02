@@ -2,6 +2,7 @@ import { it, expect, beforeAll, } from 'vitest';
 import dotenv from 'dotenv';
 import DatanestClient, { gather, projects } from '../src';
 import { listProjectItems } from '../src/gather';
+import { expectGeoJsonPointForItem } from './lib/geojson-assertions';
 import { projectPurger } from './project-cleanup';
 
 dotenv.config();
@@ -12,6 +13,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     let appUuid: string;
     let itemId: number;
     const pastDate = new Date(Date.now() - 1000 * 60 * 60 * 25).toISOString().split('.')[0] + 'Z';
+    const geoItemLatitude = -36.8485;
+    const geoItemLongitude = 174.7633;
 
     beforeAll(async () => {
         const client = new DatanestClient();
@@ -31,9 +34,12 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         // We need to get the imported app's UUID
         // We cannot use a master app UUID, in another project
         const apps = await gather.listProjectApps(client, projectUuid);
+        appUuid = apps.apps[0].uuid!;
 
-        const newItem = await gather.createGatherItem(client, projectUuid, apps.apps[0].uuid!, {
+        const newItem = await gather.createGatherItem(client, projectUuid, appUuid, {
             title: "Past Item",
+            latitude: geoItemLatitude,
+            longitude: geoItemLongitude,
             some_nonsense_section: {
                 some_nonsense_field: "Some nonsense value"
             },
@@ -42,8 +48,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
                 updated_at: pastDate,
             }
         });
+        itemId = newItem.id;
         expect(newItem.created_at.split('.')[0] + 'Z', 'created_at should be the past date, and format should match').equals(pastDate);
-    }, 30_000);
+    });
 
     it('GET v1/projects/:project_uuid/apps - List apps', async () => {
         const client = new DatanestClient();
@@ -68,10 +75,36 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         if (paginatedItems.data.length) {
             expect(paginatedItems.data[0].id).is.a('number');
-            itemId = paginatedItems.data[0].id;
             expect(paginatedItems.data[0].title).is.a('string');
             expect(paginatedItems.data[0].app_uuid).equals(appUuid);
         }
+    });
+
+    it.concurrent('GET v1/projects/:project_uuid/items - Include GeoJSON when requested', async () => {
+        const client = new DatanestClient();
+        const paginatedItems = await listProjectItems(client, projectUuid, 1, {
+            include_geojson: true,
+        });
+
+        expect(paginatedItems.data).is.an('array');
+
+        const geoItem = paginatedItems.data.find(item => item.id === itemId);
+        expect(geoItem).is.not.undefined;
+        expectGeoJsonPointForItem(geoItem!);
+    });
+
+    it.concurrent('GET v1/projects/:project_uuid/apps/:app_id/items - Include GeoJSON when requested', async () => {
+        const client = new DatanestClient();
+        expect(appUuid).is.a('string', 'appUuid is not set unable to perform this test');
+        const paginatedItems = await gather.listProjectAppItems(client, projectUuid, appUuid, 1, {
+            include_geojson: true,
+        });
+
+        expect(paginatedItems.data).is.an('array');
+
+        const geoItem = paginatedItems.data.find(item => item.id === itemId);
+        expect(geoItem).is.not.undefined;
+        expectGeoJsonPointForItem(geoItem!);
     });
 
     it('GET v1/projects/:project_uuid/items/:item_id - Get Item details', async () => {

@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import DatanestClient, { enviro, projects } from '../src';
 import { ProjectType } from '../src/projects';
 import { EnviroMatrix } from '../src/enviro';
+import { expectGeoJsonPointForItem } from './lib/geojson-assertions';
 
 dotenv.config();
 
@@ -201,6 +202,29 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
                     expect(uniqueSampleIds).contains(sample.sample_id);
                 }
             }
+        });
+
+        it('GET v1/projects/:project_uuid/enviro/samples/locations - Include GeoJSON when requested', async () => {
+            const client = new DatanestClient();
+            const sampleLocations = await enviro.getProjectSampleLocations(client, projectUuid, {
+                include_geojson: true,
+            });
+
+            expect(sampleLocations.data).is.an('array');
+            if (sampleLocations.data.length === 0) {
+                console.warn('WARNING: No sample locations found in project');
+                return;
+            }
+
+            const geoJsonLocation = sampleLocations.data.find(item => item.geojson);
+            if (!geoJsonLocation) {
+                console.warn('WARNING: No sample locations with GeoJSON found in project');
+                return;
+            }
+
+            expect(geoJsonLocation.project_uuid).toBe(projectUuid);
+            expect(geoJsonLocation.title).is.a('string');
+            expectGeoJsonPointForItem(geoJsonLocation);
         });
     });
 
