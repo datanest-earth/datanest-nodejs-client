@@ -79,10 +79,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
             expect(Array.isArray(projectScenarios.scenarios)).toBe(true);
 
-            if (projectScenarios.scenarios.length === 0) {
-                console.warn('WARNING:No matrices found in project');
-                return;
-            }
+            expect(projectScenarios.scenarios.length, 'Prerequisite: There should be at least one scenario in the ENVIRO_PROJECT_UUID: ' + projectUuid).toBeGreaterThan(0);
             expect(typeof projectScenarios.scenarios[0].id).toBe('number');
             expect(projectScenarios.scenarios[0].options).toEqual(expect.any(Object));
 

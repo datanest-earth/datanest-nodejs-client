@@ -310,7 +310,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         assert(matchingUpdatedWorkflowApp2, 'The updated workflow app should still be in the workflow assignments');
         expect(matchingUpdatedWorkflowApp2.share_group).toBe(selectedWorkflowApp.share_group);
         const secondWorkflowUser2 = projectTeam2.members.find(u => u.email === secondWorkflowUser.email);
-        console.log('secondWorkflowUser2', secondWorkflowUser2, 'original secondWorkflowUser', secondWorkflowUser, 'projectManager', firstProjectManager);
         expect(secondWorkflowUser2).toBeDefined();
         expect(secondWorkflowUser2!.custom_role_id).toBe(customRoles[0].custom_role_id);
         expect(matchingUpdatedWorkflowApp2.users.find(u => u.email === secondWorkflowUser.email)).toBeDefined();
