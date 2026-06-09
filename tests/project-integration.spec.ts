@@ -121,7 +121,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(responseRestore.status).toBe(200);
 
         await client.delete('v1/projects/' + data.project.uuid + "/archive");
-    });
+    }, { timeout: 90000 });
 
     it.concurrent('supports additional fields', async () => {
         const client = new DatanestClient();
@@ -226,8 +226,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const client = new DatanestClient();
         const companyUsers = await getCompanyUsers(client);
         const projectManager = companyUsers.data[Math.floor(Math.random() * companyUsers.data.length - 2) + 1];
+        companyUsers.data = companyUsers.data.filter(u => u.uuid !== projectManager.uuid);
         const secondUser = companyUsers.data[0];
-        assert(projectManager.uuid !== secondUser.uuid);
+
         const project = await projectPurger.createTestProject(client, {
             project_name: 'Project with Timezone',
             project_client: 'My client',
