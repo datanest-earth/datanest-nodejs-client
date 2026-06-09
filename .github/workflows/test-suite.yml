@@ -82,5 +82,5 @@ jobs:
           DATANEST_API_KEY: ${{ secrets.DATANEST_API_KEY }}
           DATANEST_API_SECRET: ${{ secrets.DATANEST_API_SECRET }}
           ENVIRO_PROJECT_UUID: ${{ secrets.ENVIRO_PROJECT_UUID }}
-          PROD: '1'
-        run: bun test --timeout 30000
+          PROD: ${{ vars.PROD || '0' }}
+        run: bun run test

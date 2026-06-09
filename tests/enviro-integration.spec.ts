@@ -56,7 +56,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
                 console.warn('WARNING: No Enviro projects found');
             }
             projectUuid = enviroProjects.data[0].uuid;
-        }, 90000);
+        }, { timeout: 90000 });
 
         it('GET v1/projects/:project_uuid/enviro/matrices - List matrices active in project', async () => {
             const client = new DatanestClient();

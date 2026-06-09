@@ -56,7 +56,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         importedAppSchema = await importAppSchemaFromJson(client, masterProject.uuid, appsSchema);
         expect(importedAppSchema.apps).toHaveLength(appsSchema.apps.length);
-    }, 90000);
+    }, { timeout: 90000 });
 
     it('Share Everything App V1, import into a new project, delete an imported app, and unshare', async () => {
         assert(importedAppSchema, 'Imported app schema is not defined');

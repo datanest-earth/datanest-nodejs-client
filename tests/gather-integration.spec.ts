@@ -1,4 +1,4 @@
-import { beforeAll, it, expect } from 'bun:test';
+import { beforeAll, expect, it } from 'bun:test';
 import DatanestClient, { gather, projects } from '../src';
 import { listProjectItems } from '../src/gather';
 import { expectGeoJsonPointForItem } from './lib/geojson-assertions';
@@ -47,7 +47,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         });
         itemId = newItem.id;
         expect(newItem.created_at.split('.')[0] + 'Z').toBe(pastDate);
-    }, 90000);
+    }, { timeout: 90000 });
 
     it('GET v1/projects/:project_uuid/apps - List apps', async () => {
         const client = new DatanestClient();
@@ -197,7 +197,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(updatedTodayItems.data.length).toBe(1);
 
         await gather.deleteItem(client, projectUuid, itemDetails.id);
-    }, 90000);
+    }, { timeout: 90000 });
 
     it.concurrent('Can filter items by bounding box', async () => {
         const mapsProjectUuid = process.env.MAPS_PROJECT_UUID || process.env.ENVIRO_PROJECT_UUID || projectUuid;
@@ -261,7 +261,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             expect(app.title).toBe(matchingApp.title);
             expect(app.system_reference).toBe(matchingApp.system_reference);
         }
-    });
+    }, { timeout: 60000 });
 
 } else {
     it('Skipping gather integration tests', () => { });

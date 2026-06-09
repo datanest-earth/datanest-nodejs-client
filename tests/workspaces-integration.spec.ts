@@ -13,7 +13,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     beforeAll(async () => {
         allProjects = (await listProjects(client)).data;
         assert(allProjects.length >= 2);
-    }, 90000);
+    });
 
     it('Create workspace & list workspaces', async () => {
         let name = 'Test workspace ' + new Date().toISOString();

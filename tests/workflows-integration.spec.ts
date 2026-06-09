@@ -7,6 +7,7 @@ import { addExternalUserToProject, getProjectTeam, removeProjectTeamMember, upda
 import { User } from '../src/users';
 import { getCompanyUsers } from '../src/users';
 import { projectPurger } from './project-cleanup';
+import { sleep } from 'bun';
 
 if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.env.DATANEST_API_BASE_URL) {
     let firstProjectManager: User;
@@ -28,40 +29,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
                 throw new Error('Failed to find a random user that is not the project manager');
             }
         }
-    }, 90000);
-
-    // let workflowDraft: CompanyWorkflow | undefined = undefined;
-    // let workflowFirstPublishedRevision: CompanyWorkflow | undefined = undefined;
-    // let workflowLatestPublishedRevision: CompanyWorkflow | undefined = undefined;
-
-    // it('setup: workflow prerequisites', async () => {
-    //     // create test master project
-    //     // import apps.json
-    //     // share as share group
-    //     // create workflow draft with share group
-
-
-    //     workflowDraft = await createWorkflowDraft(client, {
-    //         workflow_title: 'My workflow draft',
-    //         workflow_description: 'My workflow draft description',
-    //         workflow_type: WorkflowType.WORKFLOW_TYPE_STANDARD,
-    //         workflow_apps: [
-    //             {
-    //                 workflow_app_id: 1,
-    //             },
-    //         ],
-    //         workflow_figures: [
-    //             {
-    //                 workflow_figure_id: 1,
-    //             },
-    //         ],
-    //         workflow_groups: [
-    //             {
-    //                 workflow_group_id: 1,
-    //             },
-    //         ],
-    //     });
-    // });
+    }, { timeout: 90000 });
 
     async function getWorkflowDrafts(client: DatanestClient): Promise<PaginatedResponse<CompanyWorkflow>> {
         let page = 1;
@@ -121,12 +89,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             await getWorkflowDrafts(client),
             await getWorkflowRevisions(client),
         ];
-
-        console.log(
-            'publishedWorkflows', publishedWorkflows.meta.total,
-            'draftWorkflows', draftWorkflows.meta.total,
-            'revisionWorkflows', revisionWorkflows.meta.total,
-        );
 
         expect(publishedWorkflows.meta.total, 'Prerequisite: There should be at least one workflow in the test company').toBeGreaterThan(0);
         expect(draftWorkflows.meta.total).not.toBe(publishedWorkflows.meta.total);
@@ -191,29 +153,34 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             expect(dnError.status).toBe(422);
             expect(dnError.message).toContain('Datanest API Failed: v1/projects: 422');
         }
-    });
+    }, { timeout: 90000 });
 
-    it.concurrent('Can use previous revisions of workflow for project with share_group assignments', async () => {
-
-        // Find a workflow that has multiple revisions
-        let workflowWithMultipleRevisions: CompanyWorkflow | undefined = undefined;
-        let relatedWorkflows: CompanyWorkflow[] = [];
-
-        for (let page = 1; page <= 10; page++) {
+    async function findWorkflowWithMultipleRevisions(): Promise<{ workflowWithMultipleRevisions: CompanyWorkflow; relatedWorkflows: CompanyWorkflow[]; }> {
+        let page = 0;
+        while (true) {
+            page++;
             const workflows = await getCompanyWorkflows(client, { include_revisions: true, page });
             for (const workflow of workflows.data) {
                 const related = workflows.data.filter(w => w.published_at !== null && w.original_workflow_id === workflow.original_workflow_id && w.workflow_apps.some(a => workflow.workflow_apps.some(l => l.share_group && a.share_group && l.share_group === a.share_group)));
                 if (related.length > 1) {
-                    workflowWithMultipleRevisions = workflow;
-                    relatedWorkflows = related;
-                    break;
+                    return {
+                        workflowWithMultipleRevisions: workflow,
+                        relatedWorkflows: related,
+                    };
                 }
             }
+            if (page > 20) {
+                throw new Error('No workflow with multiple revisions found withing the first 20 pages');
+            }
             if (workflows.meta.last_page >= page) {
-                console.warn('No workflow with multiple revisions found withing the first 10 pages. Last page checked: ' + page);
-                break;
+                throw new Error('No workflow with multiple revisions found on any page, last page checked: ' + page);
             }
         }
+    }
+
+    it.concurrent('Can use previous revisions of workflow for project with share_group assignments', async () => {
+
+        const { workflowWithMultipleRevisions, relatedWorkflows } = await findWorkflowWithMultipleRevisions();
         expect(workflowWithMultipleRevisions).toBeDefined();
         expect(relatedWorkflows.length, 'Prerequisite: There should be at least two workflows in the test company').toBeGreaterThan(1);
 
@@ -255,7 +222,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const projectTeam = await getProjectTeam(client, project.project.uuid);
 
         expect(projectTeam.workflow_assignments?.workflow_apps[0].users.find(u => u.email === otherUser.email)).toBeDefined();
-    }, 90000);
+    }, { timeout: 90000 });
 
     function selectWorkflowWithAppShareGroup(workflows: CompanyWorkflow[]): CompanyWorkflow | undefined {
         // Use the workflow with the at least 1 workflow app, avoid using larger workflows to avoid slow workflow imports
@@ -326,7 +293,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const secondWorkflowUser = remainingUsers[0];
         expect(secondWorkflowUser.uuid).toBeDefined();
 
-        console.log('assigning workflow user to project', workflowProject1.uuid, secondWorkflowUser.uuid, selectedWorkflowApp.share_group, customRoles[0].custom_role_id);
         await assignProjectWorkflowAppUser(client, workflowProject1.uuid, secondWorkflowUser.uuid, selectedWorkflowApp.share_group, customRoles[0].custom_role_id);
         // Update project shouldn't remove any users
         await patchProject(client, workflowProject1.uuid, {
@@ -335,12 +301,18 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         await waitForProjectWorkflow(client, workflowProject1.uuid);
 
+        // Inviting a user has a delay to be added to the team
+        await sleep(5000);
+
         const projectTeam2 = await getProjectTeam(client, workflowProject1.uuid);
         expect(projectTeam2.workflow_assignments?.workflow_apps.length).toBe(workflowAppsCount);
         const matchingUpdatedWorkflowApp2 = projectTeam2.workflow_assignments?.workflow_apps.find(w => w.workflow_app_id === selectedWorkflowApp.workflow_app_id);
         assert(matchingUpdatedWorkflowApp2, 'The updated workflow app should still be in the workflow assignments');
         expect(matchingUpdatedWorkflowApp2.share_group).toBe(selectedWorkflowApp.share_group);
-        expect(projectTeam2.members.find(u => u.email === secondWorkflowUser.email)?.custom_role_id).toBe(customRoles[0].custom_role_id);
+        const secondWorkflowUser2 = projectTeam2.members.find(u => u.email === secondWorkflowUser.email);
+        console.log('secondWorkflowUser2', secondWorkflowUser2, 'original secondWorkflowUser', secondWorkflowUser, 'projectManager', firstProjectManager);
+        expect(secondWorkflowUser2).toBeDefined();
+        expect(secondWorkflowUser2!.custom_role_id).toBe(customRoles[0].custom_role_id);
         expect(matchingUpdatedWorkflowApp2.users.find(u => u.email === secondWorkflowUser.email)).toBeDefined();
         const originalWorkflowUser = projectTeam2.members.find(u => u.email === workflowUser.email);
         expect(originalWorkflowUser?.custom_role_id).toBe(customRoles[0].custom_role_id);
@@ -354,7 +326,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(matchingUpdatedWorkflowApp3.share_group).toBe(selectedWorkflowApp.share_group);
         expect(users3.members.find(u => u.email === secondWorkflowUser.email)).toBeUndefined();
         expect(matchingUpdatedWorkflowApp3.users.find(u => u.email === secondWorkflowUser.email)).toBeUndefined();
-    }, 90000);
+    }, { timeout: 90000 });
 
     it('Test LEGACY Workflow user assignment using workflow_app_id, custom role assignment and team member integrity', async () => {
         const [customRoles, workflows] = await Promise.all([getCompanyCustomRoles(client), getCompanyWorkflows(client)]);
@@ -442,7 +414,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users3.workflow_assignments?.workflow_apps[0].workflow_app_id).toBe(firstWorkflowAppId);
         expect(users3.members.find(u => u.email === secondWorkflowUser.email)).toBeUndefined();
         expect(users3.workflow_assignments?.workflow_apps[0].users.find(u => u.email === secondWorkflowUser.email)).toBeUndefined();
-    }, 90000);
+    }, { timeout: 90000 });
 
     it.concurrent('Test external workflow users', async () => {
         const [customRoles, workflows] = await Promise.all([getCompanyCustomRoles(client), getCompanyWorkflows(client)]);
@@ -500,7 +472,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users3.members.find(u => u.email === newExternalUser.email)).toBeUndefined();
         expect(users3.external_users.find(u => u.email === newExternalUser.email), 'unassigning user should remain in project team but not assigned to app').toBeDefined();
         expect(users3.workflow_assignments?.workflow_apps[0].users.find(u => u.email === newExternalUser.email)).toBeUndefined();
-    }, 90000);
+    }, { timeout: 90000 });
 } else {
     it('Skipping integration tests', () => { });
     console.warn('[WARN] Skipping integration tests because DATANEST_API_KEY, DATANEST_API_SECRET or DATANEST_API_BASE_URL is not set.');

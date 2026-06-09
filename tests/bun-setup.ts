@@ -3,7 +3,8 @@ import DatanestClient from '../src';
 import { projectPurger } from './project-cleanup';
 
 DatanestClient.disableRateLimit();
+process.env.DATANEST_LOG_ERRORS = '0';
 
 afterAll(async () => {
     await projectPurger.cleanup();
-}, 90000);
+}, { timeout: 90000 });
