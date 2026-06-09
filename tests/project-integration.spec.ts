@@ -1,4 +1,3 @@
-import assert from 'node:assert';
 import { it, expect } from 'bun:test';
 import DatanestClient, { PaginatedResponse } from '../src';
 import { listProjects, patchProject, Project, ProjectType } from '../src/projects';
