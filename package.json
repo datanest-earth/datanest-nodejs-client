@@ -26,7 +26,7 @@
     "test": "bun test",
     "test:smoke": "node tests/smoke.js",
     "test:dev": "bun test --watch",
-    "types": "tsgo -p tsconfig.json --noEmit",
+    "types": "tsgo --noEmit",
     "clean": "rm -r dist || echo 'Nothing to clean'"
   },
   "repository": {

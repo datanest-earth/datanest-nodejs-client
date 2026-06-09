@@ -1,5 +1,5 @@
 import DatanestClient, { DateRangeFilters, PaginatedResponse, Timestamp, UUID } from "./index";
-import type { File as NodeFile } from "node:buffer";
+import type { File as NodeFile } from "buffer";
 
 export enum VirusStatus {
     /**
