@@ -1,5 +1,5 @@
-import DatanestClient, { Country2CharCode, DatanestResponseError, DateRangeFilters, Email, MeasurementType, PaginatedResponse, Timestamp, TimezoneIdentifier, UUID } from "./index.js";
-import { CompanyWorkflow } from "./workflows.js";
+import DatanestClient, { Country2CharCode, DatanestResponseError, DateRangeFilters, Email, MeasurementType, PaginatedResponse, Timestamp, TimezoneIdentifier, UUID } from "./index";
+import { CompanyWorkflow } from "./workflows";
 
 export enum ProjectType {
     /**

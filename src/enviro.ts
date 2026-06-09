@@ -1,6 +1,6 @@
-import { Item } from "./gather.js";
-import DatanestClient, { Country2CharCode, DateRangeFilters, PaginatedResponse } from "./index.js";
-import { BBox } from "./maps.js";
+import { Item } from "./gather";
+import DatanestClient, { Country2CharCode, DateRangeFilters, PaginatedResponse } from "./index";
+import { BBox } from "./maps";
 
 export type ProjectAssessed = {
     assessed_id: number;
