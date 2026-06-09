@@ -1,12 +1,9 @@
-import dotenv from 'dotenv';
-import { beforeAll, expect, it } from 'vitest';
+import { beforeAll, it, expect } from 'bun:test';
 import DatanestClient from '../src';
 import { Project, ProjectType } from '../src/projects';
 import { addExternalUserToProject, addProjectTeamMember, getProjectTeam, removeExternalUserToProject, removeProjectTeamMember } from '../src/teams';
 import { User, deleteCompanyUser, getCompanyExternalUserProjects, getCompanyExternalUsers, getCompanyUsers, inviteCompanyUser, patchCompanyUser, purgeCompanyExternalUser } from '../src/users';
 import { projectPurger } from './project-cleanup';
-
-dotenv.config();
 
 if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.env.DATANEST_API_BASE_URL) {
     let testProject: Project;
@@ -29,7 +26,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             project_type: ProjectType.PROJECT_TYPE_STANDARD,
         });
         testProject = testProjectResponse.project;
-    }, 45000);
+    }, { timeout: 90000 });
 
     it('POST, GET search, PATCH and DELETE /v1/users', async () => {
         const client = new DatanestClient();
@@ -38,9 +35,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             email: randomEmail,
             name: 'Test User',
         });
-        expect(user.uuid).is.a('string');
-        expect(user.name).equals('Test User');
-        expect(user.email).equals(randomEmail);
+        expect(typeof user.uuid).toBe('string');
+        expect(user.name).toBe('Test User');
+        expect(user.email).toBe(randomEmail);
 
         const newName = 'Test User ' + Math.random().toString(36).substring(7);
         const updatedUser = await patchCompanyUser(client, user.uuid, {
@@ -48,13 +45,13 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             initials: 'TU',
         });
 
-        expect(updatedUser.uuid).equals(user.uuid);
-        expect(updatedUser.name).equals(newName);
-        expect(updatedUser.initials).equals('TU');
+        expect(updatedUser.uuid).toBe(user.uuid);
+        expect(updatedUser.name).toBe(newName);
+        expect(updatedUser.initials).toBe('TU');
 
         const users = await getCompanyUsers(client, { search: newName });
-        expect(users.data).is.an('array');
-        expect(users.data[0].name).equals(newName);
+        expect(Array.isArray(users.data)).toBe(true);
+        expect(users.data[0].name).toBe(newName);
 
         await deleteCompanyUser(client, user.uuid);
     });
@@ -63,21 +60,21 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const client = new DatanestClient();
         const users = await getCompanyUsers(client);
 
-        expect(users.data).is.an('array');
-        expect(users.data[0].name).is.a('string');
-        expect(users.data[0].email).is.a('string');
+        expect(Array.isArray(users.data)).toBe(true);
+        expect(typeof users.data[0].name).toBe('string');
+        expect(typeof users.data[0].email).toBe('string');
     });
 
     it.concurrent('GET projects/:projectUuid/teams', async () => {
         const users = await getProjectTeam(client, testProject.uuid);
 
-        expect(users.project_manager).is.an('object');
-        expect(users.project_manager.email).is.a('string')
-        expect(users.project_manager.email).equals(randomProjectManager.email);;
+        expect(users.project_manager).toEqual(expect.any(Object));
+        expect(typeof users.project_manager.email).toBe('string')
+        expect(users.project_manager.email).toBe(randomProjectManager.email);;
 
-        expect(users.members).is.an('array');
-        expect(users.members[0].email).equals(randomProjectManager.email);
-        expect(users.external_users).is.an('array');
+        expect(Array.isArray(users.members)).toBe(true);
+        expect(users.members[0].email).toBe(randomProjectManager.email);
+        expect(Array.isArray(users.external_users)).toBe(true);
     });
 
     it.concurrent('Invite company user, add to project, remove from project', async () => {
@@ -86,28 +83,28 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             email: randomEmail,
             name: 'Invited User',
         });
-        expect(user.uuid).is.a('string');
+        expect(typeof user.uuid).toBe('string');
 
         await addProjectTeamMember(client, testProject.uuid, user.uuid);
 
         const users = await getProjectTeam(client, testProject.uuid);
 
-        expect(users.project_manager).is.an('object');
-        expect(users.project_manager.email).is.a('string')
-        expect(users.project_manager.email).equals(randomProjectManager.email);;
+        expect(users.project_manager).toEqual(expect.any(Object));
+        expect(typeof users.project_manager.email).toBe('string')
+        expect(users.project_manager.email).toBe(randomProjectManager.email);;
 
-        expect(users.members).is.an('array');
-        expect(users.members[0].email).equals(randomProjectManager.email);
-        expect(users.external_users).is.an('array');
+        expect(Array.isArray(users.members)).toBe(true);
+        expect(users.members[0].email).toBe(randomProjectManager.email);
+        expect(Array.isArray(users.external_users)).toBe(true);
 
-        expect(users.members.find(u => u.email === randomEmail)).to.not.be.undefined;
-        expect(users.external_users.find(u => u.email === randomEmail)).to.be.undefined;
+        expect(users.members.find(u => u.email === randomEmail)).toBeDefined();
+        expect(users.external_users.find(u => u.email === randomEmail)).toBeUndefined();
 
         await removeProjectTeamMember(client, testProject.uuid, user.uuid);
 
         const users2 = await getProjectTeam(client, testProject.uuid);
-        expect(users2.members.find(u => u.email === randomEmail)).to.be.undefined;
-        expect(users.external_users.find(u => u.email === randomEmail)).to.be.undefined;
+        expect(users2.members.find(u => u.email === randomEmail)).toBeUndefined();
+        expect(users.external_users.find(u => u.email === randomEmail)).toBeUndefined();
 
     });
 
@@ -119,8 +116,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         });
 
         const users = await getProjectTeam(client, testProject.uuid);
-        expect(users.external_users.find(u => u.email === randomEmail)).to.not.be.undefined;
-        expect(users.members.find(u => u.email === randomEmail)).to.be.undefined;
+        expect(users.external_users.find(u => u.email === randomEmail)).toBeDefined();
+        expect(users.members.find(u => u.email === randomEmail)).toBeUndefined();
 
         await removeExternalUserToProject(client, testProject.uuid, externalUser.uuid);
     });
@@ -139,8 +136,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const externalUserProject = externalUserProjectResponse.project;
 
         const users = await getProjectTeam(client, externalUserProject.uuid);
-        expect(users.members.length).to.be.equal(1, 'Only the project manager should be in the projects team members');
-        expect(users.external_users.length).to.be.equal(0, 'Should not be any external users in new project');
+        expect(users.members.length, 'Only the project manager should be in the projects team members').toBe(1);
+        expect(users.external_users.length, 'Should not be any external users in new project').toBe(0);
 
         const newExternalUser = await addExternalUserToProject(client, externalUserProject.uuid, {
             email: newUserEmail,
@@ -148,23 +145,23 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         });
 
         const users2 = await getProjectTeam(client, externalUserProject.uuid);
-        expect(users2.members.find(u => u.email === newExternalUser.email)).to.be.undefined;
-        expect(users2.external_users.find(u => u.email === newExternalUser.email)).to.not.be.undefined;
+        expect(users2.members.find(u => u.email === newExternalUser.email)).toBeUndefined();
+        expect(users2.external_users.find(u => u.email === newExternalUser.email)).toBeDefined();
 
         const companyExternalUsers = await getCompanyExternalUsers(client, { latest: true });
         const newExternalUser2 = companyExternalUsers.data.find(u => u.email === newExternalUser.email);
-        expect(newExternalUser2).to.not.be.undefined;
+        expect(newExternalUser2).toBeDefined();
 
         const projects = await getCompanyExternalUserProjects(client, newExternalUser.uuid);
-        expect(projects.data.length).to.be.equal(1);
+        expect(projects.data.length).toBe(1);
 
         await purgeCompanyExternalUser(client, newExternalUser.uuid);
 
         const users3 = await getProjectTeam(client, externalUserProject.uuid);
-        expect(users3.members.find(u => u.email === newExternalUser.email)).to.be.undefined;
-        expect(users3.external_users.find(u => u.email === newExternalUser.email)).to.be.undefined;
+        expect(users3.members.find(u => u.email === newExternalUser.email)).toBeUndefined();
+        expect(users3.external_users.find(u => u.email === newExternalUser.email)).toBeUndefined();
     });
 } else {
-    it.only('Skipping integration tests', () => { });
+    it('Skipping integration tests', () => { });
     console.warn('[WARN] Skipping integration tests because DATANEST_API_KEY, DATANEST_API_SECRET or DATANEST_API_BASE_URL is not set.');
 } 

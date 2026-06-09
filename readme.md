@@ -1,9 +1,17 @@
-# Datanest API Client for Node.js
+# Datanest API Client for Node.js and Bun
 
-This is a Node JS implementation of [datanest.earth](https://datanest.earth)'s REST API client.
+This is a Node.js and Bun implementation of [datanest.earth](https://datanest.earth)'s REST API client.
 You should use this lightweight package to easily start using the API.
 
-**If you are not using Node.js** you can use this package as [an implementation example](https://github.com/search?q=repo%3Adatanest-earth%2Fdatanest-nodejs-client+DatanestClient&type=code).
+The published package ships dual runtime entrypoints:
+
+- ESM via `module: dist/index.js`
+- CommonJS via `main: dist/index.cjs`
+- TypeScript declarations via `types: dist/index.d.ts`
+
+That means both Bun and Node.js can consume the same package, while CommonJS projects can continue using `require()`.
+
+**If you are not using Node.js or Bun** you can use this package as [an implementation example](https://github.com/search?q=repo%3Adatanest-earth%2Fdatanest-nodejs-client+DatanestClient&type=code).
 
 Please see the [Datanest API documentation](docs/readme.md) for more information.
 If you need help please contact [hello@datanest.earth](mailto:hello@datanest.earth) for technical support.
@@ -22,38 +30,41 @@ Your Datanest Account Manager can generate API keys, from the Company Settings p
 
 ## Requirements
 
-If you wish to use this Node package, you will need to have Node installed on your machine.
-This package should work with both Bun and Deno runtime alternatives (unverified)
+This package is built with Bun and intended to be consumed from either Bun or Node.js.
 
-We recommend the latest stable version of Node.
-- Tested on Node v20.8 & v22.13
+We recommend current stable runtimes:
+
+- Bun for development in this repository
+- Node.js 20+ or Bun for consuming the published package
 
 <details>
 <summary>Minimum requirements</summary>
 
-- `Fetch API` is required, available in Node v18.0+ (unverified)
+- `Fetch API` is required, available in Node v18.0+ and Bun
 > [node-fetch](https://www.npmjs.com/package/node-fetch) may allow for earlier versions
 
 </details>
 
-## Installation for Node projects
+## Install the package
 
-Install from NPM using your preferred package manager.
+Install the published package:
 
-```bash
-npm install --save @datanest-earth/nodejs-client
-```
-<details>
-<summary>Alternatives</summary>
-
-```bash
-pnpm add @datanest-earth/nodejs-client
-```
 ```bash
 bun add @datanest-earth/nodejs-client
 ```
-</details>
 
+## Develop this repository
+
+This repository is Bun-first.
+
+```bash
+bun install
+bun run types
+bun run build
+bun test
+```
+
+`npm install` and `pnpm install` are intentionally not supported in this repository.
 
 ## Authentication
 
@@ -68,7 +79,7 @@ This package is intended for server-side use only.
   
 #### See the [Postman Documentation](docs/postman/readme.md)
 
-## Getting Started with Node.js
+## Getting Started with Bun or Node.js
 
 The client will automatically look for env variables to get the API key and secret. You can use the [dotenv](https://www.npmjs.com/package/dotenv) package to parse a `.env` file.
 
@@ -104,10 +115,22 @@ const client = new DatanestClient('your-api-key', 'your-api-secret');
 </details>
 
 <details>
-<summary>Require for CommonJS projects</summary>
+<summary>Require for CommonJS Node.js projects</summary>
 
 ```js
 const { DatanestClient, projects } = require("@datanest-earth/nodejs-client");
+```
+</details>
+
+<details>
+<summary>Import from Bun</summary>
+
+```ts
+import DatanestClient, { projects } from '@datanest-earth/nodejs-client';
+
+const client = new DatanestClient('your-api-key', 'your-api-secret');
+const page = await projects.listProjects(client, 1);
+console.log(page.data.length);
 ```
 </details>
 

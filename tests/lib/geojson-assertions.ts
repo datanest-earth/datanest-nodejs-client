@@ -1,4 +1,5 @@
-import { assert, expect } from 'vitest';
+import assert from 'node:assert';
+import { expect } from 'bun:test';
 import type { Item } from '../../src/gather';
 
 type ItemWithGeoJson = Pick<Item, 'latitude' | 'longitude' | 'geojson'>;

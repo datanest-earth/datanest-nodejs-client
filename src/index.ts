@@ -55,6 +55,10 @@ export default class DatanestClient {
         this.apiSecret = apiSecret || process.env.DATANEST_API_SECRET || '';
         this.baseUrl = process.env.DATANEST_API_BASE_URL || 'https://app.datanest.earth/api';
 
+        if (process.env.DATANEST_LOG_ERRORS) {
+            this.logErrors = process.env.DATANEST_LOG_ERRORS === '1';
+        }
+
         // Remove trailing slash
         this.baseUrl = this.baseUrl.replace(/\/$/, '');
 

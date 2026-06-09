@@ -1,0 +1,7 @@
+[install]
+ignoreScripts = true
+
+[test]
+preload = ["./tests/bun-setup.ts"]
+timeout = 90000
+root = "tests"
