@@ -136,8 +136,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const externalUserProject = externalUserProjectResponse.project;
 
         const users = await getProjectTeam(client, externalUserProject.uuid);
-        expect(users.members.length).toBe(1, 'Only the project manager should be in the projects team members');
-        expect(users.external_users.length).toBe(0, 'Should not be any external users in new project');
+        expect(users.members.length, 'Only the project manager should be in the projects team members').toBe(1);
+        expect(users.external_users.length, 'Should not be any external users in new project').toBe(0);
 
         const newExternalUser = await addExternalUserToProject(client, externalUserProject.uuid, {
             email: newUserEmail,

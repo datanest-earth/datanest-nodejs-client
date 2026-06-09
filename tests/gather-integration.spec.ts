@@ -230,13 +230,13 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const client = new DatanestClient();
         const sharedAppGroups = await gather.listSharedAppGroups(client, 1, 'global');
 
-        expect(sharedAppGroups.data.length).toBeGreaterThan(0, 'No global share groups found, unable to verify share group list');
+        expect(sharedAppGroups.data.length, 'No global share groups found, unable to verify share group list').toBeGreaterThan(0);
 
         const shareGroup = sharedAppGroups.data[0];
         expect(typeof shareGroup.share_group).toBe('string');
         expect(typeof shareGroup.group_title).toBe('string');
         expect(Array.isArray(shareGroup.apps)).toBe(true);
-        expect(shareGroup.apps.length).toBeGreaterThan(0, 'there should always be at least one app in a share group');
+        expect(shareGroup.apps.length, 'there should always be at least one app in a share group').toBeGreaterThan(0);
 
         const newProject = await projectPurger.createTestProject(client, {
             project_name: 'My project',

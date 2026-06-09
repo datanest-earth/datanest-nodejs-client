@@ -76,7 +76,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
                 break;
             }
             if (dataGetLatest.data[i].uuid === data.project.uuid) {
-                expect.fail('First project should not be in the latest list');
+                throw new Error('First project should not be in the latest list');
             }
         }
 
@@ -111,7 +111,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         try {
             await client.get('v1/projects/' + data.project.uuid);
-            expect.fail('Should have thrown 404');
+            throw new Error('Should have thrown 404');
         } catch (e: any) {
             expect(e.status).toBe(404);
         }
@@ -155,9 +155,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         });
 
         expect(updatedProject.project.additional).toEqual(expect.any(Object));
-        expect(updatedProject.project.additional?.added_after_creation).toBe('yes', 'New field should be added');
-        expect(updatedProject.project.additional?.my_additional_field).toBe('test', 'Old field should be retained');
-        expect(updatedProject.project.additional?.my_reference).toBe(undefined, 'Fields are completely removed with null');
+        expect(updatedProject.project.additional?.added_after_creation, 'New field should be added').toBe('yes');
+        expect(updatedProject.project.additional?.my_additional_field, 'Old field should be retained').toBe('test');
+        expect(updatedProject.project.additional?.my_reference, 'Fields are completely removed with null').toBe(undefined);
     });
 
     it.concurrent('can search and filter projects', async () => {
