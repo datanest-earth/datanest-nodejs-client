@@ -1,7 +1,8 @@
 {
   "name": "@datanest-earth/nodejs-client",
-  "version": "0.13.1",
+  "version": "0.14.0",
   "description": "Datanest API Client to easily create signed requests",
+  "packageManager": "bun@1.3.6",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,15 +16,17 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts --target node18 --no-splitting",
-    "test": "vitest run",
-    "test:dev": "vitest",
-    "types": "tsc --noEmit",
+    "build": "bun build src/index.ts --outfile dist/index.js --target node --format esm --packages external && bun build src/index.ts --outfile dist/index.cjs --target node --format cjs --packages external",
+    "test": "bun test",
+    "test:smoke": "node tests/smoke.js",
+    "test:dev": "bun test --watch",
+    "types": "tsgo -p tsconfig.json --noEmit",
     "clean": "rm -r dist || echo 'Nothing to clean'"
   },
   "repository": {
@@ -45,13 +48,9 @@
     "url": "https://github.com/datanest-earth/datanest-nodejs-client/issues"
   },
   "homepage": "https://github.com/datanest-earth/datanest-nodejs-client#readme",
-  "optionalDependencies": {
-    "dotenv": "^16.4.5"
-  },
   "devDependencies": {
-    "@types/node": "^20.8.7",
-    "tsup": "^8.3.5",
-    "typescript": "^5.7.2",
-    "vitest": "^2.1.8"
+    "@types/bun": "^1.3.6",
+    "@types/node": "^25.9.2",
+    "@typescript/native-preview": "^7.0.0-dev.20260608.1"
   }
 }

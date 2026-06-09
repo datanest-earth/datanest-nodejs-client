@@ -1,13 +1,11 @@
-import dotenv from 'dotenv';
-import { assert, beforeAll, expect, it } from 'vitest';
+import assert from 'node:assert';
+import { beforeAll, it, expect } from 'bun:test';
 import DatanestClient from '../src';
 import { AppSchemaExportJson, deleteApp, importAppGroup, importAppSchemaFromJson, listProjectApps, listSharedAppGroups, shareAppsFromProject, unshareAppGroup, updateShareGroup } from '../src/gather';
 import { Project, ProjectType } from '../src/projects';
 import { getCompanyUsers, User } from '../src/users';
 import { getTestFixtureJson } from './lib/test-utils';
 import { projectPurger } from './project-cleanup';
-
-dotenv.config();
 
 // Future test cases to add:
 // Share with prefix for app groups
@@ -57,8 +55,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         })).project;
 
         importedAppSchema = await importAppSchemaFromJson(client, masterProject.uuid, appsSchema);
-        expect(importedAppSchema.apps).to.have.lengthOf(appsSchema.apps.length);
-    });
+        expect(importedAppSchema.apps).toHaveLength(appsSchema.apps.length);
+    }, 90000);
 
     it('Share Everything App V1, import into a new project, delete an imported app, and unshare', async () => {
         assert(importedAppSchema, 'Imported app schema is not defined');
@@ -72,7 +70,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(share_group).toBeDefined();
         expect(share_group.group_title).toBe('TEST: Everything Test App V1');
         expect(share_group.group_description).toBe('Everything Test App V1');
-        expect(share_group.apps).to.have.lengthOf(1);
+        expect(share_group.apps).toHaveLength(1);
         expect(share_group.apps[0].uuid).toBe(everythingApp.uuid);
         const shareGroupV1 = share_group;
         assert(importedAppSchema, 'Imported app schema is not defined');
@@ -86,16 +84,16 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         });
 
         const { apps: importedApps } = await importAppGroup(client, projectToImportTo.uuid, shareGroupV1.share_group);
-        expect(importedApps).to.have.lengthOf(1);
+        expect(importedApps).toHaveLength(1);
         expect(importedApps[0].title).toBe(shareGroupV1.apps[0].title);
 
         const apps = await listProjectApps(client, projectToImportTo.uuid);
-        expect(apps.apps).to.have.lengthOf(1);
+        expect(apps.apps).toHaveLength(1);
         // Test deleting the imported app.
         await deleteApp(client, projectToImportTo.uuid, importedApps[0].uuid!);
 
         const apps2 = await listProjectApps(client, projectToImportTo.uuid);
-        expect(apps2.apps).to.have.lengthOf(0);
+        expect(apps2.apps).toHaveLength(0);
 
         await unshareAppGroup(client, masterProject.uuid, shareGroupV1.share_group);
         await expect(importAppGroup(client, projectToImportTo.uuid, shareGroupV1.share_group)).rejects.toThrow();
@@ -115,7 +113,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(share_group.share_group).toBe('share.datanest-testing.everything.v2');
         expect(share_group.group_title).toBe('TEST: Everything Test App V2');
         expect(share_group.group_description).toBeNull();
-        expect(share_group.apps).to.have.lengthOf(1);
+        expect(share_group.apps).toHaveLength(1);
         expect(share_group.apps[0].uuid).toBe(everythingApp.uuid);
         const shareGroupV2 = share_group;
         assert(importedAppSchema, 'Imported app schema is not defined');
@@ -129,10 +127,10 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         });
 
         const { apps: importedApps } = await importAppGroup(client, projectToImportTo.uuid, 'share.datanest-testing.everything.v2');
-        expect(importedApps).to.have.lengthOf(1);
+        expect(importedApps).toHaveLength(1);
         expect(importedApps[0].title).toBe(shareGroupV2.apps[0].title);
 
-        await expect(() => shareAppsFromProject(client, masterProject.uuid, {
+        await expect(shareAppsFromProject(client, masterProject.uuid, {
             group_title: 'TEST: Everything Test App V3',
             share_group: 'share.datanest-testing.everything.v2',
             app_uuids: [everythingApp.uuid!],
@@ -147,7 +145,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         });
         expect(shareGroupV3.share_group).toBe('share.datanest-testing.everything.v3');
         expect(shareGroupV3.group_description).toBe('Everything Test App V3');
-        expect(shareGroupV3.apps).to.have.lengthOf(2);
+        expect(shareGroupV3.apps).toHaveLength(2);
         const sortedApps = shareGroupV3.apps.sort((a, b) => a.title.localeCompare(b.title));
         expect(sortedApps[0].title).toBe(everythingApp.title);
         expect(sortedApps[1].title).toBe(locationApp.title);
@@ -161,14 +159,14 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         });
         expect(shareGroupV3_1.share_group).toBe('share.datanest-testing.everything.v3');
         expect(shareGroupV3_1.group_description).toBe('Everything Test App V3');
-        expect(shareGroupV3_1.apps).to.have.lengthOf(1);
+        expect(shareGroupV3_1.apps).toHaveLength(1);
         expect(shareGroupV3_1.apps[0].uuid).toBe(everythingApp.uuid);
 
         // Can search by share_group prefix
         const companyShareGroups = await listSharedAppGroups(client, 1, 'company', {
             search: 'share.datanest-testing.everything',
         });
-        expect(companyShareGroups.data, 'Search results should only contain the share groups that match the prefix').to.have.lengthOf(
+        expect(companyShareGroups.data, 'Search results should only contain the share groups that match the prefix').toHaveLength(
             companyShareGroups.data
                 .filter(shareGroup =>
                     shareGroup.share_group.startsWith('share.datanest-testing.everything')
@@ -186,7 +184,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
                 console.error('Error cleaning up from bad state', error);
             }
         }
-        expect(companyShareGroups.data).to.have.lengthOf(1);
+        expect(companyShareGroups.data).toHaveLength(1);
 
         // The system lets you delete master apps that are shared.
         await deleteApp(client, masterProject.uuid, everythingApp.uuid!)
@@ -197,9 +195,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
         const companyShareGroups2 = await listSharedAppGroups(client, 1, 'company');
         const groupsWithPrefix2 = companyShareGroups2.data.filter(shareGroup => shareGroup.share_group.startsWith('share.datanest-testing.everything'));
-        expect(groupsWithPrefix2).to.have.lengthOf(0);
+        expect(groupsWithPrefix2).toHaveLength(0);
     });
 } else {
-    it.only('Skipping integration tests', () => { });
+    it('Skipping integration tests', () => { });
     console.warn('[WARN] Skipping integration tests because DATANEST_API_KEY, DATANEST_API_SECRET or DATANEST_API_BASE_URL is not set.');
 }

@@ -1,5 +1,5 @@
-import { Item } from "./gather";
-import DatanestClient, { DateRangeFilters, PaginatedResponse, SoftDelete, Timestamps, UUID } from "./index";
+import { Item } from "./gather.js";
+import DatanestClient, { DateRangeFilters, PaginatedResponse, SoftDelete, Timestamps, UUID } from "./index.js";
 
 export type GeoJsonFeature = {
     type: "Feature";

@@ -1,10 +1,8 @@
-import dotenv from 'dotenv';
-import { assert, beforeAll, expect, it } from 'vitest';
-import DatanestClient from '../src';
+import assert from 'node:assert';
+import { beforeAll, it, expect } from 'bun:test';
+import DatanestClient from '../src/index';
 import { listProjects, Project } from '../src/projects';
 import { assignProjectsToWorkspace, createWorkspace, deleteWorkspace, getWorkspaces, getWorkspaceWithProjects, unassignProjectsFromWorkspace, updateWorkspace, Workspace } from '../src/workspaces';
-
-dotenv.config();
 
 if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.env.DATANEST_API_BASE_URL) {
     const client = new DatanestClient();
@@ -15,7 +13,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     beforeAll(async () => {
         allProjects = (await listProjects(client)).data;
         assert(allProjects.length >= 2);
-    });
+    }, 90000);
 
     it('Create workspace & list workspaces', async () => {
         let name = 'Test workspace ' + new Date().toISOString();
@@ -97,6 +95,6 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         }
     });
 } else {
-    it.only('Skipping integration tests', () => { });
+    it('Skipping integration tests', () => { });
     console.warn('[WARN] Skipping integration tests because DATANEST_API_KEY, DATANEST_API_SECRET or DATANEST_API_BASE_URL is not set.');
 } 

@@ -1,4 +1,4 @@
-import DatanestClient from "./index";
+import DatanestClient from "./index.js";
 
 export type SubscriptionTier = 'Start-up' | 'Light' | 'Growth' | 'Enterprise';
 
