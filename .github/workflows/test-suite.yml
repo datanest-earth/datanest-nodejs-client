@@ -79,4 +79,4 @@ jobs:
           DATANEST_API_SECRET: ${{ secrets.DATANEST_API_SECRET }}
           ENVIRO_PROJECT_UUID: ${{ secrets.ENVIRO_PROJECT_UUID }}
           PROD: '1'
-        run: bun test --max-concurrency 1
+        run: bun test --timeout 30000
