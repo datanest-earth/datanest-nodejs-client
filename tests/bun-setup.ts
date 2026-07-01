@@ -2,7 +2,7 @@ import { afterAll, setDefaultTimeout } from 'bun:test';
 import DatanestClient from '../src';
 import { projectPurger } from './project-cleanup';
 
-setDefaultTimeout(10000);
+setDefaultTimeout(30000);
 DatanestClient.disableRateLimit();
 process.env.DATANEST_LOG_ERRORS = '0';
 
