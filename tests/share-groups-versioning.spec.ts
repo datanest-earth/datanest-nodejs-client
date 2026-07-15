@@ -2,7 +2,7 @@ import assert from 'node:assert';
 import { beforeAll, it, expect } from 'bun:test';
 import DatanestClient from '../src';
 import { App, AppSchemaExportJson, deleteApp, importAppGroup, importAppSchemaFromJson, listProjectApps, listSharedAppGroups, shareAppsFromProject, unshareAppGroup, updateShareGroup } from '../src/gather';
-import { Project, ProjectType } from '../src/projects';
+import { getProject, listProjects, Project, ProjectType } from '../src/projects';
 import { getCompanyUsers, User } from '../src/users';
 import { getTestFixtureJson } from './lib/test-utils';
 import { projectPurger } from './project-cleanup';
@@ -85,6 +85,30 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const shareGroupV1 = share_group;
         assert(importedAppSchema, 'Imported app schema is not defined');
         assert(shareGroupV1, 'Share group v1 is not defined');
+
+        const unlistedProjects = await listProjects(client, 1, false, {
+            unlisted: true,
+            search: shareGroupV1.group_title,
+        });
+        const snapshotProject = unlistedProjects.data.find(p =>
+            p.unlisted
+            && p.uuid !== masterProject.uuid
+            && p.project_name.includes(shareGroupV1.group_title)
+        );
+        expect(snapshotProject, 'Publishing a share group should create an unlisted revision snapshot project').toBeDefined();
+        assert(snapshotProject);
+
+        const [masterProjectDetails, snapshotProjectDetails, listedMaster, listedSnapshot] = await Promise.all([
+            getProject(client, masterProject.uuid),
+            getProject(client, snapshotProject.uuid),
+            listProjects(client, 1, false, { search: masterProject.uuid }),
+            listProjects(client, 1, false, { search: snapshotProject.uuid }),
+        ]);
+        expect(masterProjectDetails.project.unlisted).toBe(false);
+        expect(snapshotProjectDetails.project.unlisted).toBe(true);
+        expect(listedMaster.data.find(p => p.uuid === masterProject.uuid)).toBeDefined();
+        expect(listedSnapshot.data.find(p => p.uuid === snapshotProject.uuid), 'Unlisted revision snapshot should be hidden from default project list').toBeUndefined();
+        expect(unlistedProjects.data.every(p => p.unlisted)).toBe(true);
 
         const { project: projectToImportTo } = await projectPurger.createTestProject(client, {
             project_name: 'Importing a Share Group',
