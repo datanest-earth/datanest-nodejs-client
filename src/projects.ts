@@ -197,7 +197,7 @@ export async function listProjects(client: DatanestClient, page = 1, archived = 
  * @returns 
  */
 export async function getProject(client: DatanestClient, projectUuidOrProjectNumber: UUID | Project['project_number']) {
-    const response = await client.get('v1/projects/' + projectUuidOrProjectNumber);
+    const response = await client.get('v1/projects/' + encodeURIComponent(projectUuidOrProjectNumber));
 
     const data = await response.json();
     return data as {
