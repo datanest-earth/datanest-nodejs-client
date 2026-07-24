@@ -26,6 +26,10 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(data.meta.current_page).toBe(1);
         expect(typeof data.meta.per_page).toBe('number');
         expect(typeof data.meta.total).toBe('number');
+        for (const project of data.data) {
+            expect(typeof project.unlisted).toBe('boolean');
+            expect(project.unlisted, 'Default project list excludes unlisted snapshot projects').toBe(false);
+        }
 
         expect(dataPage2.meta.current_page).toBe(2);
     });
@@ -58,7 +62,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(typeof data.project_link).toBe('string');
         expect(typeof data.project.uuid).toBe('string');
         expect(data.project.project_type).toBe(ProjectType.PROJECT_TYPE_STANDARD);
+        expect(data.project.unlisted).toBe(false);
         expect(enviroCreateResponseData.project.project_type).toBe(ProjectType.PROJECT_TYPE_ENVIRO);
+        expect(enviroCreateResponseData.project.unlisted).toBe(false);
 
         const [responseGetLatest, responseGet] = await Promise.all([
             client.get('v1/projects', { latest: true }),
@@ -82,6 +88,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(responseGet.status).toBe(200);
 
         const dataGet = await responseGet.json();
+        expect(dataGet.project.unlisted).toBe(false);
         expect(data).toEqual(dataGet);
 
         const responsePatch = await client.patch('v1/projects/' + data.project.uuid, {
@@ -174,17 +181,23 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             searchByUuid,
             searchByClient,
             notFound,
+            unlistedOnly,
         ] = await Promise.all([
             listProjects(client, 1, false, { search: 'test:' + hash }),
             listProjects(client, 1, false, { search: newProject.project.uuid }),
             listProjects(client, 1, false, { search: 'Client ' + hash }),
             listProjects(client, 1, false, { search: 'Not Found ABC12345' }),
+            listProjects(client, 1, false, { unlisted: true }),
         ]);
 
         expect(searchByNumber.data.find(p => p.uuid === newProject.project.uuid)).toBeDefined();
         expect(searchByUuid.data.find(p => p.uuid === newProject.project.uuid)).toBeDefined();
         expect(searchByClient.data.find(p => p.uuid === newProject.project.uuid)).toBeDefined();
         expect(notFound.data.length).toBe(0);
+        expect(unlistedOnly.data.find(p => p.uuid === newProject.project.uuid), 'Listed projects should not appear when filtering unlisted=true').toBeUndefined();
+        for (const project of unlistedOnly.data) {
+            expect(project.unlisted).toBe(true);
+        }
     });
 
     it.concurrent('can set timezone on creation', async () => {

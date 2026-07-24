@@ -27,6 +27,8 @@ export type Project = {
     /** Is the workflow currently importing in the background, more Apps, Auto Docs, Data Events and Figures may appear in the project */
     is_workflow_importing: boolean;
     archived: boolean,
+    /** This is a project hidden from search results for the purposes of being a snapshot of Gather Share Groups (a.k.a. a 'Share Group Revision Project') */
+    unlisted: boolean,
     is_confidential: boolean,
     is_confirmed: boolean,
 
@@ -179,6 +181,7 @@ export async function listProjects(client: DatanestClient, page = 1, archived = 
     workspace_uuid?: UUID;
     search?: string;
     latest?: boolean;
+    unlisted?: boolean;
 } & DateRangeFilters) {
     const response = await client.get('v1/projects', { archived, page, ...filters });
 
@@ -189,12 +192,12 @@ export async function listProjects(client: DatanestClient, page = 1, archived = 
 /**
  * Get a single project via UUID
  * @param client 
- * @param projectUuid 
+ * @param projectUuidOrProjectNumber UUID or Project Number unique to the DN account
  * @throws DatanestResponseError Request HTTP server or validation error
  * @returns 
  */
-export async function getProject(client: DatanestClient, projectUuid: string) {
-    const response = await client.get('v1/projects/' + projectUuid);
+export async function getProject(client: DatanestClient, projectUuidOrProjectNumber: UUID | Project['project_number']) {
+    const response = await client.get('v1/projects/' + encodeURIComponent(projectUuidOrProjectNumber));
 
     const data = await response.json();
     return data as {
