@@ -192,12 +192,12 @@ export async function listProjects(client: DatanestClient, page = 1, archived = 
 /**
  * Get a single project via UUID
  * @param client 
- * @param projectUuid 
+ * @param projectUuidOrProjectNumber UUID or Project Number unique to the DN account
  * @throws DatanestResponseError Request HTTP server or validation error
  * @returns 
  */
-export async function getProject(client: DatanestClient, projectUuid: string) {
-    const response = await client.get('v1/projects/' + projectUuid);
+export async function getProject(client: DatanestClient, projectUuidOrProjectNumber: UUID | Project['project_number']) {
+    const response = await client.get('v1/projects/' + projectUuidOrProjectNumber);
 
     const data = await response.json();
     return data as {
