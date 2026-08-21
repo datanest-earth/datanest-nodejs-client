@@ -35,7 +35,7 @@ This package is built with Bun and intended to be consumed from either Bun or No
 We recommend current stable runtimes:
 
 - Bun for development in this repository
-- Node.js 20+ or Bun for consuming the published package
+- Node.js 22+ or Bun for consuming the published package
 
 <details>
 <summary>Minimum requirements</summary>
