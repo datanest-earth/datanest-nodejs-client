@@ -54,7 +54,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users.data[0].name).toBe(newName);
 
         await deleteCompanyUser(client, user.uuid);
-    });
+    }, { timeout: 60000 });
 
     it.concurrent('GET /v1/users', async () => {
         const client = new DatanestClient();
@@ -106,7 +106,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(users2.members.find(u => u.email === randomEmail)).toBeUndefined();
         expect(users.external_users.find(u => u.email === randomEmail)).toBeUndefined();
 
-    });
+    }, { timeout: 60000 });
 
     it.concurrent('Invite external user, add to project, remove from project', async () => {
         const randomEmail = 'external-' + Math.random().toString(36).substring(7) + '@user.com';
