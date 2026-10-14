@@ -222,7 +222,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const projectTeam = await getProjectTeam(client, project.project.uuid);
 
         expect(projectTeam.workflow_assignments?.workflow_apps[0].users.find(u => u.email === otherUser.email)).toBeDefined();
-    }, { timeout: 90000 });
+    }, { timeout: 120000 });
 
     function selectWorkflowWithAppShareGroup(workflows: CompanyWorkflow[]): CompanyWorkflow | undefined {
         // Use the workflow with the at least 1 workflow app, avoid using larger workflows to avoid slow workflow imports
