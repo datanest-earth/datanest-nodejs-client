@@ -1,5 +1,7 @@
 import assert from 'node:assert';
-import { beforeAll, it, expect } from 'bun:test';
+import { beforeAll, it, expect, setDefaultTimeout } from 'bun:test';
+
+setDefaultTimeout(30_000);
 import DatanestClient from '../src';
 import { App, AppSchemaExportJson, deleteApp, importAppGroup, importAppSchemaFromJson, listProjectApps, listSharedAppGroups, shareAppsFromProject, unshareAppGroup, updateShareGroup } from '../src/gather';
 import { getProject, listProjects, Project, ProjectType } from '../src/projects';

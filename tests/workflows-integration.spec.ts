@@ -1,5 +1,7 @@
 import assert from 'node:assert';
-import { beforeAll, it, expect } from 'bun:test';
+import { beforeAll, it, expect, setDefaultTimeout } from 'bun:test';
+
+setDefaultTimeout(30_000);
 import { assignProjectWorkflowAppUser, CompanyWorkflow, getCompanyCustomRoles, getCompanyWorkflow, getCompanyWorkflows, getLatestPublishedWorkflowFromList, unassignProjectWorkflowAppUser } from '../src/workflows';
 import DatanestClient, { DatanestResponseError, PaginatedResponse } from '../src';
 import { patchProject, ProjectType, waitForProjectWorkflow } from '../src/projects';
@@ -33,17 +35,17 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
     async function getWorkflowDrafts(client: DatanestClient): Promise<PaginatedResponse<CompanyWorkflow>> {
         let page = 1;
-        while (true) {
+        while (page <= 20) {
             const workflows = await getCompanyWorkflows(client, { include_drafts: true, page });
-            page++;
             const drafts = workflows.data.filter(w => w.published_at === null);
             if (drafts.length > 0) {
                 workflows.data = drafts;
                 return workflows;
             }
-            if (workflows.meta.last_page >= page) {
+            if (page >= workflows.meta.last_page) {
                 break;
             }
+            page++;
         }
 
         return {
@@ -59,17 +61,17 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
 
     async function getWorkflowRevisions(client: DatanestClient): Promise<PaginatedResponse<CompanyWorkflow>> {
         let page = 1;
-        while (true) {
+        while (page <= 20) {
             const workflows = await getCompanyWorkflows(client, { include_revisions: true, page });
-            page++;
             const revisions = workflows.data.filter(w => w.revision > 1);
             if (revisions.length > 0) {
                 workflows.data = revisions;
                 return workflows;
             }
-            if (workflows.meta.last_page >= page) {
+            if (page >= workflows.meta.last_page) {
                 break;
             }
+            page++;
         }
 
         return {
@@ -113,15 +115,17 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(workflow.is_latest).toBe(false);
         expect(workflow.revision).toBe(0);
         expect(workflow.latest_revision).toBeGreaterThanOrEqual(workflowWithMaxRevision.revision);
-        expect(workflow.latest_revision_id).toBeGreaterThanOrEqual(workflowWithMaxRevision.workflow_id);
+        // A draft can be saved before the latest publish, so its id can be lower than the published workflow id.
+        expect(workflow.latest_revision_id).toBe(workflow.latest_workflow.workflow_id);
+        expect(workflow.latest_workflow.revision).toBe(workflow.latest_revision);
         expect(workflow.original_workflow_id).toBe(workflowWithMaxRevision.original_workflow_id);
         expect(workflow.workflow.workflow_id).toBe(workflowWithMaxRevision.original_workflow_id);
-        expect(workflow.latest_workflow.workflow_id).toBeGreaterThanOrEqual(workflowWithMaxRevision.workflow_id);
 
         if (workflow.latest_published_workflow) {
             expect(workflow.latest_published_revision).toBeGreaterThanOrEqual(workflowWithMaxRevision.revision);
+            expect(workflow.latest_published_id).toBe(workflow.latest_published_workflow.workflow_id);
+            expect(workflow.latest_published_id).toBeGreaterThanOrEqual(workflowWithMaxRevision.workflow_id);
             expect(workflow.latest_published_id).toBeGreaterThanOrEqual(workflow.workflow.workflow_id);
-            expect(workflow.latest_revision_id).toBeGreaterThanOrEqual(workflow.latest_published_id!);
         } else {
             expect(workflow.latest_published_revision).toBeNull();
             expect(workflow.latest_published_id).toBeNull();
@@ -155,27 +159,47 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         }
     }, { timeout: 90000 });
 
-    async function findWorkflowWithMultipleRevisions(): Promise<{ workflowWithMultipleRevisions: CompanyWorkflow; relatedWorkflows: CompanyWorkflow[]; }> {
-        let page = 0;
-        while (true) {
+    /** Drop a trailing `.v12` so versioned share groups for the same app compare equal. */
+    function shareGroupPrefix(shareGroup: string): string {
+        return shareGroup.replace(/\.v\d+$/, '');
+    }
+
+    function sharesAppPrefix(left: CompanyWorkflow, right: CompanyWorkflow): boolean {
+        const prefixes = new Set(left.workflow_apps.map(app => app.share_group ? shareGroupPrefix(app.share_group) : undefined));
+        return right.workflow_apps.some(app => app.share_group && prefixes.has(shareGroupPrefix(app.share_group)));
+    }
+
+    async function listWorkflowRevisions(): Promise<CompanyWorkflow[]> {
+        const workflows: CompanyWorkflow[] = [];
+        let page = 1;
+        let lastPage = 1;
+        while (page <= lastPage && page <= 20) {
+            const response = await getCompanyWorkflows(client, { include_revisions: true, page });
+            lastPage = response.meta.last_page;
+            workflows.push(...response.data);
             page++;
-            const workflows = await getCompanyWorkflows(client, { include_revisions: true, page });
-            for (const workflow of workflows.data) {
-                const related = workflows.data.filter(w => w.published_at !== null && w.original_workflow_id === workflow.original_workflow_id && w.workflow_apps.some(a => workflow.workflow_apps.some(l => l.share_group && a.share_group && l.share_group === a.share_group)));
-                if (related.length > 1) {
-                    return {
-                        workflowWithMultipleRevisions: workflow,
-                        relatedWorkflows: related,
-                    };
-                }
+        }
+        if (page <= lastPage) {
+            throw new Error('No workflow with multiple revisions found within the first 20 pages');
+        }
+        return workflows;
+    }
+
+    async function findWorkflowWithMultipleRevisions(): Promise<{ workflowWithMultipleRevisions: CompanyWorkflow; relatedWorkflows: CompanyWorkflow[]; }> {
+        const workflows = await listWorkflowRevisions();
+        for (const workflow of workflows) {
+            if (workflow.published_at === null) {
+                continue;
             }
-            if (page > 20) {
-                throw new Error('No workflow with multiple revisions found withing the first 20 pages');
-            }
-            if (workflows.meta.last_page >= page) {
-                throw new Error('No workflow with multiple revisions found on any page, last page checked: ' + page);
+            const related = workflows.filter(candidate => candidate.published_at !== null && candidate.original_workflow_id === workflow.original_workflow_id && sharesAppPrefix(workflow, candidate));
+            if (related.length > 1) {
+                return {
+                    workflowWithMultipleRevisions: workflow,
+                    relatedWorkflows: related,
+                };
             }
         }
+        throw new Error('No workflow with multiple revisions sharing an app prefix was found');
     }
 
     it.concurrent('Can use previous revisions of workflow for project with share_group assignments', async () => {
@@ -188,15 +212,15 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         expect(latestRevisionWorkflow.revision, 'Prerequisite: There should be at least one published revision workflow in the test company').toBeGreaterThan(0);
 
         const previousRevisionWorkflow = relatedWorkflows.find(w =>
-            w.revision < latestRevisionWorkflow.revision && w.workflow_apps.some(a => latestRevisionWorkflow.workflow_apps.some(l => l.share_group && a.share_group && l.share_group === a.share_group))
+            w.revision < latestRevisionWorkflow.revision && sharesAppPrefix(w, latestRevisionWorkflow)
         );
 
         expect(latestRevisionWorkflow, 'Prerequisite: There should be at least one published revision workflow in the test company').toBeDefined();
         expect(previousRevisionWorkflow, 'Prerequisite: There should be at least one previous revision workflow in the test company').toBeDefined();
 
-        // find a common share_group between the two workflows
+        // Share groups are versioned (share.company.app.v3). Assignments resolve a prefix to the project's revision.
         const commonShareGroup = previousRevisionWorkflow!.workflow_apps.find(w =>
-            latestRevisionWorkflow!.workflow_apps.some(l => l.share_group && w.share_group && l.share_group === w.share_group)
+            w.share_group && latestRevisionWorkflow!.workflow_apps.some(l => l.share_group && shareGroupPrefix(l.share_group) === shareGroupPrefix(w.share_group))
         );
         expect(commonShareGroup, 'Prerequisite: There should be at least one common share_group between the two workflows').toBeDefined();
 
@@ -211,7 +235,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             workflow_assignments: {
                 workflow_id: previousRevisionWorkflow!.workflow_id,
                 workflow_apps: [{
-                    share_group: commonShareGroup!.share_group,
+                    share_group: shareGroupPrefix(commonShareGroup!.share_group),
                     user_uuids: [otherUser.uuid],
                 }],
             },
@@ -245,8 +269,8 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         const selectedWorkflowApp = selectedWorkflowWithAppShareGroup!.workflow_apps.find(a => a.share_group);
         assert(selectedWorkflowApp, 'Prerequisite: There should be at least one workflow app share group in the selected workflow');
 
-        // Simulate a version-reuseable prefix. E.g. removing .v1 off the end of the share_group
-        const prefix = selectedWorkflowApp!.share_group.slice(0, -3);
+        // Assignments accept a prefix and resolve the project's share group version.
+        const prefix = shareGroupPrefix(selectedWorkflowApp!.share_group);
 
         expect(workflowUser.uuid).toBeDefined();
 

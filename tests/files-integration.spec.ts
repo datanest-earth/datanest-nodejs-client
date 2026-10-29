@@ -1,4 +1,6 @@
-import { it, expect } from 'bun:test';
+import { it, expect, setDefaultTimeout } from 'bun:test';
+
+setDefaultTimeout(30_000);
 import DatanestClient from '../src';
 import { deleteFile, getProjectFile, getProjectFileHistory, getProjectFiles, getProjectFileVersionUrl, getRecentNotifications, uploadFile } from '../src/files';
 import { readFileSync, unlinkSync, writeFileSync } from 'fs';

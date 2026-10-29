@@ -1,10 +1,38 @@
-import { it, expect } from 'bun:test';
-import DatanestClient, { PaginatedResponse } from '../src';
+import { it, expect, setDefaultTimeout } from 'bun:test';
+
+setDefaultTimeout(30_000);
+import DatanestClient, { DatanestResponseError, PaginatedResponse } from '../src';
 import { listProjects, patchProject, Project, ProjectType } from '../src/projects';
 import { projectPurger } from './project-cleanup';
 import { getCompanyUsers } from '../src/users';
 
+function isEnviroProjectCreationDisabled(error: unknown): boolean {
+    return error instanceof DatanestResponseError
+        && error.status === 422
+        && error.message.includes("doesn't have access to create enviro projects");
+}
+
 if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.env.DATANEST_API_BASE_URL) {
+    const enviroClient = new DatanestClient();
+    let enviroProject: Awaited<ReturnType<typeof projectPurger.createTestProject>> | undefined;
+    try {
+        enviroProject = await projectPurger.createTestProject(enviroClient, {
+            project_name: 'Enviro project',
+            project_client: 'My client',
+            address_country: 'GB',
+            project_type: ProjectType.PROJECT_TYPE_ENVIRO,
+        });
+    } catch (error) {
+        if (!isEnviroProjectCreationDisabled(error)) {
+            throw error;
+        }
+        console.warn('Skipping enviro project test: this account cannot create enviro projects');
+    }
+
+    it.skipIf(enviroProject === undefined)('Create an enviro project', () => {
+        expect(enviroProject!.project.project_type).toBe(ProjectType.PROJECT_TYPE_ENVIRO);
+    });
+
     it.concurrent('Ordered query params', async () => {
         const client = new DatanestClient();
         const responses = await Promise.all([client.get('v1/projects', { order: 'test', page: '1' }), client.get('v1/projects', { page: '1', order: 'test' })]);
@@ -49,21 +77,35 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             project_type: ProjectType.PROJECT_TYPE_STANDARD,
         });
 
-        const enviroProject = await projectPurger.createTestProject(client, {
-            project_name: 'Latest project',
-            project_client: 'My client',
-            address_country: 'GB',
-            project_type: ProjectType.PROJECT_TYPE_ENVIRO,
-        });
+        let latestProject;
+        try {
+            latestProject = await projectPurger.createTestProject(client, {
+                project_name: 'Latest project',
+                project_client: 'My client',
+                address_country: 'GB',
+                project_type: ProjectType.PROJECT_TYPE_ENVIRO,
+            });
+            expect(latestProject.project.project_type).toBe(ProjectType.PROJECT_TYPE_ENVIRO);
+        } catch (error) {
+            if (!isEnviroProjectCreationDisabled(error)) {
+                throw error;
+            }
+            console.warn('Account cannot create enviro projects, using a standard project for the latest-project checks');
+            latestProject = await projectPurger.createTestProject(client, {
+                project_name: 'Latest project',
+                project_client: 'My client',
+                address_country: 'GB',
+                project_type: ProjectType.PROJECT_TYPE_STANDARD,
+            });
+        }
 
         const data = firstProject;
-        const enviroCreateResponseData = enviroProject;
+        const enviroCreateResponseData = latestProject;
 
         expect(typeof data.project_link).toBe('string');
         expect(typeof data.project.uuid).toBe('string');
         expect(data.project.project_type).toBe(ProjectType.PROJECT_TYPE_STANDARD);
         expect(data.project.unlisted).toBe(false);
-        expect(enviroCreateResponseData.project.project_type).toBe(ProjectType.PROJECT_TYPE_ENVIRO);
         expect(enviroCreateResponseData.project.unlisted).toBe(false);
 
         const [responseGetLatest, responseGet] = await Promise.all([

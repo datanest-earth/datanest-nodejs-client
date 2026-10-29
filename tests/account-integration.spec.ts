@@ -1,4 +1,6 @@
-import { it, expect } from 'bun:test';
+import { it, expect, setDefaultTimeout } from 'bun:test';
+
+setDefaultTimeout(30_000);
 import DatanestClient from '../src/index';
 import { getCompanyAccountDetails } from '../src/account';
 

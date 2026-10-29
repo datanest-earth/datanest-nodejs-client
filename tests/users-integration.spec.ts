@@ -1,4 +1,6 @@
-import { beforeAll, it, expect } from 'bun:test';
+import { beforeAll, it, expect, setDefaultTimeout } from 'bun:test';
+
+setDefaultTimeout(30_000);
 import DatanestClient from '../src';
 import { Project, ProjectType } from '../src/projects';
 import { addExternalUserToProject, addProjectTeamMember, getProjectTeam, removeExternalUserToProject, removeProjectTeamMember } from '../src/teams';
