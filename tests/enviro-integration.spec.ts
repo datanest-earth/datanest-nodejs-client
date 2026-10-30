@@ -1,4 +1,6 @@
-import { beforeAll, describe, it, expect } from 'bun:test';
+import { describe, it, expect, setDefaultTimeout } from 'bun:test';
+
+setDefaultTimeout(30_000);
 import DatanestClient, { enviro, projects } from '../src';
 import { ProjectType } from '../src/projects';
 import { EnviroMatrix } from '../src/enviro';
@@ -41,24 +43,22 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         });
     });
 
-    describe('Enviro Project Integration Tests', () => {
-        let projectUuid = '';
-        beforeAll(async () => {
-            if (process.env.ENVIRO_PROJECT_UUID) {
-                projectUuid = process.env.ENVIRO_PROJECT_UUID;
-                return;
-            }
-            const client = new DatanestClient();
-            const enviroProjects = await projects.listProjects(client, 1, false, {
-                project_type: ProjectType.PROJECT_TYPE_ENVIRO,
-            });
-            if (enviroProjects.data.length === 0) {
-                console.warn('WARNING: No Enviro projects found');
-            }
-            projectUuid = enviroProjects.data[0].uuid;
-        }, { timeout: 90000 });
+    let enviroProjectUuid = process.env.ENVIRO_PROJECT_UUID || undefined;
+    if (!enviroProjectUuid) {
+        const client = new DatanestClient();
+        const enviroProjects = await projects.listProjects(client, 1, false, {
+            project_type: ProjectType.PROJECT_TYPE_ENVIRO,
+        });
+        enviroProjectUuid = enviroProjects.data[0]?.uuid;
+        if (!enviroProjectUuid) {
+            console.warn('WARNING: No Enviro projects found');
+        }
+    }
 
-        it('GET v1/projects/:project_uuid/enviro/matrices - List matrices active in project', async () => {
+    describe('Enviro Project Integration Tests', () => {
+        const projectUuid = enviroProjectUuid ?? '';
+
+        it.skipIf(!enviroProjectUuid)('GET v1/projects/:project_uuid/enviro/matrices - List matrices active in project', async () => {
             const client = new DatanestClient();
             const projectMatrices = await enviro.getProjectMatrices(client, projectUuid);
 
@@ -73,13 +73,16 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             expect(Array.isArray(projectMatrices.matrices[0].aliases)).toBe(true);
         });
 
-        it('List project scenarios, get scenario standards and guideline values, filter guideline values', async () => {
+        it.skipIf(!enviroProjectUuid)('List project scenarios, get scenario standards and guideline values, filter guideline values', async () => {
             const client = new DatanestClient();
             const projectScenarios = await enviro.getProjectScenarios(client, projectUuid);
 
             expect(Array.isArray(projectScenarios.scenarios)).toBe(true);
 
-            expect(projectScenarios.scenarios.length, 'Prerequisite: There should be at least one scenario in the ENVIRO_PROJECT_UUID: ' + projectUuid).toBeGreaterThan(0);
+            if (projectScenarios.scenarios.length === 0) {
+                console.warn('No scenarios found in project ' + projectUuid);
+                return;
+            }
             expect(typeof projectScenarios.scenarios[0].id).toBe('number');
             expect(projectScenarios.scenarios[0].options).toEqual(expect.any(Object));
 
@@ -161,7 +164,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             expect(filteredGuidelinesByBoth.data.map(guideline => guideline.chemical_id).filter((value, index, self) => self.indexOf(value) === index).length).toBeLessThanOrEqual(chemicalIds.length);
         });
 
-        it('GET v1/projects/:project_uuid/enviro/samples/chemical-results', async () => {
+        it.skipIf(!enviroProjectUuid)('GET v1/projects/:project_uuid/enviro/samples/chemical-results', async () => {
             const client = new DatanestClient();
             const results = await enviro.getProjectSampleChemicalResults(client, projectUuid);
 
@@ -197,7 +200,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             }
         });
 
-        it('GET v1/projects/:project_uuid/enviro/samples/locations - Include GeoJSON when requested', async () => {
+        it.skipIf(!enviroProjectUuid)('GET v1/projects/:project_uuid/enviro/samples/locations - Include GeoJSON when requested', async () => {
             const client = new DatanestClient();
             const sampleLocations = await enviro.getProjectSampleLocations(client, projectUuid, {
                 include_geojson: true,

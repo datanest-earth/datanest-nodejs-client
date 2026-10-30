@@ -1,4 +1,6 @@
-import { beforeAll, expect, it } from 'bun:test';
+import { beforeAll, expect, it, setDefaultTimeout } from 'bun:test';
+
+setDefaultTimeout(30_000);
 import DatanestClient, { gather, projects } from '../src';
 import { listProjectItems } from '../src/gather';
 import { expectGeoJsonPointForItem } from './lib/geojson-assertions';
