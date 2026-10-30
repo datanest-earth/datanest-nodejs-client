@@ -13,24 +13,22 @@ function isEnviroProjectCreationDisabled(error: unknown): boolean {
 }
 
 if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.env.DATANEST_API_BASE_URL) {
-    const enviroClient = new DatanestClient();
-    let enviroProject: Awaited<ReturnType<typeof projectPurger.createTestProject>> | undefined;
-    try {
-        enviroProject = await projectPurger.createTestProject(enviroClient, {
-            project_name: 'Enviro project',
-            project_client: 'My client',
-            address_country: 'GB',
-            project_type: ProjectType.PROJECT_TYPE_ENVIRO,
-        });
-    } catch (error) {
-        if (!isEnviroProjectCreationDisabled(error)) {
-            throw error;
+    it('Create an enviro project', async () => {
+        const client = new DatanestClient();
+        try {
+            const enviroProject = await projectPurger.createTestProject(client, {
+                project_name: 'Enviro project',
+                project_client: 'My client',
+                address_country: 'GB',
+                project_type: ProjectType.PROJECT_TYPE_ENVIRO,
+            });
+            expect(enviroProject.project.project_type).toBe(ProjectType.PROJECT_TYPE_ENVIRO);
+        } catch (error) {
+            if (!isEnviroProjectCreationDisabled(error)) {
+                throw error;
+            }
+            console.warn('Skipping enviro project test: this account cannot create enviro projects');
         }
-        console.warn('Skipping enviro project test: this account cannot create enviro projects');
-    }
-
-    it.skipIf(enviroProject === undefined)('Create an enviro project', () => {
-        expect(enviroProject!.project.project_type).toBe(ProjectType.PROJECT_TYPE_ENVIRO);
     });
 
     it.concurrent('Ordered query params', async () => {

@@ -169,6 +169,14 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
         return right.workflow_apps.some(app => app.share_group && prefixes.has(shareGroupPrefix(app.share_group)));
     }
 
+    function relatedPublishedRevisions(workflows: CompanyWorkflow[], workflow: CompanyWorkflow): CompanyWorkflow[] {
+        return workflows.filter(candidate => candidate.published_at !== null && candidate.original_workflow_id === workflow.original_workflow_id && sharesAppPrefix(workflow, candidate));
+    }
+
+    function hasRevisionPair(workflows: CompanyWorkflow[]): boolean {
+        return workflows.some(workflow => workflow.published_at !== null && relatedPublishedRevisions(workflows, workflow).length > 1);
+    }
+
     async function listWorkflowRevisions(): Promise<CompanyWorkflow[]> {
         const workflows: CompanyWorkflow[] = [];
         let page = 1;
@@ -178,6 +186,9 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             lastPage = response.meta.last_page;
             workflows.push(...response.data);
             page++;
+            if (hasRevisionPair(workflows)) {
+                return workflows;
+            }
         }
         if (page <= lastPage) {
             throw new Error('No workflow with multiple revisions found within the first 20 pages');
@@ -191,7 +202,7 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
             if (workflow.published_at === null) {
                 continue;
             }
-            const related = workflows.filter(candidate => candidate.published_at !== null && candidate.original_workflow_id === workflow.original_workflow_id && sharesAppPrefix(workflow, candidate));
+            const related = relatedPublishedRevisions(workflows, workflow);
             if (related.length > 1) {
                 return {
                     workflowWithMultipleRevisions: workflow,
