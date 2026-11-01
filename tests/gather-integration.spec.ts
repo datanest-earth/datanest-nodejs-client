@@ -202,8 +202,34 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     }, { timeout: 90000 });
 
     it.concurrent('Can filter items by bounding box', async () => {
-        const mapsProjectUuid = process.env.MAPS_PROJECT_UUID || process.env.ENVIRO_PROJECT_UUID || projectUuid;
+        const configuredProjectUuid = process.env.MAPS_PROJECT_UUID || process.env.ENVIRO_PROJECT_UUID;
         const client = new DatanestClient();
+        let mapsProjectUuid = configuredProjectUuid || projectUuid;
+        if (!configuredProjectUuid) {
+            // The shared setup project has one southern point, which stays inside [minLat, maxLat / 2].
+            const bboxProject = await projectPurger.createTestProject(client, {
+                project_name: 'Bbox filter project',
+                project_client: 'My client',
+                address_country: 'GB',
+                project_address: '123 Fake Street',
+                project_type: projects.ProjectType.PROJECT_TYPE_STANDARD,
+            });
+            mapsProjectUuid = bboxProject.project.uuid;
+            const sharedAppGroups = await gather.listSharedAppGroups(client);
+            await gather.importAppGroup(client, mapsProjectUuid, sharedAppGroups.data[0].share_group);
+            const apps = await gather.listProjectApps(client, mapsProjectUuid);
+            const bboxAppUuid = apps.apps[0].uuid!;
+            await gather.createGatherItem(client, mapsProjectUuid, bboxAppUuid, {
+                title: 'Southern bbox item',
+                latitude: -36.8485,
+                longitude: 174.7633,
+            });
+            await gather.createGatherItem(client, mapsProjectUuid, bboxAppUuid, {
+                title: 'Northern bbox item',
+                latitude: 60,
+                longitude: 10,
+            });
+        }
         const allProjectItems = await listProjectItems(client, mapsProjectUuid);
         let minLat = 90;
         let maxLat = -90;
