@@ -277,9 +277,15 @@ if (process.env.DATANEST_API_KEY && process.env.DATANEST_API_SECRET && process.e
     it.concurrent('can set project manager by email', async () => {
         const client = new DatanestClient();
         const companyUsers = await getCompanyUsers(client);
-        const projectManager = companyUsers.data[Math.floor(Math.random() * companyUsers.data.length - 2) + 1];
-        companyUsers.data = companyUsers.data.filter(u => u.uuid !== projectManager.uuid);
-        const secondUser = companyUsers.data[0];
+        if (companyUsers.data.length < 2) {
+            throw new Error('Need at least two company users to set a project manager by email');
+        }
+        const projectManagerIndex = Math.floor(Math.random() * companyUsers.data.length);
+        const projectManager = companyUsers.data[projectManagerIndex];
+        const secondUser = companyUsers.data.find(user => user.uuid !== projectManager.uuid);
+        if (!secondUser) {
+            throw new Error('Need a second company user to update the project manager');
+        }
 
         const project = await projectPurger.createTestProject(client, {
             project_name: 'Project with Timezone',
